@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="content" type="id" />
+    <item name="nickname" type="id" />
+    <item name="user_name" type="id" />
+    <item name="avatar" type="id" />
+    <item name="cover" type="id" />
+    <item name="subtitle" type="id" />
+    <item name="mask" type="id" />
+</resources>

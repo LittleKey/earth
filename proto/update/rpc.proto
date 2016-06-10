@@ -1,0 +1,23 @@
+syntax = "proto3";
+package rpc;
+option java_package = "com.yuanqi.update.model";
+
+message RPCRequest {
+  bytes session_id = 1;
+  bytes content = 2;
+  // EncryptMethod encrypt_method = 3;
+  // bytes encrypt_IV = 4;
+}
+message RPCResponse {
+  bytes session_id = 1;
+  bool success = 2;
+  Reason reason = 3;
+  bytes content = 4;
+  // EncryptMethod encrypt_method = 4;
+  // bytes encrypt_IV = 5;
+  enum Reason {
+    OK = 0;
+    // Bad Request
+    BAD_REQUEST = 10;
+  }
+}

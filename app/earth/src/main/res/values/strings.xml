@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Earth</string>
+    <string name="space">&#160;</string>
+    <string name="about">关于</string>
+    <string name="rights_warning">Copyright @2016 All right reserved</string>
+
+    <!-- Date && Time -->
+    <string name="date_time_24">M月dd日 HH:mm</string>
+    <string name="date_week_time">M月d日 E HH:mm</string>
+    <string name="year_month_day_format">yyyy年MM月dd日</string>
+    <string name="yesterday">昨天</string>
+    <string name="sunday">星期日</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="hour_minute_format">a hh时mm分</string>
+    <string name="date_format">MM-dd</string>
+    <string name="today">今天</string>
+    <string name="date_ymd">yy/MM/dd</string>
+    <string name="date_time">HH:mm</string>
+    <string name="date_title">yyyy年MM月</string>
+    <string name="date_day">MM-dd</string>
+    <string name="date_week">E</string>
+    <string name="date_show">E MM-dd</string>
+
+    <!-- IconFont -->
+    <string name="img_court">&#xe617;</string>
+    <string name="img_people">&#xe615;</string>
+    <string name="img_comment">&#xe616;</string>
+    <string name="img_lock">&#xe60f;</string>
+    <string name="img_hand_phone">&#xe60c;</string>
+    <string name="img_weibo_circle">&#xe60b;</string>
+    <string name="img_weixin_circle">&#xe60d;</string>
+    <string name="img_qq_circle">&#xe60e;</string>
+    <string name="img_weibo_round">&#xe600;</string>
+    <string name="img_weixin_round">&#xe604;</string>
+    <string name="img_qq_round">&#xe603;</string>
+    <string name="img_weibo">&#xe601;</string>
+    <string name="img_weixin">&#xe605;</string>
+    <string name="img_weixin_friends">&#xe613;</string>
+    <string name="img_qq">&#xe602;</string>
+    <string name="img_search">&#xe606;</string>
+    <string name="img_heart">&#xe607;</string>
+    <string name="img_show_close">&#xe608;</string>
+    <string name="img_show_open">&#xe609;</string>
+    <string name="img_btn_back">&#xe60a;</string>
+    <string name="img_setting">&#xe610;</string>
+    <string name="img_clock">&#xe611;</string>
+    <string name="img_cross">&#xe612;</string>
+</resources>

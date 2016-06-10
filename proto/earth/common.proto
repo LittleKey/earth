@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package common;
+option java_package = "me.littlekey.earth.model.proto";
+
+message Cursor {
+  string cursor_id = 1;
+  bool has_more = 2;
+}
+
+message NullMessage {
+  bool success = 1;
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- app theme -->
+    <color name="colorPrimary">#2188E9</color>
+    <color name="colorPrimaryDark">#2188E9</color>
+
+    <color name="colorAccent">#FF4081</color>
+    <color name="gray_bg">#F2F2F2</color>
+
+    <!-- palette -->
+    <color name="gray">#999999</color>
+    <color name="black">#4A4A4A</color>
+    <color name="blue">#67ADFF</color>
+    <color name="dark_blue">#1E64E4</color>
+    <color name="green">#6EB73B</color>
+    <color name="red">#FF5555</color>
+    <color name="yellow">#FFD92D</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_green">#7CCF42</color>
+
+    <color name="light_gray_frame">#DCDCDC</color>
+    <color name="light_gray_text">#C9C9C9</color>
+    <color name="brown">#987D53</color>
+    <color name="white_pressed">#F8F8F8</color>
+    <color name="gray_bg_color">#F5F5F5</color>
+    <color name="dark_gray">#333333</color>
+    <color name="progress_dialog_text_color">#9b9b9b</color>
+    <color name="black_bg">#212225</color>
+    <color name="light_black_bg">#414246</color>
+    <color name="light_black_bg1">#303135</color>
+    <color name="half_transparent_white">#7Fffffff</color>
+    <color name="transparent_white">#19ffffff</color>
+
+    <color name="join_room_btn_blue">#1E64E4</color>
+    <color name="join_room_edit_rect_color">#4d4d4d</color>
+
+    <color name="translucency_border_bg">#19000000</color>
+    <color name="translucency_player_status_bar_bg">#CC000000</color>
+    <color name="room_dialog_black">#2b2b2b</color>
+    <color name="cancel_match_dialog_text_color">#eeb600</color>
+    <color name="bg_room_info_card_white">#FEFEFE</color>
+
+    <color name="light_blue_transparent">#E52188E9</color>
+    <color name="gray_for_subtitle">#FAFAFA</color>
+    <color name="blue_transparent">#F2618bb5</color>
+    <color name="gray_style_bg">#EBEBEB</color>
+
+    <color name="translucency_red">#CCF32C74</color>
+
+    <!-- rank number color -->
+    <color name="rank_1">#FF5555</color>
+    <color name="rank_2">#F5A623</color>
+    <color name="rank_3">#67ADFF</color>
+    <color name="rank_self">#FF9843</color>
+    <color name="rank_default">@color/black</color>
+
+    <!-- rank -->
+    <color name="rank_tab_select">#37414F</color>
+    <color name="rank_tab_not_select">#9B9B9B</color>
+    <color name="rank_tab_indicator">#374050</color>
+
+    <drawable name="white">#fff</drawable>
+</resources>

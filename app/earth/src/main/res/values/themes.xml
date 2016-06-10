@@ -1,0 +1,36 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/gray_bg</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="BaseAppTheme.HomePage">
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="BaseAppTheme.DrawableBackground">
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="BaseAppTheme.StylePage">
+        <item name="android:windowBackground">@color/gray_style_bg</item>
+    </style>
+
+    <style name="BaseAppTheme.ChatPage">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme" />
+
+    <style name="AppTheme.DrawableBackground" parent="BaseAppTheme.DrawableBackground" />
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>

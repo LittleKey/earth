@@ -1,0 +1,33 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="default_dialog_size">95dp</dimen>
+    <dimen name="text_size_for_iconfont">25sp</dimen>
+    <dimen name="indicator_height">2dp</dimen>
+    <dimen name="thin_divider_line_height">0.5dp</dimen>
+    <dimen name="divider_line_height">1.0dp</dimen>
+
+    <dimen name="textSizeMini">10sp</dimen>
+    <dimen name="textSizeSmall">12sp</dimen>
+    <dimen name="textSizeMiddle">14sp</dimen>
+    <dimen name="textSizeNormal">16sp</dimen>
+    <dimen name="textSizeLarge">18sp</dimen>
+    <dimen name="icon_font_size">20sp</dimen>
+
+    <dimen name="little_space">3dp</dimen>
+
+    <dimen name="space_medium">10dp</dimen>
+    <dimen name="space_normal">15dp</dimen>
+
+    <dimen name="corner_radius">5dp</dimen>
+    <dimen name="edit_height">45dp</dimen>
+    <dimen name="btn_height">40dp</dimen>
+
+    <dimen name="dialog_height">50dp</dimen>
+    <dimen name="dialog_width">50dp</dimen>
+    <dimen name="page_space">15dp</dimen>
+    <dimen name="title_height">56dp</dimen>
+    <dimen name="tab_height">40dp</dimen>
+    <dimen name="item_height">45dp</dimen>
+
+</resources>

@@ -1,0 +1,12 @@
+[submodule "external/volley"]
+	path = external/volley
+	url = https://android.googlesource.com/platform/frameworks/volley
+[submodule "framework/base"]
+	path = framework/base
+	url = git@github.com:littlekey/android-framework-base.git
+[submodule "framework/mvp"]
+	path = framework/mvp
+	url = git@github.com:littlekey/android-framework-mvp.git
+[submodule "framework/network"]
+	path = framework/network
+	url = git@github.com:littlekey/android-framework-network.git

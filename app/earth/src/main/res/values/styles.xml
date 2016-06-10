@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ThinLightGrayLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/thin_divider_line_height</item>
+        <item name="android:background">@color/light_gray_frame</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edit_height</item>
+        <item name="android:textColorHint">@color/light_gray_text</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="android:selectable">true</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:textSize">@dimen/textSizeMiddle</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AppTheme.DialogNoTitle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@drawable/bg_white_rounded_corners</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="AppTheme.DialogNoTitle.TransparentBg">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="NoTitleDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="TextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle.Mini">
+        <item name="android:textSize">@dimen/textSizeMini</item>
+    </style>
+
+    <style name="TextStyle.Small">
+        <item name="android:textSize">@dimen/textSizeSmall</item>
+    </style>
+
+    <style name="TextStyle.Middle">
+        <item name="android:textSize">@dimen/textSizeMiddle</item>
+    </style>
+
+    <style name="TextStyle.Normal">
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+    </style>
+
+    <style name="TextStyle.Large">
+        <item name="android:textSize">@dimen/textSizeLarge</item>
+    </style>
+
+    <style name="TextStyle.Mini.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextStyle.Small.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextStyle.Middle.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextStyle.Large.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextStyle.Normal.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextStyle.Mini.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextStyle.Small.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextStyle.Middle.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextStyle.Normal.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextStyle.Small.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="TextStyle.Middle.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="TextStyle.Normal.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="TextStyle.Large.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="TextStyle.Mini.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="TextStyle.Mini.Green">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="TextStyle.Large.Green">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="TextStyle.Mini.Red">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="TextStyle.Middle.Red">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="TextStyle.Small.Blue">
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="TextStyle.Large.Blue">
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="TextStyle.Middle.Blue">
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="TextStyle.Large.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="WhiteText" parent="TextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="WhiteItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="WhiteItem.TopMargin">
+        <item name="android:layout_marginTop">@dimen/space_medium</item>
+    </style>
+
+    <style name="MatchTopItemStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">@dimen/space_normal</item>
+        <item name="android:layout_marginBottom">@dimen/space_normal</item>
+    </style>
+
+    <style name="TextIconFontStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/icon_font_size</item>
+    </style>
+
+</resources>

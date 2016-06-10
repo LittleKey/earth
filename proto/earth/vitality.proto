@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package model;
+option java_package = "me.littlekey.earth.model.proto";
+
+message Count {
+  uint32 rank = 1;
+  uint32 selected_num = 2;
+  uint32 unread_message = 3;
+  int64 start_time = 4;
+  int64 end_time = 5;
+  int64 time = 6;
+}
+
+message Flag {
+  bool is_admin = 1;
+  bool is_me = 2;
+  bool is_winner = 3;
+  bool is_selected = 4;
+  bool can_move = 5;
+  bool loading = 6;
+  bool is_ready = 7;
+  bool in_room = 8;
+  bool is_matching = 9;
+}
+
+message Notice {
+  string identity = 1;
+  int32 type = 2;
+  string title = 3;
+  string content = 4;
+  int64 time = 5;
+  string uri = 6;
+}
+
+
+message User {
+  string user_id = 1;
+  string display_name = 3;
+  string image = 4;
+  string bio = 5;
+  Count count = 8;
+  Gender gender = 9;
+  bool reject_invitation = 13;
+  enum Gender {
+    UNKNOWN = 0;
+    MALE = 1;
+    FEMALE = 2;
+  }
+  message Count {
+    uint32 total_win = 2;
+    uint32 total_play = 3;
+  }
+}

@@ -1,14 +1,9 @@
 package me.littlekey.earth.account;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.event.AccountChangeEvent;
-import me.littlekey.earth.event.UpdateUserInfoEvent;
-import me.littlekey.earth.model.Model;
-import me.littlekey.earth.model.ModelFactory;
-import me.littlekey.earth.model.proto.User;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.PreferenceUtils;
 
@@ -17,19 +12,22 @@ import me.littlekey.earth.utils.PreferenceUtils;
  */
 public class AccountManager {
   private boolean isSignIn;
-  private String mSessionId;
-  private Model mUser;
+  private String mUserId;
+  private String mPassHash;
 
-  public void login() {
-    throw new UnsupportedOperationException("not implemented login.");
+  public void login(String userId, String passHash) {
+    setIsSignIn(true);
+    setUser(userId, passHash);
+    EventBus.getDefault().post(new AccountChangeEvent(true));
   }
 
   public void logout() {
     setIsSignIn(false);
-    mUser = null;
-    mSessionId = null;
+    mUserId = null;
+    mPassHash = null;
     EventBus.getDefault().post(new AccountChangeEvent(false));
-    PreferenceUtils.removeString(Const.LAST_ACTION, Const.LAST_SESSION_ID);
+    PreferenceUtils.removeString(Const.LAST_ACTION, Const.LAST_USER_ID);
+    PreferenceUtils.removeString(Const.LAST_ACTION, Const.LAST_PASS_HASH);
   }
 
   public boolean isSignIn() {
@@ -40,29 +38,37 @@ public class AccountManager {
     this.isSignIn = isSignIn;
   }
 
-  public String getSessionId() {
-    return mSessionId;
+  public String getUserId() {
+    return mUserId;
   }
 
-  public void setSessionId(@NonNull String sessionId) {
-    if (!TextUtils.isEmpty(sessionId) && !sessionId.equals(mSessionId)) {
-      this.mSessionId = sessionId;
-      PreferenceUtils.setString(Const.LAST_ACTION, Const.LAST_SESSION_ID, sessionId);
+  public String getPassHash() {
+    return mPassHash;
+  }
+
+  private boolean setUser(String userId, String passHash) {
+    return setUserId(userId) | setPassHash(passHash);
+  }
+
+  private boolean setUserId(String userId) {
+    if (!TextUtils.isEmpty(userId) && !userId.equals(mUserId)) {
+      mUserId = userId;
+      PreferenceUtils.setString(Const.LAST_ACTION, Const.LAST_USER_ID, userId);
+      return true;
     }
+    return false;
+  }
+
+  private boolean setPassHash(String passHash) {
+    if (!TextUtils.isEmpty(passHash) && !passHash.equals(mPassHash)) {
+      mPassHash = passHash;
+      PreferenceUtils.setString(Const.LAST_ACTION, Const.LAST_PASS_HASH, passHash);
+      return true;
+    }
+    return false;
   }
 
   public boolean isSelf(String id) {
-    return isSignIn() && mUser != null && String.valueOf(mUser.getIdentity()).equals(id);
-  }
-
-  public Model getUser() {
-    return mUser;
-  }
-
-  public void setUser(User user) {
-    if (user != null && isSelf(user.user_id)) {
-      mUser = ModelFactory.createModelFromUser(user, Model.Template.DATA);
-      EventBus.getDefault().post(new UpdateUserInfoEvent(mUser));
-    }
+    return isSignIn() && mUserId != null && String.valueOf(mUserId).equals(id);
   }
 }

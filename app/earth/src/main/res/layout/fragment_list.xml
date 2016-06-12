@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <com.yuanqi.basket.widget.EarthSwipeRefreshLayout
+    <me.littlekey.earth.widget.EarthSwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,6 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </com.yuanqi.basket.widget.EarthSwipeRefreshLayout>
+    </me.littlekey.earth.widget.EarthSwipeRefreshLayout>
 
 </FrameLayout>

@@ -3,18 +3,14 @@ package me.littlekey.earth.network;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.squareup.wire.Message;
 import com.yuanqi.network.RequestManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
-import me.littlekey.earth.model.proto.RPCRequest;
 import me.littlekey.earth.utils.Const;
-import okio.ByteString;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -29,43 +25,20 @@ public class EarthRequestManager extends RequestManager {
     mCacheConfig = new CacheConfig(true, DEFAULT_TTL, DEFAULT_SOFT_TTL);
   }
 
-  public <T extends Message> VitalityRequest<T> newVitalityProtoRequest(
-      ApiType apiType, Map<String, String> params, Class<T> clazz,
-      Response.Listener<T> listener, Response.ErrorListener errorListener) {
-    return newVitalityProtoRequest(apiType, buildBody(apiType, params), clazz, listener,
-        errorListener);
-  }
-
-  public <T extends Message> VitalityRequest<T> newVitalityProtoRequest(
-      ApiType apiType, ByteString result, Class<T> clazz, Response.Listener<T> listener,
-      Response.ErrorListener errorListener) {
-    return newVitalityProtoRequest(apiType, buildBody(result), clazz, listener, errorListener);
-  }
-
-  private <T extends Message> VitalityRequest<T> newVitalityProtoRequest(
-      ApiType apiType, final byte[] body, Class<T> clazz, Response.Listener<T> listener,
-      Response.ErrorListener errorListener) {
-    VitalityRequest<T> request = new VitalityRequest<T>(EarthApplication.getInstance(),
-        Request.Method.POST, getUrl(apiType), clazz, listener, errorListener, mCacheConfig) {
-
-      @Override
-      public String getBodyContentType() {
-        return "application/protobuf";
-      }
+  public EarthRequest newEarthRequest(
+      ApiType apiType, int method,
+      Response.Listener<EarthResponse> listener, Response.ErrorListener errorListener) {
+    EarthRequest request = new EarthRequest(EarthApplication.getInstance(), method,
+        getUrl(apiType), listener, errorListener, mCacheConfig) {
 
       @Override
       public Map<String, String> getHeaders() throws AuthFailureError {
-        String sessionId = EarthApplication.getInstance().getAccountManager().getSessionId();
         Map<String, String> headers = new HashMap<>();
-        if (sessionId != null) {
-          headers.put(Const.NETWORK_HEADER_SSID, sessionId);
-        }
+        String cookie = String.format("ipb_member_id=%s;ipb_pass_hash=%s",
+            EarthApplication.getInstance().getAccountManager().getUserId(),
+            EarthApplication.getInstance().getAccountManager().getPassHash());
+        headers.put(Const.KEY_COOKIE, cookie);
         return headers;
-      }
-
-      @Override
-      public byte[] getBody() {
-        return body;
       }
     };
     request.setShouldCache(false);
@@ -74,24 +47,12 @@ public class EarthRequestManager extends RequestManager {
 
   private String getUrl(ApiType apiType) {
     switch (apiType) {
+      case HOME_LIST:
+        return Const.API_HOME_LIST;
+      case LOGIN:
+        return Const.API_LOGIN;
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }
-  }
-
-  private byte[] buildBody(ApiType apiType, Map<String, String> params) {
-    ByteString content = null;
-    switch (apiType) {
-      default:
-        throw new IllegalStateException("Unknown api type:" + apiType.name());
-    }
-//    return buildBody(content);
-  }
-
-  private byte[] buildBody(ByteString content) {
-    RPCRequest.Builder builder =
-        new RPCRequest.Builder();
-    builder.content(content);
-    return RPCRequest.ADAPTER.encode(builder.build());
   }
 }

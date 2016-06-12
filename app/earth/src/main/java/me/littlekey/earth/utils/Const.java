@@ -6,6 +6,8 @@ package me.littlekey.earth.utils;
 public class Const {
   public static final String LAST_ACTION = "last_action";
   public static final String LAST_SESSION_ID = "last_session_id";
+  public static final String LAST_USER_ID = "last_user_id";
+  public static final String LAST_PASS_HASH = "last_pass_hash";
   public static final String LAST_CONTACT = "last_contact";
   public static final String LAST_REGIONS_ID = "last_regions_id";
   public static final String LAST_REGION_TEXT = "last_region_text";
@@ -37,6 +39,7 @@ public class Const {
   public static final String KEY_DISPLAY_NAME = "display_name";
   public static final String KEY_BIO = "bio";
   public static final String KEY_HEIGHT = "height";
+  public static final String KEY_COOKIE = "cookie";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -50,14 +53,18 @@ public class Const {
   public static final String EXTRA_MODEL = KEY_EXTRA + "model";
   public static final String EXTRA_IDENTITY_LIST = KEY_EXTRA + "identity_list";
   /*********************************** API ***********************************/
-  private static final String API_HOST_URL = "http://api.yuanqi.tv";
+//  private static final String API_HOST_URL = "http://api.yuanqi.tv";
+  private static final String API_HOST_URL = "http://e-hentai.org";
+  private static final String API_LOGIN_HOST_URL = "http://forums.e-hentai.org";
   //  private static final String API_HOST_URL = "http://192.168.1.66:5001";
   private static final String WS_HOST_URL = "ws://api.yuanqi.tv";
   //  private static final String WS_HOST_URL = "ws://192.168.1.66:5001";
+  // earth
+  public static final String API_HOME_LIST = API_HOST_URL + "/p/2333";
   //business_match
   public static final String API_RECENT_MATCH = API_HOST_URL + "/user/recent_matches";
   // business_account
-  public static final String API_LOGIN = API_HOST_URL + "/account/sms_login";
+  public static final String API_LOGIN = API_LOGIN_HOST_URL + "/index.php?act=Login&CODE=01";
   public static final String API_REGISTER = API_HOST_URL + "/account/sms_register";
   public static final String API_VERIFY_SMS = API_HOST_URL + "/account/sms_verify";
   public static final String API_UPDATE_PASSWORD = API_HOST_URL + "/account/change_password";

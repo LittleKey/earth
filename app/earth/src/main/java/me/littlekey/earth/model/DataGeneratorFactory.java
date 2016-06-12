@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.yuanqi.network.NameValuePair;
 
 import me.littlekey.earth.model.data.EarthDataGenerator;
+import me.littlekey.earth.model.data.HomeDataGenerator;
 import me.littlekey.earth.network.ApiType;
 
 /**
@@ -16,6 +17,8 @@ public class DataGeneratorFactory {
   public static EarthDataGenerator<?>
   createDataGenerator(ApiType apiType, Bundle bundle, NameValuePair... pairs) {
     switch (apiType) {
+      case HOME_LIST:
+        return new HomeDataGenerator(pairs);
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }

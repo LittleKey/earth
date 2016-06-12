@@ -10,7 +10,7 @@
     </style>
 
     <style name="BaseAppTheme.HomePage">
-        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
     <style name="BaseAppTheme.DrawableBackground">

@@ -1,21 +1,19 @@
 e-hentai api
 ============
 
-host `http://e-hentai.org`
+host `https://forums.e-hentai.org`
 
 ## login
 
-**POST** `/bounce_login.php?act=Login&CODE=01`
+**POST** `/index.php?act=Login&CODE=01`
 
 #### Body
 
 form-data
 
-- **returntype** `8`
-
 - **b** `d`
 
-- **bt** `pone`
+- **bt** ``
 
 - **CookieDate** `1`
 

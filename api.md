@@ -11,17 +11,11 @@ host `https://forums.e-hentai.org`
 
 form-data
 
-- **b** `d`
-
-- **bt** ``
-
 - **CookieDate** `1`
 
 - **UserName** `username`
 
 - **PassWord** `password`
-
-- **ipb_login_submit** `Login!`
 
 ## exhentai
 

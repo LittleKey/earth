@@ -87,12 +87,9 @@ public class HomeFragment extends BaseFragment {
               }
             });
     Map<String, String> params = new HashMap<>();
-    params.put("b", "d");
-    params.put("bt", "");
     params.put("CookieDate", "1");
     params.put("UserName", "LittleKey");
     params.put("PassWord", "JD199401@1");
-    params.put("ipb_login_submit", "Login!");
     request.setParams(params);
     request.setTag(this);
     request.submit();

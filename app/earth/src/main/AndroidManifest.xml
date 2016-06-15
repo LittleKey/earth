@@ -16,15 +16,21 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.HomeActivity"
+            android:name=".activity.WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppTheme.HomePage">
+            android:theme="@style/BaseAppTheme.WelcomePage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.LoginActivity"
+                  android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.HomeActivity"
+                  android:screenOrientation="portrait" />
 
     </application>
 

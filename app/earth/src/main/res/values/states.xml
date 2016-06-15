@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="State">
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="State.Login">
+        <item name="android:text">@string/btn_login</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:background">@drawable/bg_white_rounded_corners</item>
+    </style>
+    <style name="State.Login.Done">
+        <item name="android:alpha">1</item>
+    </style>
+    <style name="State.Login.Canceled">
+        <item name="android:alpha">0.7</item>
+    </style>
+
+    <style name="State.Submit">
+        <item name="android:text">@string/btn_submit</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/bg_primary_rounded_corners</item>
+    </style>
+    <style name="State.Submit.Done">
+        <item name="android:alpha">1</item>
+    </style>
+    <style name="State.Submit.Canceled">
+        <item name="android:alpha">0.7</item>
+    </style>
+</resources>

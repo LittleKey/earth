@@ -10,6 +10,14 @@ import com.yuanqi.network.RequestManager;
 
 import org.jsoup.Jsoup;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import me.littlekey.earth.EarthApplication;
+
 /**
  * Created by littlekey on 16/6/10.
  */
@@ -25,6 +33,20 @@ public class EarthRequest extends ApiRequest<EarthResponse> {
 
   @Override
   protected EarthResponse parseResponse(NetworkResponse response) throws Exception {
+    for (String field: HttpHeaderParser.parseSetCookie(response.headers)) {
+      Map<String, String> fieldMap = parseSetCookieField(field);
+      Set<String> fieldKeys = fieldMap.keySet();
+      if (fieldKeys.contains("expires")) {
+        fieldKeys.remove("path");
+        fieldKeys.remove("domain");
+        fieldKeys.remove("max-age");
+        fieldKeys.remove("expires");
+        for (String key: fieldKeys) {
+          EarthApplication.getInstance().getRequestManager().addCookie(key, fieldMap.get(key));
+        }
+      }
+
+    }
     return new EarthResponse(
         Jsoup.parse(new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf8"))),
         response.headers);
@@ -33,11 +55,29 @@ public class EarthRequest extends ApiRequest<EarthResponse> {
   @Override
   protected Cache.Entry parseCache(NetworkResponse response) {
     Cache.Entry entry = super.parseCache(response);
-    if (mCacheConfig.isPreferLocalConfig()) {
+    if (entry != null && mCacheConfig.isPreferLocalConfig()) {
       long now = System.currentTimeMillis();
       entry.ttl = now + mCacheConfig.getTtl();
       entry.softTtl = now + mCacheConfig.getSoftTtl();
     }
     return entry;
+  }
+
+  private Map<String, String> parseSetCookieField(String field) {
+    Map<String, String> result = new HashMap<>();
+    for (String pairString: field.split(";")) {
+      String[] pair = pairString.split("=");
+      result.put(strip(pair[0]).toLowerCase(), strip(pair[1]).toLowerCase());
+    }
+    return result;
+  }
+
+  private String strip(String str) {
+    Pattern pattern = Pattern.compile("^\\s*(.*?)\\s*$");
+    Matcher matcher = pattern.matcher(str);
+    if (matcher.find()) {
+      return matcher.group(1);
+    }
+    return str;
   }
 }

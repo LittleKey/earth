@@ -6,7 +6,9 @@ import android.view.ViewGroup;
 import com.yuanqi.mvp.adapter.MvpAdapter;
 import com.yuanqi.mvp.presenter.ViewGroupPresenter;
 
+import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
+import me.littlekey.earth.presenter.EarthPresenterFactory;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -28,6 +30,8 @@ public class ListAdapter extends MvpAdapter<Model> {
   protected ViewGroupPresenter onCreateDataViewPresenter(ViewGroup parent, int viewType) {
     Model.Template template = Model.Template.values()[viewType];
     switch (template) {
+      case ITEM_ART:
+        return EarthPresenterFactory.createArtItemPresenter(parent, R.layout.item_art);
       default:
         throw new IllegalStateException("Nonsupport template : " + template.name());
     }

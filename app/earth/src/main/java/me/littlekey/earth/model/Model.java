@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.model.proto.Action;
+import me.littlekey.earth.model.proto.Category;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.User;
@@ -69,10 +70,12 @@ public final class Model implements Parcelable {
   private final String url;
   private final String cover;
   private final String avatar;
+  private final String date;
   private final User user;
   private final Count count;
   private final Member member;
   private final Flag flag;
+  private final Category category;
   private List<Model> subModels;
   private Map<Integer, Action> actions;
   private int hashCode;
@@ -88,10 +91,12 @@ public final class Model implements Parcelable {
     this.url = builder.url;
     this.cover = builder.cover;
     this.avatar = builder.avatar;
+    this.date = builder.date;
     this.user = builder.user;
     this.count = builder.count;
     this.member = builder.member;
     this.flag = builder.flag;
+    this.category = builder.category;
     this.subModels = immutableCopyOf(builder.subModels);
     if (builder.actions == null) {
       this.actions = new HashMap<>();
@@ -149,6 +154,10 @@ public final class Model implements Parcelable {
     return avatar;
   }
 
+  public String getDate() {
+    return date;
+  }
+
   public User getUser() {
     return user;
   }
@@ -163,6 +172,10 @@ public final class Model implements Parcelable {
 
   public Flag getFlag() {
     return flag;
+  }
+
+  public Category getCategory() {
+    return category;
   }
 
   public List<Model> getSubModels() {
@@ -196,10 +209,12 @@ public final class Model implements Parcelable {
         && equals(url, o.url)
         && equals(cover, o.cover)
         && equals(avatar, o.avatar)
+        && equals(date, o.date)
         && equals(user, o.user)
         && equals(count, o.count)
         && equals(member, o.member)
         && equals(flag, o.flag)
+        && equals(category, o.category)
         && equals(subModels, o.subModels);
   }
 
@@ -223,10 +238,12 @@ public final class Model implements Parcelable {
       result = result * 37 + (url != null ? url.hashCode() : 0);
       result = result * 37 + (cover != null ? cover.hashCode() : 0);
       result = result * 37 + (avatar != null ? avatar.hashCode() : 0);
+      result = result * 37 + (date != null ? date.hashCode() : 0);
       result = result * 37 + (user != null ? user.hashCode() : 0);
       result = result * 37 + (count != null ? count.hashCode() : 0);
       result = result * 37 + (member != null ? member.hashCode() : 0);
       result = result * 37 + (flag != null ? flag.hashCode() : 0);
+      result = result * 37 + (category != null ? category.hashCode() : 0);
       result = result * 37 + (subModels != null ? subModels.hashCode() : 1);
       hashCode = result;
     }
@@ -264,7 +281,8 @@ public final class Model implements Parcelable {
   public enum Type implements WireEnum {
     UNKNOWN(0),
     LINK(1),
-    USER(2),;
+    USER(2),
+    ART(3);
 
     private final int value;
 
@@ -282,7 +300,8 @@ public final class Model implements Parcelable {
     UNSUPPORTED(0),
     DATA(1),
     HEADER(2),
-    USER(3);
+    USER(3),
+    ITEM_ART(4);
 
     private final int value;
 
@@ -308,10 +327,12 @@ public final class Model implements Parcelable {
     public String url;
     public String cover;
     public String avatar;
+    public String date;
     public User user;
     public Count count;
     public Member member;
     public Flag flag;
+    public Category category;
     public List<Model> subModels;
     public Map<Integer, Action> actions;
 
@@ -329,10 +350,12 @@ public final class Model implements Parcelable {
       this.url = message.url;
       this.cover = message.cover;
       this.avatar = message.avatar;
+      this.date = message.date;
       this.user = message.user;
       this.count = message.count;
       this.member = message.member;
       this.flag = message.flag;
+      this.category = message.category;
       this.subModels = copyOf(message.subModels);
       this.actions = copyOf(message.actions);
     }
@@ -408,6 +431,11 @@ public final class Model implements Parcelable {
       return this;
     }
 
+    public Builder date(String date) {
+      this.date = date;
+      return this;
+    }
+
     public Builder user(User user) {
       this.user = user;
       return this;
@@ -425,6 +453,11 @@ public final class Model implements Parcelable {
 
     public Builder flag(Flag flag) {
       this.flag = flag;
+      return this;
+    }
+
+    public Builder category(Category category) {
+      this.category = category;
       return this;
     }
 

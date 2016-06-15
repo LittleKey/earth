@@ -19,7 +19,7 @@ import me.littlekey.earth.utils.EarthUtils;
 /**
  * Created by nengxiangzhou on 15/5/8.
  */
-public class FlagPresenter extends VitalityPresenter {
+public class FlagPresenter extends EarthPresenter {
   @Override
   public void bind(Model model) {
     switch (id()) {

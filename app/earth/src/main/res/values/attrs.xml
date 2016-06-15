@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StatefulButton">
+        <attr name="android:gravity"/>
+        <attr name="android:singleLine"/>
+        <attr name="android:background"/>
+        <attr name="android:text"/>
+        <attr name="android:textColor"/>
+        <attr name="android:textSize"/>
+        <attr name="android:drawable"/>
+        <attr name="android:alpha"/>
+        <attr name="layoutRes" format="reference"/>
+        <attr name="stateDone" format="reference"/>
+        <attr name="stateCanceled" format="reference"/>
+    </declare-styleable>
+</resources>

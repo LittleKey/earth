@@ -23,7 +23,7 @@ import me.littlekey.earth.utils.NavigationManager;
 /**
  * Created by nengxiangzhou on 16/1/13.
  */
-public class ActionPresenter extends VitalityPresenter {
+public class ActionPresenter extends EarthPresenter {
 
   @Override
   public void bind(final Model model) {
@@ -96,14 +96,11 @@ public class ActionPresenter extends VitalityPresenter {
     Model newModel = new Model.Builder(model).flag(flag).build();
     for (int i = 0; i < adapter.getData().size(); i++) {
       Object item = adapter.getItem(i);
-      if (item instanceof Model && ((Model) item).getFlag() != null
-          && Wire.get(((Model) item).getFlag().is_selected, false)) {
-        if (!item.equals(model)) {
-          flag = Wire.get(((Model) item).getFlag(), new Flag.Builder().build()).newBuilder()
-              .is_selected(false).build();
-          adapter.changeData(i, new Model.Builder((Model) item).flag(flag).build());
-          break;
-        }
+      if (item instanceof Model && (flag = ((Model) item).getFlag()) != null
+          && Wire.get(flag.is_selected, false) && !item.equals(model)) {
+        flag = flag.newBuilder().is_selected(false).build();
+        adapter.changeData(i, new Model.Builder((Model) item).flag(flag).build());
+        break;
       }
     }
     adapter.changeData(group().holder.getAdapterPosition(), newModel);

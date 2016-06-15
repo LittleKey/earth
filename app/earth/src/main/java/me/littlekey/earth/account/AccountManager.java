@@ -69,6 +69,6 @@ public class AccountManager {
   }
 
   public boolean isSelf(String id) {
-    return isSignIn() && mUserId != null && String.valueOf(mUserId).equals(id);
+    return isSignIn() && mUserId != null && TextUtils.equals(mUserId, id);
   }
 }

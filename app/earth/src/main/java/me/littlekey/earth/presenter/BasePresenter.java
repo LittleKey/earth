@@ -27,7 +27,7 @@ import me.littlekey.earth.utils.Const;
 /**
  * Created by nengxiangzhou on 15/5/8.
  */
-public class BasePresenter extends VitalityPresenter {
+public class BasePresenter extends EarthPresenter {
   @Override
   public void bind(Model model) {
     Object attrValue = getValueByViewId(id(), model);

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:padding="5dp"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cover"
+            android:layout_width="100dp"
+            android:layout_height="134dp"
+            android:layout_alignParentLeft="true"
+            app:actualImageScaleType="centerInside"
+            app:placeholderImageScaleType="fitCenter"/>
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextStyle.Large.Black"
+            android:layout_alignTop="@id/cover"
+            android:layout_toRightOf="@id/cover"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:singleLine="false"
+            android:maxLines="2"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

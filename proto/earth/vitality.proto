@@ -4,7 +4,7 @@ package model;
 option java_package = "me.littlekey.earth.model.proto";
 
 message Count {
-  uint32 rank = 1;
+  float rank = 1;
   uint32 selected_num = 2;
   uint32 unread_message = 3;
   int64 start_time = 4;
@@ -32,7 +32,6 @@ message Notice {
   int64 time = 5;
   string uri = 6;
 }
-
 
 message User {
   string user_id = 1;

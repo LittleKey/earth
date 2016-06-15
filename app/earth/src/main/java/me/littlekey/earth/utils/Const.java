@@ -25,8 +25,8 @@ public class Const {
   public static final String KEY_OLD_PASSWORD = "old_password";
   public static final String KEY_MOBILE_PN = "mobile_pn";
   public static final String KEY_VERIFICATION_CODE = "verification_code";
-  public static final String KEY_USER_NAME = "username";
-  public static final String KEY_PASSWORD = "password";
+  public static final String KEY_USER_NAME = "UserName";
+  public static final String KEY_PASSWORD = "PassWord";
   public static final String KEY_QUERY = "query";
   public static final String KEY_IDENTITY = "identity";
   public static final String KEY_AVATAR = "avatar";
@@ -40,6 +40,8 @@ public class Const {
   public static final String KEY_BIO = "bio";
   public static final String KEY_HEIGHT = "height";
   public static final String KEY_COOKIE = "cookie";
+  public static final String KEY_COOKIE_DATE = "CookieDate";
+  public static final String KEY_SET_COOKIE = "Set-Cookie";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -53,74 +55,12 @@ public class Const {
   public static final String EXTRA_MODEL = KEY_EXTRA + "model";
   public static final String EXTRA_IDENTITY_LIST = KEY_EXTRA + "identity_list";
   /*********************************** API ***********************************/
-//  private static final String API_HOST_URL = "http://api.yuanqi.tv";
-  private static final String API_HOST_URL = "http://e-hentai.org";
+  private static final String API_EX_HOST_URL = "http://exhentai.org";
   private static final String API_LOGIN_HOST_URL = "http://forums.e-hentai.org";
-  //  private static final String API_HOST_URL = "http://192.168.1.66:5001";
-  private static final String WS_HOST_URL = "ws://api.yuanqi.tv";
-  //  private static final String WS_HOST_URL = "ws://192.168.1.66:5001";
   // earth
-  public static final String API_HOME_LIST = API_HOST_URL + "/p/2333";
-  //business_match
-  public static final String API_RECENT_MATCH = API_HOST_URL + "/user/recent_matches";
+  public static final String API_HOME_LIST = API_EX_HOST_URL + "/";
   // business_account
   public static final String API_LOGIN = API_LOGIN_HOST_URL + "/index.php?act=Login&CODE=01";
-  public static final String API_REGISTER = API_HOST_URL + "/account/sms_register";
-  public static final String API_VERIFY_SMS = API_HOST_URL + "/account/sms_verify";
-  public static final String API_UPDATE_PASSWORD = API_HOST_URL + "/account/change_password";
-  // business_user
-  public static final String API_GET_USER_BY_ID = API_HOST_URL + "/user/get_by_id";
-  public static final String API_USER_CURRENT = API_HOST_URL + "/user/current";
-  public static final String API_UPLOAD_IMAGE = API_HOST_URL + "/upload/avatar";
-  public static final String API_UPDATE_USER = API_HOST_URL + "/user/update_profile";
-  // business_account_recovery
-  public static final String API_RESET_PASSWORD_BY_MOBILE =
-      API_HOST_URL + "/account/recovery_password_via_sms";
-  // business_search
-  public static final String API_SEARCH = API_HOST_URL + "/search";
-  public static final String API_SEARCH_MEMBER = API_HOST_URL + "/search/user";
-  // business_chat_room
-  public static final String API_GET_CHAT_ROOM = API_HOST_URL + "/chatroom/get";
-  public static final String API_CHAT_PUSH = WS_HOST_URL + "/chat/push/%1$s";
-  public static final String API_WEB_SOCKET = WS_HOST_URL + "/ws";
-  public static final String API_CHAT_HISTORY = API_HOST_URL + "/chatroom/chat_history";
-  public static final String API_USER_READY = API_HOST_URL + "/chatroom/user_ready";
-  public static final String API_GET_PLAY_STYLE = API_HOST_URL + "/playstyle/list";
-  // business_match
-  public static final String API_GET_MATCH = API_HOST_URL + "/match/get_by_id";
-  public static final String API_FINISH_MATCH = API_HOST_URL + "/match/finish";
-  public static final String API_START_MATCH = API_HOST_URL + "/match/start";
-  public static final String API_CANCEL_MATCH = API_HOST_URL + "/match/cancel";
-  // business_room
-  public static final String API_CREATE_ROOM = API_HOST_URL + "/room/create";
-  public static final String API_GET_ROOM = API_HOST_URL + "/room/get_by_id";
-  public static final String API_JOIN_ROOM = API_HOST_URL + "/room/join";
-  public static final String API_CLOSE_ROOM = API_HOST_URL + "/room/close";
-  public static final String API_LEAVE_ROOM = API_HOST_URL + "/room/leave";
-  public static final String API_INVITE_MEMBER = API_HOST_URL + "/room/invite";
-  public static final String API_TRANS_GROUP = API_HOST_URL + "/room/trans_group";
-  public static final String API_UPDATE_ROOM = API_HOST_URL + "/room/update";
-  public static final String API_RECENT_MEMBER = API_HOST_URL + "/user/recent_teammates";
-  public static final String API_ADD_GROUP = API_HOST_URL + "/room/add_group";
-  public static final String API_SWITCH_GROUP = API_HOST_URL + "/room/switch_group";
-  // business_chat_room
-  public static final String API_CHAT_ROOM_LIST = API_HOST_URL + "/chatroom/list";
-  public static final String API_NEW_MATCH = API_HOST_URL + "/chatroom/match";
-  public static final String API_CANCEL_ARRANGE_MATCH = API_HOST_URL + "/chatroom/cancel_match";
-  public static final String API_CHAT_ROOM_INVITE_USER = API_HOST_URL + "/chatroom/invite_user";
-  public static final String API_CHAT_ROOM_REMOVE_USER = API_HOST_URL + "/chatroom/remove_user";
-  public static final String API_UPDATE_CHAT_ROOM_INFO = API_HOST_URL + "/chatroom/update";
-  // business_region
-  public static final String API_GET_REGION = API_HOST_URL + "/region/list";
-  // business_notification
-  public static final String API_NOTIFICATION_LIST = API_HOST_URL + "/notification/list";
-  // business_others
-  public static final String API_FEEDBACK = "http://fb.umeng.com/api/v2/feedback/new";
-  public static final String API_SET_DEVICE_ID = API_HOST_URL + "/user/set_device_id";
-  // basket business
-  public static final String API_REGION_RANKING = API_HOST_URL + "/rank/region";
-  public static final String API_GLOBAL_RANKING = API_HOST_URL + "/rank/global";
-  public static final String API_WS_ROOM = "ws://api.yuanqi.tv/push/%s";
   /******************************** Network Related ********************************/
   public static final String NETWORK_HEADER_SSID = "SSID";
   /*********************************** UM Social ***********************************/
@@ -141,9 +81,11 @@ public class Const {
   public static final String APP_SECRET_WX = "7fbeb429ea9920a0300f7a34e791bbed";
   public static final String TARGET_URL = "https://yuanqi.tv";
   /************************************ ConstValues ***********************************/
+  public static final String ZERO = "0";
+  public static final String ONE = "1";
   public static final int MIN_PASSWORD_LENGTH = 6;
   public static final int MAX_PASSWORD_LENGTH = 30;
-  public static final int MIN_NICKNAME_LENGTH = 2;
+  public static final int MIN_NICKNAME_LENGTH = 1;
   public static final int MAX_NICKNAME_LENGTH = 12;
   public static final int MAX_SIGNATURE_LENGTH = 30;
   public static final int MIN_SIGNATURE_LENGTH = 0;

@@ -26,6 +26,7 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
     if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(passHash)) {
       EarthApplication.getInstance().getAccountManager().login(userId, passHash);
       NavigationManager.navigationTo(WelcomeActivity.this, HomeActivity.class);
+      finish();
     } else {
       TextView btnLogin = (TextView) findViewById(R.id.btn_login);
       if (btnLogin != null) {

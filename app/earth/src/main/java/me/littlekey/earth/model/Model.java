@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.model.proto.Action;
-import me.littlekey.earth.model.proto.Category;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.User;
@@ -312,6 +311,50 @@ public final class Model implements Parcelable {
     @Override
     public int getValue() {
       return value;
+    }
+  }
+
+  public enum Category implements WireEnum {
+    UNKNOWN(0),
+    DOUJINSHI(1),
+    MANGA(2),
+    ARTIST_CG(3),
+    GAME_CG(4),
+    WESTERN(5),
+    NON__H(6),
+    IMAGE_SET(7),
+    COSPLAY(8),
+    ASIAN_PORN(9),
+    MISC(10);
+
+    private final int value;
+
+    Category(int value) {
+      this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+      return value;
+    }
+
+    public String getName() {
+      return name().replace("__", "-").replace("_", " ").toUpperCase();
+    }
+
+    public static Category from(String name) {
+      switch (name) {
+        case "imageset":
+          return IMAGE_SET;
+        case "artistcg":
+          return ARTIST_CG;
+        case "gamecg":
+          return GAME_CG;
+        case "asianporn":
+          return ASIAN_PORN;
+        default:
+          return valueOf(Category.class, name.replace(" ", "_").replace("-", "__").toUpperCase());
+      }
     }
   }
 

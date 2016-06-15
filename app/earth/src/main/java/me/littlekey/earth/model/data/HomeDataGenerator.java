@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,9 @@ import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.network.ApiType;
+import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
+import me.littlekey.earth.utils.Const;
 
 /**
  * Created by littlekey on 16/6/12.
@@ -37,12 +40,24 @@ public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
 
   @Override
   public ApiRequest<EarthResponse> getNextRequestFromResponse(EarthResponse response) {
-    return null;
+    int currentPage = Integer.valueOf(
+        response.document.select("table.ptt > tbody > tr > td.ptds > a").text());
+    EarthRequest request = EarthApplication.getInstance().getRequestManager()
+        .newEarthRequest(mApiType, Request.Method.GET, mListener, mErrorListener);
+    Map<String, String> params = new HashMap<>();
+    // page argument was base 0, and website page was base 1. so not need modify page number.
+    params.put(Const.KEY_PAGE, String.valueOf(currentPage));
+    request.setParams(params);
+    return request;
   }
 
   @Override
   public boolean getHasMoreFromResponse(EarthResponse response) {
-    return false;
+    Elements pageElements = response.document.select("table.ptt > tbody > tr > td");
+    int currentPage = Integer.valueOf(pageElements.select("td.ptds > a").text());
+    int totalPage = Integer.valueOf(pageElements.get(pageElements.size() - 2).select("a").text());
+
+    return currentPage < totalPage;
   }
 
   @Override

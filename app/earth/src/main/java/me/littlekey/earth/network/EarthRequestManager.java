@@ -49,11 +49,23 @@ public class EarthRequestManager extends RequestManager {
     }
   }
 
-  public EarthRequest newEarthRequest(
-      ApiType apiType, int method,
+  public EarthRequest newEarthRequest(ApiType apiType, int method,
       Response.Listener<EarthResponse> listener, Response.ErrorListener errorListener) {
     EarthRequest request = new EarthRequest(EarthApplication.getInstance(), method,
         getUrl(apiType), listener, errorListener, mCacheConfig) {
+
+      @Override
+      public String getUrl() {
+        try {
+          if (getMethod() == Method.POST || getMethod() == Method.PUT) {
+            return super.getUrl();
+          }
+          return RequestManager.parseUrl(super.getUrl(), getParams());
+        } catch (AuthFailureError ignore) {
+          ignore.printStackTrace();
+        }
+        return null;
+      }
 
       @Override
       public Map<String, String> getHeaders() throws AuthFailureError {
@@ -71,33 +83,33 @@ public class EarthRequestManager extends RequestManager {
       case HOME_LIST:
         return Const.API_HOME_LIST;
       case LOGIN:
-        return Const.API_LOGIN;
+        Map<String, String> loginPairs = new HashMap<>();
+        loginPairs.put(Const.KEY_ACT, Const.LOGIN);
+        loginPairs.put(Const.KEY_CODE, Const.ZERO_ONE);
+        return RequestManager.parseUrl(Const.API_LOGIN, loginPairs);
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }
   }
 
   /**
-   * Converts List<NameValuePair> to String.
+   * Converts Map<String, String> to String.
    */
-  private String convertCookies(List<NameValuePair> cookies) {
+  private String convertCookies(Map<String, String> cookies) {
     List<String> result = new ArrayList<>();
-    for (NameValuePair cookieField: cookies) {
+    for (Map.Entry<String, String> cookieField: cookies.entrySet()) {
       CollectionUtils.add(result,
-          String.format("%s=%s", cookieField.getName(), cookieField.getValue()));
+          String.format("%s=%s", cookieField.getKey(), cookieField.getValue()));
     }
     return TextUtils.join(";", result);
   }
 
-  private List<NameValuePair> buildCookie() {
-    List<NameValuePair> cookies = new ArrayList<>();
-    cookies.add(new NameValuePair("ipb_member_id",
-        EarthApplication.getInstance().getAccountManager().getUserId()));
-    cookies.add(new NameValuePair("ipb_pass_hash",
-        EarthApplication.getInstance().getAccountManager().getPassHash()));
-    for (Map.Entry<String, String> field: mAdditionHeaders.entrySet()) {
-      CollectionUtils.add(cookies, new NameValuePair(field.getKey(), field.getValue()));
-    }
+  private Map<String, String> buildCookie() {
+    Map<String, String> cookies = new HashMap<>(mAdditionHeaders);
+    cookies.put("ipb_member_id",
+        EarthApplication.getInstance().getAccountManager().getUserId());
+    cookies.put("ipb_pass_hash",
+        EarthApplication.getInstance().getAccountManager().getPassHash());
     return cookies;
   }
 }

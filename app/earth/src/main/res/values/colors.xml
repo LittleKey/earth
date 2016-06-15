@@ -7,6 +7,19 @@
     <color name="colorAccent">#FF4081</color>
     <color name="gray_bg">#F2F2F2</color>
 
+    <!-- category -->
+    <color name="doujinshi">#FF5555</color>
+    <color name="manga">#FFD92D</color>
+    <color name="artist_cg">#FFF92D</color>
+    <color name="game_cg">#6EB73B</color>
+    <color name="western">#7CCF42</color>
+    <color name="non_h">#67ADFF</color>
+    <color name="image_set">#1E64E4</color>
+    <color name="cosplay">#9966dd</color>
+    <color name="asian_porn">#e96ce3</color>
+    <color name="misc">#999999</color>
+    <color name="default_category">#4A4A4A</color>
+
     <!-- palette -->
     <color name="gray">#999999</color>
     <color name="black">#4A4A4A</color>
@@ -30,6 +43,7 @@
     <color name="light_black_bg1">#303135</color>
     <color name="half_transparent_white">#7Fffffff</color>
     <color name="transparent_white">#19ffffff</color>
+    <color name="transparent">#00000000</color>
 
     <color name="join_room_btn_blue">#1E64E4</color>
     <color name="join_room_edit_rect_color">#4d4d4d</color>
@@ -47,14 +61,14 @@
 
     <color name="translucency_red">#CCF32C74</color>
 
-    <!-- rank number color -->
+    <!-- rating number color -->
     <color name="rank_1">#FF5555</color>
     <color name="rank_2">#F5A623</color>
     <color name="rank_3">#67ADFF</color>
     <color name="rank_self">#FF9843</color>
     <color name="rank_default">@color/black</color>
 
-    <!-- rank -->
+    <!-- rating -->
     <color name="rank_tab_select">#37414F</color>
     <color name="rank_tab_not_select">#9B9B9B</color>
     <color name="rank_tab_indicator">#374050</color>

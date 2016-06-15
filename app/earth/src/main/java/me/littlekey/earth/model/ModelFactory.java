@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.model.proto.Action;
-import me.littlekey.earth.model.proto.Category;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.User;
@@ -64,14 +63,11 @@ public class ModelFactory {
     Elements children = element.children();
     // NOTE : find category
     Element categoryEle = children.get(0);
-    Category category = new Category.Builder()
-        .img(categoryEle.select("a > img").attr("src"))
-        .name(categoryEle.select("a > img").attr("alt"))
-        .build();
+    Model.Category category = Model.Category.from(categoryEle.select("a > img").attr("alt"));
     // NOTE : find date
     Element dateEle = children.get(1);
     String date = dateEle.text();
-    // NOTE : find cover and title and url and rank
+    // NOTE : find cover and title and url and rating
     Element artEle = children.get(2);
     String cover =  artEle.select("div.it2 > img").attr("src");
     if (TextUtils.isEmpty(cover)) {
@@ -85,15 +81,15 @@ public class ModelFactory {
     Elements titleAndUrlElements = artEle.select("div.it5 > a");
     String arUrl  = titleAndUrlElements.attr("href");
     String title = titleAndUrlElements.text();
-    Pattern rankPattern = Pattern.compile("background-position:\\s*?-?(\\d*?)px\\s*?-?(\\d*?)px;");
-    Matcher rankMatcher = rankPattern.matcher(artEle.select("div.it4 > div").attr("style"));
-    int rankNum = 0;
-    float rankOffset = 0f;
-    if (rankMatcher.find()) {
-      rankNum = 5 - Integer.valueOf(rankMatcher.group(1)) / 16;
-      rankOffset = Integer.valueOf(rankMatcher.group(2)) == 1 ? 0.0f : 0.5f;
+    Pattern ratingPattern = Pattern.compile("background-position:\\s*?-?(\\d*?)px\\s*?-?(\\d*?)px;");
+    Matcher ratingMatcher = ratingPattern.matcher(artEle.select("div.it4 > div").attr("style"));
+    int ratingNum = 0;
+    float ratingOffset = 0f;
+    if (ratingMatcher.find()) {
+      ratingNum = 5 - Integer.valueOf(ratingMatcher.group(1)) / 16;
+      ratingOffset = Integer.valueOf(ratingMatcher.group(2)) == 1 ? 0.0f : 0.5f;
     }
-    Count count = new Count.Builder().rank(rankNum - rankOffset).build();
+    Count count = new Count.Builder().rating(ratingNum - ratingOffset).build();
     // NOTE : find publisher
     Element publisherEle = children.get(3);
     Elements nameAndUrlElements = publisherEle.select("div > a");

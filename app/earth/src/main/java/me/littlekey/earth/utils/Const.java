@@ -42,6 +42,9 @@ public class Const {
   public static final String KEY_COOKIE = "cookie";
   public static final String KEY_COOKIE_DATE = "CookieDate";
   public static final String KEY_SET_COOKIE = "Set-Cookie";
+  public static final String KEY_PAGE = "page";
+  public static final String KEY_ACT = "act";
+  public static final String KEY_CODE = "CODE";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -60,7 +63,7 @@ public class Const {
   // earth
   public static final String API_HOME_LIST = API_EX_HOST_URL + "/";
   // business_account
-  public static final String API_LOGIN = API_LOGIN_HOST_URL + "/index.php?act=Login&CODE=01";
+  public static final String API_LOGIN = API_LOGIN_HOST_URL + "/index.php";
   /******************************** Network Related ********************************/
   public static final String NETWORK_HEADER_SSID = "SSID";
   /*********************************** UM Social ***********************************/
@@ -83,6 +86,8 @@ public class Const {
   /************************************ ConstValues ***********************************/
   public static final String ZERO = "0";
   public static final String ONE = "1";
+  public static final String ZERO_ONE = "01";
+  public static final String LOGIN = "Login";
   public static final int MIN_PASSWORD_LENGTH = 6;
   public static final int MAX_PASSWORD_LENGTH = 30;
   public static final int MIN_NICKNAME_LENGTH = 1;

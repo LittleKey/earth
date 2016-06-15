@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package common;
-option java_package = "me.littlekey.earth.model.proto.ehentai";
-
-message HomeListResponse {
-}

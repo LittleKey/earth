@@ -24,7 +24,7 @@ public final class Count extends Message<Count, Count.Builder> {
 
   private static final long serialVersionUID = 0L;
 
-  public static final Float DEFAULT_RANK = 0.0f;
+  public static final Float DEFAULT_RATING = 0.0f;
 
   public static final Integer DEFAULT_SELECTED_NUM = 0;
 
@@ -40,7 +40,7 @@ public final class Count extends Message<Count, Count.Builder> {
       tag = 1,
       adapter = "com.squareup.wire.ProtoAdapter#FLOAT"
   )
-  public final Float rank;
+  public final Float rating;
 
   @WireField(
       tag = 2,
@@ -72,13 +72,13 @@ public final class Count extends Message<Count, Count.Builder> {
   )
   public final Long time;
 
-  public Count(Float rank, Integer selected_num, Integer unread_message, Long start_time, Long end_time, Long time) {
-    this(rank, selected_num, unread_message, start_time, end_time, time, ByteString.EMPTY);
+  public Count(Float rating, Integer selected_num, Integer unread_message, Long start_time, Long end_time, Long time) {
+    this(rating, selected_num, unread_message, start_time, end_time, time, ByteString.EMPTY);
   }
 
-  public Count(Float rank, Integer selected_num, Integer unread_message, Long start_time, Long end_time, Long time, ByteString unknownFields) {
+  public Count(Float rating, Integer selected_num, Integer unread_message, Long start_time, Long end_time, Long time, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
-    this.rank = rank;
+    this.rating = rating;
     this.selected_num = selected_num;
     this.unread_message = unread_message;
     this.start_time = start_time;
@@ -89,7 +89,7 @@ public final class Count extends Message<Count, Count.Builder> {
   @Override
   public Builder newBuilder() {
     Builder builder = new Builder();
-    builder.rank = rank;
+    builder.rating = rating;
     builder.selected_num = selected_num;
     builder.unread_message = unread_message;
     builder.start_time = start_time;
@@ -105,7 +105,7 @@ public final class Count extends Message<Count, Count.Builder> {
     if (!(other instanceof Count)) return false;
     Count o = (Count) other;
     return Internal.equals(unknownFields(), o.unknownFields())
-        && Internal.equals(rank, o.rank)
+        && Internal.equals(rating, o.rating)
         && Internal.equals(selected_num, o.selected_num)
         && Internal.equals(unread_message, o.unread_message)
         && Internal.equals(start_time, o.start_time)
@@ -118,7 +118,7 @@ public final class Count extends Message<Count, Count.Builder> {
     int result = super.hashCode;
     if (result == 0) {
       result = unknownFields().hashCode();
-      result = result * 37 + (rank != null ? rank.hashCode() : 0);
+      result = result * 37 + (rating != null ? rating.hashCode() : 0);
       result = result * 37 + (selected_num != null ? selected_num.hashCode() : 0);
       result = result * 37 + (unread_message != null ? unread_message.hashCode() : 0);
       result = result * 37 + (start_time != null ? start_time.hashCode() : 0);
@@ -132,7 +132,7 @@ public final class Count extends Message<Count, Count.Builder> {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    if (rank != null) builder.append(", rank=").append(rank);
+    if (rating != null) builder.append(", rating=").append(rating);
     if (selected_num != null) builder.append(", selected_num=").append(selected_num);
     if (unread_message != null) builder.append(", unread_message=").append(unread_message);
     if (start_time != null) builder.append(", start_time=").append(start_time);
@@ -142,7 +142,7 @@ public final class Count extends Message<Count, Count.Builder> {
   }
 
   public static final class Builder extends Message.Builder<Count, Builder> {
-    public Float rank;
+    public Float rating;
 
     public Integer selected_num;
 
@@ -157,8 +157,8 @@ public final class Count extends Message<Count, Count.Builder> {
     public Builder() {
     }
 
-    public Builder rank(Float rank) {
-      this.rank = rank;
+    public Builder rating(Float rating) {
+      this.rating = rating;
       return this;
     }
 
@@ -189,7 +189,7 @@ public final class Count extends Message<Count, Count.Builder> {
 
     @Override
     public Count build() {
-      return new Count(rank, selected_num, unread_message, start_time, end_time, time, buildUnknownFields());
+      return new Count(rating, selected_num, unread_message, start_time, end_time, time, buildUnknownFields());
     }
   }
 
@@ -200,7 +200,7 @@ public final class Count extends Message<Count, Count.Builder> {
 
     @Override
     public int encodedSize(Count value) {
-      return (value.rank != null ? ProtoAdapter.FLOAT.encodedSizeWithTag(1, value.rank) : 0)
+      return (value.rating != null ? ProtoAdapter.FLOAT.encodedSizeWithTag(1, value.rating) : 0)
           + (value.selected_num != null ? ProtoAdapter.UINT32.encodedSizeWithTag(2, value.selected_num) : 0)
           + (value.unread_message != null ? ProtoAdapter.UINT32.encodedSizeWithTag(3, value.unread_message) : 0)
           + (value.start_time != null ? ProtoAdapter.INT64.encodedSizeWithTag(4, value.start_time) : 0)
@@ -211,7 +211,7 @@ public final class Count extends Message<Count, Count.Builder> {
 
     @Override
     public void encode(ProtoWriter writer, Count value) throws IOException {
-      if (value.rank != null) ProtoAdapter.FLOAT.encodeWithTag(writer, 1, value.rank);
+      if (value.rating != null) ProtoAdapter.FLOAT.encodeWithTag(writer, 1, value.rating);
       if (value.selected_num != null) ProtoAdapter.UINT32.encodeWithTag(writer, 2, value.selected_num);
       if (value.unread_message != null) ProtoAdapter.UINT32.encodeWithTag(writer, 3, value.unread_message);
       if (value.start_time != null) ProtoAdapter.INT64.encodeWithTag(writer, 4, value.start_time);
@@ -226,7 +226,7 @@ public final class Count extends Message<Count, Count.Builder> {
       long token = reader.beginMessage();
       for (int tag; (tag = reader.nextTag()) != -1;) {
         switch (tag) {
-          case 1: builder.rank(ProtoAdapter.FLOAT.decode(reader)); break;
+          case 1: builder.rating(ProtoAdapter.FLOAT.decode(reader)); break;
           case 2: builder.selected_num(ProtoAdapter.UINT32.decode(reader)); break;
           case 3: builder.unread_message(ProtoAdapter.UINT32.decode(reader)); break;
           case 4: builder.start_time(ProtoAdapter.INT64.decode(reader)); break;

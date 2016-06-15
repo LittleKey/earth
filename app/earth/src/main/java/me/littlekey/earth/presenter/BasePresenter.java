@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -23,6 +24,7 @@ import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.widget.CustomRatingBar;
 
 /**
  * Created by nengxiangzhou on 15/5/8.
@@ -48,6 +50,8 @@ public class BasePresenter extends EarthPresenter {
       bindImage((ImageView) view(), (Integer) attrValue);
     } else if (attrValue instanceof Integer && view() instanceof ProgressBar) {
       ((ProgressBar) view()).setProgress((Integer) attrValue);
+    } else if (attrValue instanceof Float && (view() instanceof RatingBar || view() instanceof CustomRatingBar)) {
+      ((RatingBar) view()).setRating((Float) attrValue);
     }
   }
 
@@ -105,6 +109,10 @@ public class BasePresenter extends EarthPresenter {
         return model.getCover();
       case R.id.subtitle:
         return model.getSubtitle();
+      case R.id.rating:
+        return model.getCount().rating;
+      case R.id.date:
+        return model.getDate();
     }
     return null;
   }

@@ -1,6 +1,8 @@
 package me.littlekey.earth.model.data;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.yuanqi.base.utils.CollectionUtils;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.network.ApiType;
@@ -28,14 +31,24 @@ import me.littlekey.earth.utils.Const;
  */
 public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
 
-  public HomeDataGenerator(NameValuePair... pairs) {
+  private String mBaseUrl;
+
+  public HomeDataGenerator(Bundle bundle, NameValuePair... pairs) {
     super(ApiType.HOME_LIST, pairs);
+    if (bundle != null) {
+      mBaseUrl = bundle.getString(Const.EXTRA_URL);
+    }
   }
 
   @Override
   protected ApiRequest<EarthResponse> onCreateRequest(ApiType apiType, Map<String, String> pairs) {
-    return EarthApplication.getInstance().getRequestManager()
-        .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
+    if (TextUtils.isEmpty(mBaseUrl)) {
+      return EarthApplication.getInstance().getRequestManager()
+          .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
+    } else {
+      return EarthApplication.getInstance().getRequestManager()
+          .newEarthRequest(mBaseUrl, Request.Method.GET, mListener, mErrorListener);
+    }
   }
 
   @Override
@@ -67,7 +80,8 @@ public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
     // NOTE : remove first unused element
     elements.remove(0);
     for (Element element: elements) {
-      CollectionUtils.add(models, ModelFactory.createModelFromArtElement(element, Model.Template.ITEM_ART));
+      CollectionUtils.add(models, ModelFactory.createModelFromArt(
+          EarthCrawler.createArtItemFromElement(element), Model.Template.ITEM_ART));
     }
     return models;
   }

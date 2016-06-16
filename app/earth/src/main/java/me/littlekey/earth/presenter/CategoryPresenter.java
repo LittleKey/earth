@@ -1,5 +1,6 @@
 package me.littlekey.earth.presenter;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.widget.TextView;
 
@@ -11,14 +12,30 @@ import me.littlekey.earth.model.Model;
  */
 public class CategoryPresenter extends EarthPresenter {
 
+  private boolean mReverse = false;
+  private @ColorInt int mTextColor = 0;
+
+  public CategoryPresenter() {
+    this(false);
+  }
+
+  public CategoryPresenter(boolean reverse) {
+    mReverse = reverse;
+  }
+
   @Override
   public void bind(Model model) {
     Model.Category category = model.getCategory();
     if (category == null) {
       return;
     }
+    if (mTextColor == 0) {
+      mTextColor = ((TextView) view()).getCurrentTextColor();
+    }
     ((TextView) view()).setText(category.getName());
-    view().setBackgroundColor(group().context.getResources().getColor(getColor(category)));
+    @ColorInt int backgroundColor = group().context.getResources().getColor(getColor(category));
+    ((TextView) view()).setTextColor(mReverse ? backgroundColor : mTextColor);
+    view().setBackgroundColor(mReverse ? mTextColor : backgroundColor);
   }
 
   private @ColorRes int getColor(Model.Category category) {

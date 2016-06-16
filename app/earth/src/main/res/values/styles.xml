@@ -155,6 +155,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="TextStyle.Middle.Light_Gray">
+        <item name="android:textColor">@color/light_gray</item>
+    </style>
+
     <style name="WhiteText" parent="TextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>

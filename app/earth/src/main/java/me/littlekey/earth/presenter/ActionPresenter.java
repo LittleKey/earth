@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.event.OnClickTagItemEvent;
 import me.littlekey.earth.event.OnSelectEvent;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Action;
@@ -36,9 +37,6 @@ public class ActionPresenter extends EarthPresenter {
       @SuppressWarnings("unchecked")
       public void onClick(View v) {
         switch (action.type) {
-          case JUMP_CLEAR_BADGE:
-            group().pageContext.adapter.changeData(group().pageContext.adapter.indexOf(model),
-                new Model.Builder(model).count(model.getCount().newBuilder().unread_message(0).build()).build());
           case JUMP:
             if (null != action.clazz) {
               NavigationManager.navigationTo(view().getContext(), action.clazz, action.bundle);
@@ -62,6 +60,9 @@ public class ActionPresenter extends EarthPresenter {
           case SELECT_STYLE:
           case SELECT_STATURE:
             check(model);
+            break;
+          case EVENT:
+            EventBus.getDefault().post(new OnClickTagItemEvent(model));
             break;
         }
       }

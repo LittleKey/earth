@@ -32,6 +32,8 @@ public class ListAdapter extends MvpAdapter<Model> {
     switch (template) {
       case ITEM_ART:
         return EarthPresenterFactory.createArtItemPresenter(parent, R.layout.item_art);
+      case Thumbnail:
+        return EarthPresenterFactory.createThumbnailPresenter(parent, R.layout.item_thumbnail);
       default:
         throw new IllegalStateException("Nonsupport template : " + template.name());
     }

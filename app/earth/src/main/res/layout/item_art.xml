@@ -8,24 +8,24 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
     app:cardElevation="2dp"
     app:cardCornerRadius="2dp"
     tools:ignore="RtlHardcoded">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="107dp"
+        android:layout_height="114dp"
         android:layout_margin="2dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/cover"
-            android:layout_width="80dp"
-            android:layout_height="107dp"
+            android:layout_width="82dp"
+            android:layout_height="114dp"
             android:layout_centerVertical="true"
             app:actualImageScaleType="fitCenter"
-            app:placeholderImageScaleType="fitCenter" />
+            app:placeholderImageScaleType="fitCenter"/>
 
         <TextView
             android:id="@+id/title"
@@ -35,23 +35,24 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp"
             android:singleLine="false"
-            android:maxLines="2" />
+            android:maxLines="2"/>
         
         <TextView
             android:id="@+id/subtitle"
             style="@style/TextStyle.Middle.Gray"
+            android:layout_marginTop="2dp"
             android:layout_below="@id/title"
-            android:layout_alignLeft="@id/title" />
+            android:layout_alignLeft="@id/title"/>
 
         <TextView
             android:id="@+id/category"
-            style="@style/TextStyle.Normal.White"
+            style="@style/TextStyle.Middle.White"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/cover"
             android:layout_marginLeft="5dp"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="5dp"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
+            android:paddingRight="5dp"/>
 
         <me.littlekey.earth.widget.CustomRatingBar
             android:id="@+id/rating"
@@ -63,12 +64,12 @@
             style="?android:attr/ratingBarStyleSmall"
             android:numStars="5"
             android:stepSize="0.5"
-            android:isIndicator="true" />
+            android:isIndicator="true"/>
 
         <TextView
             android:id="@+id/date"
             style="@style/TextStyle.Middle.Gray"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

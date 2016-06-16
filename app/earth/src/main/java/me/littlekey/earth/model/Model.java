@@ -1,6 +1,7 @@
 package me.littlekey.earth.model;
 
 import android.os.Parcel;
+import android.os.ParcelFormatException;
 import android.os.Parcelable;
 
 import com.squareup.wire.WireEnum;
@@ -13,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.model.proto.Action;
+import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Flag;
+import me.littlekey.earth.model.proto.Image;
+import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.model.proto.User;
 
 /**
@@ -45,8 +49,17 @@ public final class Model implements Parcelable {
           case USER:
             User user = User.ADAPTER.decode(bytes);
             return ModelFactory.createModelFromUser(user, template);
+          case ART:
+            Art art = Art.ADAPTER.decode(bytes);
+            return ModelFactory.createModelFromArt(art, template);
+          case TAG:
+            Tag tag = Tag.ADAPTER.decode(bytes);
+            return ModelFactory.createModelFromTag(tag, template);
+          case IMAGE:
+            Image image = Image.ADAPTER.decode(bytes);
+            return ModelFactory.createModelFromImage(image, template);
           default:
-            return null;
+            throw new ParcelFormatException(String.format("can not parcel '%s'", type.name()));
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -64,6 +77,8 @@ public final class Model implements Parcelable {
   private final Template template;
   private final String title;
   private final String subtitle;
+  private final String language;
+  private final String fileSize;
   private final String userName;
   private final String description;
   private final String url;
@@ -71,6 +86,9 @@ public final class Model implements Parcelable {
   private final String avatar;
   private final String date;
   private final User user;
+  private final Art art;
+  private final Tag tag;
+  private final Image image;
   private final Count count;
   private final Member member;
   private final Flag flag;
@@ -85,6 +103,8 @@ public final class Model implements Parcelable {
     this.template = builder.template;
     this.title = builder.title;
     this.subtitle = builder.subtitle;
+    this.language = builder.language;
+    this.fileSize = builder.fileSize;
     this.userName = builder.userName;
     this.description = builder.description;
     this.url = builder.url;
@@ -92,6 +112,9 @@ public final class Model implements Parcelable {
     this.avatar = builder.avatar;
     this.date = builder.date;
     this.user = builder.user;
+    this.art = builder.art;
+    this.tag = builder.tag;
+    this.image = builder.image;
     this.count = builder.count;
     this.member = builder.member;
     this.flag = builder.flag;
@@ -131,6 +154,14 @@ public final class Model implements Parcelable {
     return subtitle;
   }
 
+  public String getLanguage() {
+    return language;
+  }
+
+  public String getFileSize() {
+    return fileSize;
+  }
+
   @Deprecated
   public String getUserName() {
     return userName;
@@ -159,6 +190,18 @@ public final class Model implements Parcelable {
 
   public User getUser() {
     return user;
+  }
+
+  public Art getArt() {
+    return art;
+  }
+
+  public Tag getTag() {
+    return tag;
+  }
+
+  public Image getImage() {
+    return image;
   }
 
   public Count getCount() {
@@ -203,6 +246,8 @@ public final class Model implements Parcelable {
         && equals(template, o.template)
         && equals(title, o.title)
         && equals(subtitle, o.subtitle)
+        && equals(language, o.language)
+        && equals(fileSize, o.fileSize)
         && equals(userName, o.userName)
         && equals(description, o.description)
         && equals(url, o.url)
@@ -210,6 +255,9 @@ public final class Model implements Parcelable {
         && equals(avatar, o.avatar)
         && equals(date, o.date)
         && equals(user, o.user)
+        && equals(art, o.art)
+        && equals(tag, o.tag)
+        && equals(image, o.image)
         && equals(count, o.count)
         && equals(member, o.member)
         && equals(flag, o.flag)
@@ -232,6 +280,8 @@ public final class Model implements Parcelable {
       result = result * 37 + (template != null ? template.hashCode() : 0);
       result = result * 37 + (title != null ? title.hashCode() : 0);
       result = result * 37 + (subtitle != null ? subtitle.hashCode() : 0);
+      result = result * 37 + (language != null ? language.hashCode() : 0);
+      result = result * 37 + (fileSize != null ? fileSize.hashCode() : 0);
       result = result * 37 + (userName != null ? userName.hashCode() : 0);
       result = result * 37 + (description != null ? description.hashCode() : 0);
       result = result * 37 + (url != null ? url.hashCode() : 0);
@@ -239,6 +289,9 @@ public final class Model implements Parcelable {
       result = result * 37 + (avatar != null ? avatar.hashCode() : 0);
       result = result * 37 + (date != null ? date.hashCode() : 0);
       result = result * 37 + (user != null ? user.hashCode() : 0);
+      result = result * 37 + (art != null ? art.hashCode() : 0);
+      result = result * 37 + (tag != null ? tag.hashCode() : 0);
+      result = result * 37 + (image != null ? image.hashCode() : 0);
       result = result * 37 + (count != null ? count.hashCode() : 0);
       result = result * 37 + (member != null ? member.hashCode() : 0);
       result = result * 37 + (flag != null ? flag.hashCode() : 0);
@@ -267,12 +320,21 @@ public final class Model implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    // TODO add other type.
     dest.writeInt(type.getValue());
     dest.writeInt(template.getValue());
     switch (type) {
       case USER:
         dest.writeByteArray(user.encode());
+        break;
+      case ART:
+        dest.writeByteArray(art.encode());
+        break;
+      case TAG:
+        dest.writeByteArray(tag.encode());
+        break;
+      case IMAGE:
+        dest.writeByteArray(image.encode());
+      default:
         break;
     }
   }
@@ -281,7 +343,9 @@ public final class Model implements Parcelable {
     UNKNOWN(0),
     LINK(1),
     USER(2),
-    ART(3);
+    ART(3),
+    TAG(4),
+    IMAGE(5);
 
     private final int value;
 
@@ -300,7 +364,10 @@ public final class Model implements Parcelable {
     DATA(1),
     HEADER(2),
     USER(3),
-    ITEM_ART(4);
+    ITEM_ART(4),
+    PARENT_TAG(5),
+    CHILD_TAG(6),
+    Thumbnail(7);
 
     private final int value;
 
@@ -365,6 +432,8 @@ public final class Model implements Parcelable {
     public Template template;
     public String title;
     public String subtitle;
+    public String language;
+    public String fileSize;
     public String userName;
     public String description;
     public String url;
@@ -372,6 +441,9 @@ public final class Model implements Parcelable {
     public String avatar;
     public String date;
     public User user;
+    public Art art;
+    public Tag tag;
+    public Image image;
     public Count count;
     public Member member;
     public Flag flag;
@@ -388,6 +460,8 @@ public final class Model implements Parcelable {
       this.template = message.template;
       this.title = message.title;
       this.subtitle = message.subtitle;
+      this.language = message.language;
+      this.fileSize = message.fileSize;
       this.userName = message.userName;
       this.description = message.description;
       this.url = message.url;
@@ -395,6 +469,9 @@ public final class Model implements Parcelable {
       this.avatar = message.avatar;
       this.date = message.date;
       this.user = message.user;
+      this.art = message.art;
+      this.tag = message.tag;
+      this.image = message.image;
       this.count = message.count;
       this.member = message.member;
       this.flag = message.flag;
@@ -447,6 +524,16 @@ public final class Model implements Parcelable {
       return this;
     }
 
+    public Builder language(String language) {
+      this.language = language;
+      return this;
+    }
+
+    public Builder fileSize(String fileSize) {
+      this.fileSize = fileSize;
+      return this;
+    }
+
     @Deprecated
     public Builder userName(String name) {
       this.userName = name;
@@ -481,6 +568,21 @@ public final class Model implements Parcelable {
 
     public Builder user(User user) {
       this.user = user;
+      return this;
+    }
+
+    public Builder art(Art art) {
+      this.art = art;
+      return this;
+    }
+
+    public Builder tag(Tag tag) {
+      this.tag = tag;
+      return this;
+    }
+
+    public Builder image(Image image) {
+      this.image = image;
       return this;
     }
 

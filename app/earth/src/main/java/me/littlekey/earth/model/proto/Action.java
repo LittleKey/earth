@@ -126,7 +126,8 @@ public final class Action {
     SELECT_DAY(9),
     SELECT_STYLE(10),
     SELECT_STATURE(11),
-    JUMP_CLEAR_BADGE(12);
+    JUMP_CLEAR_BADGE(12),
+    EVENT(13);
 
     private final int value;
 

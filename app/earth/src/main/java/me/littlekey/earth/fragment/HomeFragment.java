@@ -19,8 +19,10 @@ import me.littlekey.earth.utils.Const;
  */
 public class HomeFragment extends BaseFragment {
 
-  public static HomeFragment newInstance() {
-    return new HomeFragment();
+  public static HomeFragment newInstance(Bundle bundle) {
+    HomeFragment fragment = new HomeFragment();
+    fragment.setArguments(bundle);
+    return fragment;
   }
 
   @Nullable
@@ -52,6 +54,7 @@ public class HomeFragment extends BaseFragment {
   protected Fragment createContentFragment() {
     Bundle bundle = new Bundle();
     bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
+    bundle.putBundle(Const.KEY_BUNDLE, getArguments());
     return ListFragment.newInstance(bundle);
   }
 }

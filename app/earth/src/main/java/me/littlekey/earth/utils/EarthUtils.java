@@ -18,6 +18,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.littlekey.earth.EarthApplication;
 
@@ -158,5 +160,14 @@ public class EarthUtils {
       Editable text = editText.getText();
       Selection.setSelection(text, text.length());
     }
+  }
+
+  public static String strip(String str) {
+    Pattern pattern = Pattern.compile("^\\s*(.*?)\\s*$");
+    Matcher matcher = pattern.matcher(str);
+    if (matcher.find()) {
+      return matcher.group(1);
+    }
+    return str;
   }
 }

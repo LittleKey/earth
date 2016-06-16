@@ -30,6 +30,7 @@
     <color name="yellow">#FFD92D</color>
     <color name="white">#FFFFFF</color>
     <color name="light_green">#7CCF42</color>
+    <color name="light_gray">#EEE</color>
 
     <color name="light_gray_frame">#DCDCDC</color>
     <color name="light_gray_text">#C9C9C9</color>

@@ -3,6 +3,7 @@ package me.littlekey.earth.widget;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
+import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.widget.RatingBar;
 
@@ -23,8 +24,15 @@ public class CustomRatingBar extends RatingBar {
 
   public CustomRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    setDrawableColor(context.getResources().getColor(R.color.gray),
+        context.getResources().getColor(R.color.white),
+        context.getResources().getColor(R.color.yellow));
+  }
+
+  public void setDrawableColor(@ColorInt int emptyColor, @ColorInt int halfColor, @ColorInt int fullColor) {
     LayerDrawable star = (LayerDrawable) getProgressDrawable();
-    star.getDrawable(1).setColorFilter(context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-    star.getDrawable(2).setColorFilter(context.getResources().getColor(R.color.yellow), PorterDuff.Mode.SRC_ATOP);
+    star.getDrawable(0).setColorFilter(emptyColor, PorterDuff.Mode.SRC_ATOP);
+    star.getDrawable(1).setColorFilter(halfColor, PorterDuff.Mode.SRC_ATOP);
+    star.getDrawable(2).setColorFilter(fullColor, PorterDuff.Mode.SRC_ATOP);
   }
 }

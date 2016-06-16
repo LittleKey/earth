@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.yuanqi.network.NameValuePair;
 
+import me.littlekey.earth.model.data.ArtDataGenerator;
 import me.littlekey.earth.model.data.EarthDataGenerator;
 import me.littlekey.earth.model.data.HomeDataGenerator;
 import me.littlekey.earth.network.ApiType;
@@ -18,7 +19,9 @@ public class DataGeneratorFactory {
   createDataGenerator(ApiType apiType, Bundle bundle, NameValuePair... pairs) {
     switch (apiType) {
       case HOME_LIST:
-        return new HomeDataGenerator(pairs);
+        return new HomeDataGenerator(bundle, pairs);
+      case ART_VIEWER:
+        return new ArtDataGenerator(bundle, pairs);
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }

@@ -13,10 +13,9 @@ import org.jsoup.Jsoup;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.utils.EarthUtils;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -67,17 +66,8 @@ public class EarthRequest extends ApiRequest<EarthResponse> {
     Map<String, String> result = new HashMap<>();
     for (String pairString: field.split(";")) {
       String[] pair = pairString.split("=");
-      result.put(strip(pair[0]).toLowerCase(), strip(pair[1]).toLowerCase());
+      result.put(EarthUtils.strip(pair[0]).toLowerCase(), EarthUtils.strip(pair[1]).toLowerCase());
     }
     return result;
-  }
-
-  private String strip(String str) {
-    Pattern pattern = Pattern.compile("^\\s*(.*?)\\s*$");
-    Matcher matcher = pattern.matcher(str);
-    if (matcher.find()) {
-      return matcher.group(1);
-    }
-    return str;
   }
 }

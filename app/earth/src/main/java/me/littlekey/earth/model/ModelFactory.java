@@ -1,23 +1,26 @@
 package me.littlekey.earth.model;
 
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.yuanqi.base.utils.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.model.proto.Action;
+import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Flag;
+import me.littlekey.earth.model.proto.Image;
+import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.model.proto.User;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.EarthUtils;
+import me.littlekey.earth.utils.NavigationManager;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -55,58 +58,93 @@ public class ModelFactory {
     return builder.actions(actions).build();
   }
 
-  public static Model createModelFromArtElement(Element element, Model.Template template) {
-    element = DataVerifier.verify(element);
-    if (element == null) {
+  public static Model createModelFromArt(Art art, Model.Template template) {
+    art = DataVerifier.verify(art);
+    if (art == null) {
       return null;
     }
-    Elements children = element.children();
-    // NOTE : find category
-    Element categoryEle = children.get(0);
-    Model.Category category = Model.Category.from(categoryEle.select("a > img").attr("alt"));
-    // NOTE : find date
-    Element dateEle = children.get(1);
-    String date = dateEle.text();
-    // NOTE : find cover and title and url and rating
-    Element artEle = children.get(2);
-    String cover =  artEle.select("div.it2 > img").attr("src");
-    if (TextUtils.isEmpty(cover)) {
-      Pattern coverPattern = Pattern.compile("init~(.*?)~(.*?)/(.*?)~");
-      Matcher coverMatcher = coverPattern.matcher(artEle.select("div.it2").text());
-      if (coverMatcher.find()) {
-        cover = String.format("http://%s/%s/%s",
-            coverMatcher.group(1), coverMatcher.group(2), coverMatcher.group(3));
-      }
+    Model.Category category;
+    if (art.category >= 0 && art.category < Model.Category.values().length) {
+      category = Model.Category.values()[art.category];
+    } else {
+      throw new IllegalStateException("Category can not be null.");
     }
-    Elements titleAndUrlElements = artEle.select("div.it5 > a");
-    String arUrl  = titleAndUrlElements.attr("href");
-    String title = titleAndUrlElements.text();
-    Pattern ratingPattern = Pattern.compile("background-position:\\s*?-?(\\d*?)px\\s*?-?(\\d*?)px;");
-    Matcher ratingMatcher = ratingPattern.matcher(artEle.select("div.it4 > div").attr("style"));
-    int ratingNum = 0;
-    float ratingOffset = 0f;
-    if (ratingMatcher.find()) {
-      ratingNum = 5 - Integer.valueOf(ratingMatcher.group(1)) / 16;
-      ratingOffset = Integer.valueOf(ratingMatcher.group(2)) == 1 ? 0.0f : 0.5f;
+    List<Model> subModels = new ArrayList<>();
+    for (Tag tag: art.tags) {
+      CollectionUtils.add(subModels, createModelFromTag(tag, Model.Template.PARENT_TAG));
     }
-    Count count = new Count.Builder().rating(ratingNum - ratingOffset).build();
-    // NOTE : find publisher
-    Element publisherEle = children.get(3);
-    Elements nameAndUrlElements = publisherEle.select("div > a");
-//    String publisherUrl = nameAndUrlElements.attr("href");
-    String publisherName = nameAndUrlElements.text();
-
     Model.Builder builder = new Model.Builder()
         .type(Model.Type.ART)
         .template(template)
-        .title(title)
-        .url(arUrl)
-        .subtitle(publisherName)
+        .art(art)
+        .title(art.title)
+        .subtitle(art.publisher_name)
         .category(category)
-        .date(date)
+        .date(art.date)
+        .url(art.url)
+        .flag(new Flag.Builder().is_liked(art.liked).build())
+        .language(art.language)
+        .fileSize(art.file_size)
+        .count(art.count)
+        .cover(art.cover)
+        .language(art.language)
+        .subModels(subModels);
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(Const.EXTRA_MODEL, builder.build());
+    Bundle artBundle = new Bundle();
+    artBundle.putString(Const.EXTRA_URL, art.url);
+    bundle.putBundle(Const.KEY_BUNDLE, artBundle);
+    Map<Integer, Action> actions = new HashMap<>();
+    actions.put(Const.ACTION_MAIN, new Action.Builder()
+        .type(Action.Type.JUMP)
+        .bundle(bundle)
+        .uri(NavigationManager.buildUri(Uri.parse(art.url).getEncodedPath()))
+        .build());
+
+    return builder.actions(actions).build();
+  }
+
+  public static Model createModelFromTag(Tag tag, Model.Template template) {
+    tag = DataVerifier.verify(tag);
+    if (tag == null) {
+      return null;
+    }
+    List<Model> subModels = new ArrayList<>();
+    for (Tag subTag: tag.values) {
+      subModels.add(createModelFromTag(subTag, Model.Template.CHILD_TAG));
+    }
+    Flag flag = new Flag.Builder().is_selected(false).build();
+    Map<Integer, Action> actions = new HashMap<>();
+    actions.put(Const.ACTION_MAIN, new Action.Builder()
+        .type(Action.Type.EVENT)
+        .build());
+    return new Model.Builder()
+        .type(Model.Type.TAG)
+        .template(template)
+        .tag(tag)
+        .identity(tag.id)
+        .title(tag.key)
+        .subModels(subModels)
+        .flag(flag)
+        .actions(actions)
+        .build();
+  }
+
+  public static Model createModelFromImage(Image image, Model.Template template) {
+    image = DataVerifier.verify(image);
+    if (image == null) {
+      return null;
+    }
+    Count count = new Count.Builder()
+        .number(image.number)
+        .build();
+    return new Model.Builder()
+        .type(Model.Type.IMAGE)
+        .template(template)
+        .image(image)
         .count(count)
-        .cover(cover);
-    return builder.build();
+        .cover(image.thumbnail)
+        .build();
   }
 
   public static Model createHeaderModel(String title) {

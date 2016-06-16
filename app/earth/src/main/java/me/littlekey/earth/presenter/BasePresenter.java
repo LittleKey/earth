@@ -1,18 +1,12 @@
 package me.littlekey.earth.presenter;
 
 
-import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.yuanqi.base.utils.CollectionUtils;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +18,7 @@ import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.EarthUtils;
 import me.littlekey.earth.widget.CustomRatingBar;
 
 /**
@@ -40,14 +35,6 @@ public class BasePresenter extends EarthPresenter {
     view().setVisibility(View.VISIBLE);
     if (attrValue instanceof CharSequence && view() instanceof TextView) {
       bindText((TextView) view(), (CharSequence) attrValue);
-    } else if (attrValue instanceof String && view() instanceof SimpleDraweeView) {
-      // if (view().getId() == R.id.avatar) {
-      // bindSmallImage((SimpleDraweeView) view(), (String) attrValue);
-      // } else {
-      bindImage((SimpleDraweeView) view(), (String) attrValue);
-      // }
-    } else if (attrValue instanceof Integer && view() instanceof ImageView) {
-      bindImage((ImageView) view(), (Integer) attrValue);
     } else if (attrValue instanceof Integer && view() instanceof ProgressBar) {
       ((ProgressBar) view()).setProgress((Integer) attrValue);
     } else if (attrValue instanceof Float && (view() instanceof RatingBar || view() instanceof CustomRatingBar)) {
@@ -57,26 +44,6 @@ public class BasePresenter extends EarthPresenter {
 
   private void bindText(TextView view, CharSequence attrValue) {
     view.setText(attrValue);
-  }
-
-  private void bindImage(ImageView view, Integer attrValue) {
-    view.setImageResource(attrValue);
-  }
-
-  private void bindImage(ImageView view, String attrValue) {
-    if (view instanceof SimpleDraweeView) {
-      view.setImageURI(Uri.parse(attrValue));
-    }
-  }
-
-  private void bindSmallImage(SimpleDraweeView view, String attrValue) {
-    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(attrValue))
-        .setImageType(ImageRequest.ImageType.SMALL).build();
-    DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setOldController(view.getController())
-        .setImageRequest(request)
-        .build();
-    view.setController(controller);
   }
 
   private void bindNull(View view) {
@@ -105,14 +72,28 @@ public class BasePresenter extends EarthPresenter {
       case R.id.user_name:
         return model.getUser().display_name;
       case R.id.avatar:
-      case R.id.cover:
-        return model.getCover();
       case R.id.subtitle:
         return model.getSubtitle();
       case R.id.rating:
         return model.getCount().rating;
       case R.id.date:
         return model.getDate();
+      case R.id.language:
+        if (TextUtils.isEmpty(model.getLanguage())) {
+          return EarthApplication.getInstance().getString(R.string.unknown);
+        }
+        return model.getLanguage();
+      case R.id.page_number:
+        return EarthUtils.formatString(R.string.page_count, model.getCount().pages);
+      case R.id.size:
+        if (TextUtils.isEmpty(model.getFileSize())) {
+          return EarthApplication.getInstance().getString(R.string.zero_file_size);
+        }
+        return model.getFileSize();
+      case R.id.likes:
+        return String.valueOf(model.getCount().likes);
+      case R.id.number:
+        return String.valueOf(model.getCount().number);
     }
     return null;
   }

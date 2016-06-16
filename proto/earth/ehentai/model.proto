@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package model;
+option java_package = "me.littlekey.earth.model.proto";
+
+import "./vitality.proto";
+
+message Art {
+    string title = 1;
+    string publisher_name = 2;
+    int32 category = 3;
+    string date = 4;
+    string url = 5;
+    Count count = 6;
+    string cover = 7;
+    string language = 8;
+    bool liked = 9;
+    string file_size = 10;
+    repeated Tag tags = 11;
+}
+
+message Tag {
+    string id = 1;
+    string key = 2;
+    repeated Tag values = 3;
+}
+
+message Image {
+    string thumbnail = 1;
+    string normal = 2;
+    string origin = 3;
+    int32 number = 4;
+}

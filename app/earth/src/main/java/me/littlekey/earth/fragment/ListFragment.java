@@ -4,6 +4,7 @@ package me.littlekey.earth.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class ListFragment extends BaseFragment {
       pairs = pairList.toArray(new NameValuePair[pairList.size()]);
     }
     resetApi(apiType, getArguments().getBundle(Const.KEY_BUNDLE), pairs);
+    mSwipeRefreshLayout.setEnabled(getArguments().getBoolean(Const.KEY_ENABLE_SWIPE_REFRESH, true));
   }
 
   @Override
@@ -140,7 +142,20 @@ public class ListFragment extends BaseFragment {
     mList.registerDataLoadObserver(mSwipeRefreshLayout);
     mSwipeRefreshLayout.setAdapter(adapter);
     adapter.setList(mList);
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    RecyclerView.LayoutManager layoutManager;
+    switch (apiType) {
+      case ART_VIEWER:
+        layoutManager = new LinearLayoutManager(getActivity()) {
+          @Override
+          protected int getExtraLayoutSpace(RecyclerView.State state) {
+            return 5 * getHeight();
+          }
+        };
+        break;
+      default:
+        layoutManager = new LinearLayoutManager(getActivity());
+    }
+    mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setItemAnimator(null);
   }
 }

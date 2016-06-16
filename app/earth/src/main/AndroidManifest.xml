@@ -30,7 +30,26 @@
                   android:screenOrientation="portrait" />
 
         <activity android:name=".activity.HomeActivity"
-                  android:screenOrientation="portrait" />
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+                <data android:scheme="earth" />
+                <data android:host="exhentai.org" android:pathPrefix="/tag" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".activity.ViewerActivity"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http"  />
+                <data android:scheme="earth" />
+                <data android:host="exhentai.org" android:pathPrefix="/g" />
+            </intent-filter>
+        </activity>
 
     </application>
 

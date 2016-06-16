@@ -51,8 +51,13 @@ public class EarthRequestManager extends RequestManager {
 
   public EarthRequest newEarthRequest(ApiType apiType, int method,
       Response.Listener<EarthResponse> listener, Response.ErrorListener errorListener) {
+    return newEarthRequest(getUrl(apiType), method, listener, errorListener);
+  }
+
+  public EarthRequest newEarthRequest(String url, int method,
+      Response.Listener<EarthResponse> listener, Response.ErrorListener errorListener) {
     EarthRequest request = new EarthRequest(EarthApplication.getInstance(), method,
-        getUrl(apiType), listener, errorListener, mCacheConfig) {
+        url, listener, errorListener, mCacheConfig) {
 
       @Override
       public String getUrl() {
@@ -74,7 +79,7 @@ public class EarthRequestManager extends RequestManager {
         return headers;
       }
     };
-    request.setShouldCache(false);
+    request.setShouldCache(true);
     return request;
   }
 
@@ -110,6 +115,7 @@ public class EarthRequestManager extends RequestManager {
         EarthApplication.getInstance().getAccountManager().getUserId());
     cookies.put("ipb_pass_hash",
         EarthApplication.getInstance().getAccountManager().getPassHash());
+    cookies.put("uconfig", "uh_y-xr_a-rx_0-ry_0-tl_r-ar_0-dm_l-prn_y-cats_6-fs_f-xns_0-xl_null-rc_0-lt_m-ts_l-tr_2-cs_a-sc_0-to_a-pn_1-hp_-hk_-tf_n-oi_n-qb_n-ms_n-mt_n");
     return cookies;
   }
 }

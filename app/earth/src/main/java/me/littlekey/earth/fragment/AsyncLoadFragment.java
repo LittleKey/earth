@@ -38,8 +38,8 @@ public abstract class AsyncLoadFragment extends BaseFragment implements DataLoad
     if (pairs == null) {
       pairs = new ArrayList<>();
     }
-    mList = new EarthApiList<>(DataGeneratorFactory.createDataGenerator(apiType, null,
-        pairs.toArray(new NameValuePair[pairs.size()])));
+    mList = new EarthApiList<>(DataGeneratorFactory.createDataGenerator(apiType,
+        getArguments().getBundle(Const.KEY_BUNDLE), pairs.toArray(new NameValuePair[pairs.size()])));
     mList.registerDataLoadObserver(this);
     mList.refresh();
   }

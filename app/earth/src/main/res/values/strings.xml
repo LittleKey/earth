@@ -4,6 +4,7 @@
     <string name="about">关于</string>
     <string name="rights_warning">Copyright @2016 All right reserved</string>
     <string name="btn_submit">提交</string>
+    <string name="unknown">unknown</string>
 
     <!-- Login -->
     <string name="login">登陆</string>
@@ -11,6 +12,10 @@
     <string name="input_account">请输入账号</string>
     <string name="input_password">请输入密码</string>
     <string name="login_error">登陆失败</string>
+
+    <!-- Detail -->
+    <string name="page_count">%s页</string>
+    <string name="zero_file_size">0 MB</string>
 
     <!-- Date && Time -->
     <string name="date_time_24">M月dd日 HH:mm</string>

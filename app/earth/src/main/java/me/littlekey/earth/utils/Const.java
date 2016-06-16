@@ -43,8 +43,10 @@ public class Const {
   public static final String KEY_COOKIE_DATE = "CookieDate";
   public static final String KEY_SET_COOKIE = "Set-Cookie";
   public static final String KEY_PAGE = "page";
+  public static final String KEY_P = "p";
   public static final String KEY_ACT = "act";
   public static final String KEY_CODE = "CODE";
+  public static final String KEY_ENABLE_SWIPE_REFRESH = "enable_swipe_refresh";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -57,6 +59,7 @@ public class Const {
   public static final String EXTRA_ROOM_IDENTITY = KEY_EXTRA + "room_number";
   public static final String EXTRA_MODEL = KEY_EXTRA + "model";
   public static final String EXTRA_IDENTITY_LIST = KEY_EXTRA + "identity_list";
+  public static final String EXTRA_URL = KEY_EXTRA + "url";
   /*********************************** API ***********************************/
   private static final String API_EX_HOST_URL = "http://exhentai.org";
   private static final String API_LOGIN_HOST_URL = "http://forums.e-hentai.org";

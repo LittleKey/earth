@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,12 +49,20 @@ public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
 
   @Override
   public ApiRequest<EarthResponse> getNextRequestFromResponse(EarthResponse response) {
-    return null;
+    Map<String, String> params = new HashMap<>();
+    // page argument was base 0, and website page was base 1. so not need modify page number.
+    params.put(Const.KEY_P,
+        response.document.select("table.ptt > tbody > tr > td.ptds > a").text());
+    return onCreateRequest(mApiType, params);
   }
 
   @Override
   public boolean getHasMoreFromResponse(EarthResponse response) {
-    return false;
+    Elements pageElements = response.document.select("table.ptt > tbody > tr > td");
+    int currentPage = Integer.valueOf(pageElements.select("td.ptds > a").text());
+    int totalPage = Integer.valueOf(pageElements.get(pageElements.size() - 2).select("a").text());
+
+    return currentPage < totalPage;
   }
 
   @Override

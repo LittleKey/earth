@@ -22,7 +22,6 @@ import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.network.ApiType;
-import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
 
@@ -42,26 +41,24 @@ public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
 
   @Override
   protected ApiRequest<EarthResponse> onCreateRequest(ApiType apiType, Map<String, String> pairs) {
+    ApiRequest<EarthResponse> request;
     if (TextUtils.isEmpty(mBaseUrl)) {
-      return EarthApplication.getInstance().getRequestManager()
+      request = EarthApplication.getInstance().getRequestManager()
           .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
     } else {
-      return EarthApplication.getInstance().getRequestManager()
+      request = EarthApplication.getInstance().getRequestManager()
           .newEarthRequest(mBaseUrl, Request.Method.GET, mListener, mErrorListener);
     }
+    return request;
   }
 
   @Override
   public ApiRequest<EarthResponse> getNextRequestFromResponse(EarthResponse response) {
-    int currentPage = Integer.valueOf(
-        response.document.select("table.ptt > tbody > tr > td.ptds > a").text());
-    EarthRequest request = EarthApplication.getInstance().getRequestManager()
-        .newEarthRequest(mApiType, Request.Method.GET, mListener, mErrorListener);
     Map<String, String> params = new HashMap<>();
     // page argument was base 0, and website page was base 1. so not need modify page number.
-    params.put(Const.KEY_PAGE, String.valueOf(currentPage));
-    request.setParams(params);
-    return request;
+    params.put(Const.KEY_PAGE,
+        response.document.select("table.ptt > tbody > tr > td.ptds > a").text());
+    return onCreateRequest(mApiType, params);
   }
 
   @Override

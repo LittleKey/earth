@@ -1,10 +1,15 @@
 package me.littlekey.earth.activity;
 
 import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+
+import me.littlekey.earth.widget.DetailTransition;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -12,6 +17,15 @@ import android.view.inputmethod.InputMethodManager;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+      getWindow().setSharedElementEnterTransition(new DetailTransition(500, 100));
+      getWindow().setSharedElementReturnTransition(new DetailTransition(500, 100));
+    }
+  }
 
   @Override
   protected void onResume() {

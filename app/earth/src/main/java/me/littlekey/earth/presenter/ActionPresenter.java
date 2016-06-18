@@ -1,5 +1,9 @@
 package me.littlekey.earth.presenter;
 
+import android.app.ActivityOptions;
+import android.os.Build;
+import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.squareup.wire.Wire;
@@ -11,6 +15,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.R;
 import me.littlekey.earth.event.OnClickTagItemEvent;
 import me.littlekey.earth.event.OnSelectEvent;
 import me.littlekey.earth.model.Model;
@@ -41,7 +46,14 @@ public class ActionPresenter extends EarthPresenter {
             if (null != action.clazz) {
               NavigationManager.navigationTo(view().getContext(), action.clazz, action.bundle);
             } else if (null != action.uri) {
-              NavigationManager.navigationTo(view().getContext(), action.uri, action.bundle);
+              if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
+                  && !TextUtils.isEmpty(action.transitionName)) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                    (FragmentActivity) view().getContext(), view().findViewById(R.id.cover), action.transitionName);
+                NavigationManager.navigationTo(view().getContext(), action.uri, action.bundle, options);
+              } else {
+                NavigationManager.navigationTo(view().getContext(), action.uri, action.bundle);
+              }
             } else if (null != action.url) {
               NavigationManager.navigationTo(view().getContext(), action.url);
             }

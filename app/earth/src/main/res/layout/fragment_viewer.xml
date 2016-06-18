@@ -34,6 +34,7 @@
                     android:layout_width="130dp"
                     android:layout_height="170dp"
                     android:layout_centerVertical="true"
+                    android:transitionName="@string/art_detail_transition_name"
                     app:actualImageScaleType="fitCenter"
                     app:placeholderImageScaleType="fitCenter"/>
 

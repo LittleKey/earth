@@ -6,6 +6,9 @@
     <string name="btn_submit">提交</string>
     <string name="unknown">unknown</string>
 
+    <!-- transition name -->
+    <string name="art_detail_transition_name">art_detail</string>
+
     <!-- behavior -->
     <string name="fixed_fling_behavior">me.littlekey.earth.widget.FixedFlingBehavior</string>
 

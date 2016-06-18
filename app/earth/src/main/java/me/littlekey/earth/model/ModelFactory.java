@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.R;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
@@ -98,6 +99,7 @@ public class ModelFactory {
     actions.put(Const.ACTION_MAIN, new Action.Builder()
         .type(Action.Type.JUMP)
         .bundle(bundle)
+        .transitionName(EarthApplication.getInstance().getString(R.string.art_detail_transition_name))
         .uri(NavigationManager.buildUri(Uri.parse(art.url).getEncodedPath()))
         .build());
 

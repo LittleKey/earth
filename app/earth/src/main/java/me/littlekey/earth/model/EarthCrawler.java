@@ -22,7 +22,7 @@ import me.littlekey.earth.utils.EarthUtils;
  */
 public class EarthCrawler {
 
-  public static Art createArtItemFromElement(Element element) {
+  public static Art createArtItemFromElement(Element element) throws Exception {
     Elements children = element.children();
     // NOTE : find category
     Element categoryEle = children.get(0);
@@ -70,7 +70,7 @@ public class EarthCrawler {
         .build();
   }
 
-  public static Art createArtDetailFromElements(Elements elements) {
+  public static Art createArtDetailFromElements(Elements elements) throws Exception {
     // NOTE : find cover
     String cover = elements.select("#gd1 > img").attr("src");
     // NOTE : find title
@@ -137,14 +137,65 @@ public class EarthCrawler {
         .build();
   }
 
-  public static Image createImageFromElement(Element element) {
-    String normal = element.select("a").attr("href");
-    String thumbnail = element.select("a > img").attr("src");
-    int number = Integer.valueOf(element.select("a").text());
-    return new Image.Builder()
-        .normal(normal)
-        .thumbnail(thumbnail)
-        .number(number)
+  public static Image createImageFromElement(Element element) throws Exception {
+    Image.Builder builder = new Image.Builder();
+    Pattern pattern = Pattern.compile("^(.*?):(.*?)$");
+    if (element.select(".gdtl").size() != 0) {
+      builder.is_thumbnail(false);
+      Element img = element.select("a > img").get(0);
+      builder.src(img.attr("src"));
+      for (String style: img.attr("style").split("; ")) {
+        Matcher matcher = pattern.matcher(style);
+        if (matcher.find()) {
+          String value = matcher.group(2);
+          switch (matcher.group(1).toLowerCase()) {
+            case "width":
+              builder.width(Integer.valueOf(value.substring(0, value.length() - 2)));
+              break;
+            case "height":
+              builder.height(Integer.valueOf(value.substring(0, value.length() - 2)));
+              break;
+          }
+        }
+      }
+    } else if (element.select(".gdtm > div").size() != 0) {
+      builder.is_thumbnail(true);
+      Element img = element.select(".gdtm > div").get(0);
+      for (String style : img.attr("style").split("; ")) {
+        Matcher matcher = pattern.matcher(style);
+        if (matcher.find()) {
+          String value = matcher.group(2);
+          switch (matcher.group(1).toLowerCase()) {
+            case "width":
+              builder.width(Integer.valueOf(value.substring(0, value.length() - 2)));
+              break;
+            case "height":
+              builder.height(Integer.valueOf(value.substring(0, value.length() - 2)));
+              break;
+            case "background":
+              String[] backgroundParams = value.split(" ");
+              builder.src(backgroundParams[1].substring(4, backgroundParams[1].length() - 1));
+              builder.offset(Integer.valueOf(
+                  backgroundParams[2].substring(0, backgroundParams[2].length() - 2)));
+              break;
+          }
+        }
+      }
+    } else {
+      return null;
+    }
+    builder.origin_url(element.select("a").attr("href"));
+    builder.number(Integer.valueOf(element.select("a > img").attr("alt")));
+    return builder.build();
+  }
+
+  public static Count createPageCountFromElements(Elements elements) throws Exception {
+    int currentPage = Integer.valueOf(elements.select("td.ptds > a").text());
+    int totalPage = Integer.valueOf(elements.get(elements.size() - 2).select("a").text());
+
+    return new Count.Builder()
+        .number(currentPage)
+        .pages(totalPage)
         .build();
   }
 }

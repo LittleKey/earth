@@ -21,9 +21,12 @@ import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
+import me.littlekey.earth.model.proto.Art;
+import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
+import timber.log.Timber;
 
 /**
  * Created by littlekey on 16/6/12.
@@ -57,29 +60,48 @@ public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
   public ApiRequest<EarthResponse> getNextRequestFromResponse(EarthResponse response) {
     Map<String, String> params = new HashMap<>();
     // page argument was base 0, and website page was base 1. so not need modify page number.
-    params.put(Const.KEY_PAGE,
-        response.document.select("table.ptt > tbody > tr > td.ptds > a").text());
-    return onCreateRequest(mApiType, params);
+    Count count = null;
+    try {
+      count = EarthCrawler.createPageCountFromElements(response.document.select("table.ptt > tbody > tr > td"));
+    } catch (Exception e) {
+      Timber.e("parse page number error");
+    }
+    if (count != null) {
+      params.put(Const.KEY_PAGE, String.valueOf(count.number));
+      return onCreateRequest(mApiType, params);
+    }
+    return null;
   }
 
   @Override
   public boolean getHasMoreFromResponse(EarthResponse response) {
     Elements pageElements = response.document.select("table.ptt > tbody > tr > td");
-    int currentPage = Integer.valueOf(pageElements.select("td.ptds > a").text());
-    int totalPage = Integer.valueOf(pageElements.get(pageElements.size() - 2).select("a").text());
-
-    return currentPage < totalPage;
+    Count count = null;
+    try {
+      count = EarthCrawler.createPageCountFromElements(pageElements);
+    } catch (Exception e) {
+      Timber.e(e, "parse page number error");
+    }
+    return count != null && count.number < count.pages;
   }
 
   @Override
   public List<Model> getItemsFromResponse(@NonNull EarthResponse response) {
     List<Model> models = new ArrayList<>();
     Elements elements = response.document.select("table.itg tr");
-    // NOTE : remove first unused element
-    elements.remove(0);
-    for (Element element: elements) {
-      CollectionUtils.add(models, ModelFactory.createModelFromArt(
-          EarthCrawler.createArtItemFromElement(element), Model.Template.ITEM_ART));
+    if (elements.size() > 0) {
+      // NOTE : remove first unused element
+      elements.remove(0);
+      for (Element element : elements) {
+        Art art = null;
+        try {
+          art = EarthCrawler.createArtItemFromElement(element);
+          ;
+        } catch (Exception e) {
+          Timber.e(e, "parse art item error");
+        }
+        CollectionUtils.add(models, ModelFactory.createModelFromArt(art, Model.Template.ITEM_ART));
+      }
     }
     return models;
   }

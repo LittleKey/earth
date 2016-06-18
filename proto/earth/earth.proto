@@ -10,6 +10,9 @@ message Count {
   uint32 pages = 4;
   uint32 rating_count = 5;
   uint32 number = 6;
+  uint32 width = 7;
+  uint32 height = 8;
+  int32 x_offset = 9;
 }
 
 message Flag {
@@ -23,6 +26,7 @@ message Flag {
   bool in_room = 8;
   bool is_matching = 9;
   bool is_liked = 10;
+  bool is_thumbnail = 11;
 }
 
 message Notice {

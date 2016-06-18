@@ -13,6 +13,10 @@ public class Const {
   public static final String LAST_REGION_TEXT = "last_region_text";
   public static final String FIRST_SYNC = "first_sync";
   public static final String EMPTY_STRING = "";
+  public static final String IPB_MEMBER_ID = "ipb_member_id";
+  public static final String IPB_PASS_HASH = "ipb_pass_hash";
+  public static final String UCONFIG = "uconfig";
+  public static final String UCONFIG_VALUE = "uh_y-xr_a-rx_0-ry_0-tl_r-ar_0-dm_l-prn_y-cats_6-fs_f-xns_0-xl_null-rc_0-lt_m-ts_l-tr_2-cs_a-sc_0-to_a-pn_1-hp_-hk_-tf_n-oi_n-qb_n-ms_n-mt_n";
   /*********************************** Action **********************************/
   public static final Integer ACTION_MAIN = 0;
   /************************************ Key ***********************************/

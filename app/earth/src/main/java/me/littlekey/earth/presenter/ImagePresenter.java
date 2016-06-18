@@ -1,14 +1,20 @@
 package me.littlekey.earth.presenter;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.View;
-import android.widget.ImageView;
 
+import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.squareup.wire.Wire;
 
-import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
 
 /**
@@ -29,41 +35,63 @@ public class ImagePresenter extends EarthPresenter {
 
   @Override
   public void bind(Model model) {
-    Object attrValue = getValueByViewId(id(), model);
-    if (attrValue == null) {
-      return;
-    }
     view().setVisibility(View.VISIBLE);
-    if (view() instanceof SimpleDraweeView && attrValue instanceof String) {
-      bindImage((SimpleDraweeView) view(), ImageRequest.fromUri((String) attrValue));
-    } else if (view() instanceof ImageView && attrValue instanceof Integer) {
-      bindImage((ImageView) view(), (Integer) attrValue);
+    if (view() instanceof SimpleDraweeView) {
+      bindImage((SimpleDraweeView) view(), model);
     }
   }
 
-  private Object getValueByViewId(int id, Model model) {
-    switch (id) {
-      case R.id.cover:
-      case R.id.avatar:
-      case R.id.icon:
-      case R.id.image:
-        return model.getCover();
+  private void bindImage(SimpleDraweeView view, Model model) {
+    ImageRequestBuilder requestBuilder = ImageRequestBuilder
+        .newBuilderWithSource(Uri.parse(model.getCover()));
+    if (Wire.get(model.getFlag().is_thumbnail, false)) {
+      requestBuilder.setPostprocessor(new ThumbnailAdjustProcessor(model));
+      requestBuilder.setResizeOptions(
+          new ResizeOptions(model.getCount().width, model.getCount().height));
     }
-    return null;
-  }
-
-  private void bindImage(SimpleDraweeView view, ImageRequest request) {
-    PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
-        .setOldController(view.getController())
-        .setImageRequest(request);
+    PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
+        .setOldController(view.getController());
     if (mSmoothSwitch && mCurrentRequest != null) {
-      builder.setLowResImageRequest(mCurrentRequest);
+      controllerBuilder.setLowResImageRequest(mCurrentRequest);
     }
-    view.setController(builder.build());
-    mCurrentRequest = request;
+    controllerBuilder.setImageRequest(mCurrentRequest = requestBuilder.build());
+    view.setController(controllerBuilder.build());
   }
 
-  private void bindImage(ImageView view, int resId) {
-    view.setImageResource(resId);
+  private static class ThumbnailAdjustProcessor extends BasePostprocessor {
+
+    private Model mModel;
+
+    public ThumbnailAdjustProcessor(Model model) {
+      mModel = model;
+    }
+
+    @Override
+    public String getName() {
+      return "thumbnail_processor";
+    }
+
+    @Override
+    public CloseableReference<Bitmap> process(Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
+      int x_offset = mModel.getCount().x_offset;
+      int width = mModel.getCount().width;
+      int height = mModel.getCount().height;
+      CloseableReference<Bitmap> bitmapRef = bitmapFactory.createBitmap(width, height);
+      try {
+        Bitmap destBitmap = bitmapRef.get();
+        int dest_x = 0;
+        for (int x = 0; x < sourceBitmap.getWidth(); x++) {
+          if (x < -x_offset) continue;
+          if (x >= width - x_offset) break;
+          for (int y = 0; y < sourceBitmap.getHeight(); y++) {
+            destBitmap.setPixel(dest_x, y, sourceBitmap.getPixel(x, y));
+          }
+          dest_x++;
+        }
+        return CloseableReference.cloneOrNull(bitmapRef);
+      } finally {
+        CloseableReference.closeSafely(bitmapRef);
+      }
+    }
   }
 }

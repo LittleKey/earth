@@ -79,7 +79,7 @@ public class EarthRequestManager extends RequestManager {
         return headers;
       }
     };
-    request.setShouldCache(true);
+    request.setShouldCache(false);
     return request;
   }
 
@@ -111,11 +111,11 @@ public class EarthRequestManager extends RequestManager {
 
   private Map<String, String> buildCookie() {
     Map<String, String> cookies = new HashMap<>(mAdditionHeaders);
-    cookies.put("ipb_member_id",
+    cookies.put(Const.IPB_MEMBER_ID,
         EarthApplication.getInstance().getAccountManager().getUserId());
-    cookies.put("ipb_pass_hash",
+    cookies.put(Const.IPB_PASS_HASH,
         EarthApplication.getInstance().getAccountManager().getPassHash());
-    cookies.put("uconfig", "uh_y-xr_a-rx_0-ry_0-tl_r-ar_0-dm_l-prn_y-cats_6-fs_f-xns_0-xl_null-rc_0-lt_m-ts_l-tr_2-cs_a-sc_0-to_a-pn_1-hp_-hk_-tf_n-oi_n-qb_n-ms_n-mt_n");
+    cookies.put(Const.UCONFIG, Const.UCONFIG_VALUE);
     return cookies;
   }
 }

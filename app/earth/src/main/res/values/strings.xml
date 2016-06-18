@@ -6,6 +6,9 @@
     <string name="btn_submit">提交</string>
     <string name="unknown">unknown</string>
 
+    <!-- behavior -->
+    <string name="fixed_fling_behavior">me.littlekey.earth.widget.FixedFlingBehavior</string>
+
     <!-- Login -->
     <string name="login">登陆</string>
     <string name="btn_login">登陆</string>

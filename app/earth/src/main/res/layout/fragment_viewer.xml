@@ -10,7 +10,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent">
+        android:background="@color/white"
+        app:layout_behavior="@string/fixed_fling_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,7 +67,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:paddingTop="30dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
@@ -117,6 +117,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:overScrollMode="never"/>
+
+            <include layout="@layout/thin_light_divider_line" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -124,5 +126,6 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

@@ -28,7 +28,7 @@ message Tag {
 message Image {
     string src = 1;
     string origin_url = 2;
-    int32 number = 3;
+    uint32 number = 3;
     bool is_thumbnail = 4;
     int32 offset = 5;
     int32 width = 6;

@@ -10,6 +10,7 @@ import com.squareup.wire.ProtoWriter;
 import com.squareup.wire.WireField;
 import com.squareup.wire.internal.Internal;
 import java.io.IOException;
+import java.lang.Boolean;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
@@ -22,57 +23,87 @@ public final class Image extends Message<Image, Image.Builder> {
 
   private static final long serialVersionUID = 0L;
 
-  public static final String DEFAULT_THUMBNAIL = "";
+  public static final String DEFAULT_SRC = "";
 
-  public static final String DEFAULT_NORMAL = "";
-
-  public static final String DEFAULT_ORIGIN = "";
+  public static final String DEFAULT_ORIGIN_URL = "";
 
   public static final Integer DEFAULT_NUMBER = 0;
+
+  public static final Boolean DEFAULT_IS_THUMBNAIL = false;
+
+  public static final Integer DEFAULT_OFFSET = 0;
+
+  public static final Integer DEFAULT_WIDTH = 0;
+
+  public static final Integer DEFAULT_HEIGHT = 0;
 
   @WireField(
       tag = 1,
       adapter = "com.squareup.wire.ProtoAdapter#STRING"
   )
-  public final String thumbnail;
+  public final String src;
 
   @WireField(
       tag = 2,
       adapter = "com.squareup.wire.ProtoAdapter#STRING"
   )
-  public final String normal;
+  public final String origin_url;
 
   @WireField(
       tag = 3,
-      adapter = "com.squareup.wire.ProtoAdapter#STRING"
-  )
-  public final String origin;
-
-  @WireField(
-      tag = 4,
-      adapter = "com.squareup.wire.ProtoAdapter#INT32"
+      adapter = "com.squareup.wire.ProtoAdapter#UINT32"
   )
   public final Integer number;
 
-  public Image(String thumbnail, String normal, String origin, Integer number) {
-    this(thumbnail, normal, origin, number, ByteString.EMPTY);
+  @WireField(
+      tag = 4,
+      adapter = "com.squareup.wire.ProtoAdapter#BOOL"
+  )
+  public final Boolean is_thumbnail;
+
+  @WireField(
+      tag = 5,
+      adapter = "com.squareup.wire.ProtoAdapter#INT32"
+  )
+  public final Integer offset;
+
+  @WireField(
+      tag = 6,
+      adapter = "com.squareup.wire.ProtoAdapter#INT32"
+  )
+  public final Integer width;
+
+  @WireField(
+      tag = 7,
+      adapter = "com.squareup.wire.ProtoAdapter#INT32"
+  )
+  public final Integer height;
+
+  public Image(String src, String origin_url, Integer number, Boolean is_thumbnail, Integer offset, Integer width, Integer height) {
+    this(src, origin_url, number, is_thumbnail, offset, width, height, ByteString.EMPTY);
   }
 
-  public Image(String thumbnail, String normal, String origin, Integer number, ByteString unknownFields) {
+  public Image(String src, String origin_url, Integer number, Boolean is_thumbnail, Integer offset, Integer width, Integer height, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
-    this.thumbnail = thumbnail;
-    this.normal = normal;
-    this.origin = origin;
+    this.src = src;
+    this.origin_url = origin_url;
     this.number = number;
+    this.is_thumbnail = is_thumbnail;
+    this.offset = offset;
+    this.width = width;
+    this.height = height;
   }
 
   @Override
   public Builder newBuilder() {
     Builder builder = new Builder();
-    builder.thumbnail = thumbnail;
-    builder.normal = normal;
-    builder.origin = origin;
+    builder.src = src;
+    builder.origin_url = origin_url;
     builder.number = number;
+    builder.is_thumbnail = is_thumbnail;
+    builder.offset = offset;
+    builder.width = width;
+    builder.height = height;
     builder.addUnknownFields(unknownFields());
     return builder;
   }
@@ -83,10 +114,13 @@ public final class Image extends Message<Image, Image.Builder> {
     if (!(other instanceof Image)) return false;
     Image o = (Image) other;
     return Internal.equals(unknownFields(), o.unknownFields())
-        && Internal.equals(thumbnail, o.thumbnail)
-        && Internal.equals(normal, o.normal)
-        && Internal.equals(origin, o.origin)
-        && Internal.equals(number, o.number);
+        && Internal.equals(src, o.src)
+        && Internal.equals(origin_url, o.origin_url)
+        && Internal.equals(number, o.number)
+        && Internal.equals(is_thumbnail, o.is_thumbnail)
+        && Internal.equals(offset, o.offset)
+        && Internal.equals(width, o.width)
+        && Internal.equals(height, o.height);
   }
 
   @Override
@@ -94,10 +128,13 @@ public final class Image extends Message<Image, Image.Builder> {
     int result = super.hashCode;
     if (result == 0) {
       result = unknownFields().hashCode();
-      result = result * 37 + (thumbnail != null ? thumbnail.hashCode() : 0);
-      result = result * 37 + (normal != null ? normal.hashCode() : 0);
-      result = result * 37 + (origin != null ? origin.hashCode() : 0);
+      result = result * 37 + (src != null ? src.hashCode() : 0);
+      result = result * 37 + (origin_url != null ? origin_url.hashCode() : 0);
       result = result * 37 + (number != null ? number.hashCode() : 0);
+      result = result * 37 + (is_thumbnail != null ? is_thumbnail.hashCode() : 0);
+      result = result * 37 + (offset != null ? offset.hashCode() : 0);
+      result = result * 37 + (width != null ? width.hashCode() : 0);
+      result = result * 37 + (height != null ? height.hashCode() : 0);
       super.hashCode = result;
     }
     return result;
@@ -106,37 +143,41 @@ public final class Image extends Message<Image, Image.Builder> {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    if (thumbnail != null) builder.append(", thumbnail=").append(thumbnail);
-    if (normal != null) builder.append(", normal=").append(normal);
-    if (origin != null) builder.append(", origin=").append(origin);
+    if (src != null) builder.append(", src=").append(src);
+    if (origin_url != null) builder.append(", origin_url=").append(origin_url);
     if (number != null) builder.append(", number=").append(number);
+    if (is_thumbnail != null) builder.append(", is_thumbnail=").append(is_thumbnail);
+    if (offset != null) builder.append(", offset=").append(offset);
+    if (width != null) builder.append(", width=").append(width);
+    if (height != null) builder.append(", height=").append(height);
     return builder.replace(0, 2, "Image{").append('}').toString();
   }
 
   public static final class Builder extends Message.Builder<Image, Builder> {
-    public String thumbnail;
+    public String src;
 
-    public String normal;
-
-    public String origin;
+    public String origin_url;
 
     public Integer number;
+
+    public Boolean is_thumbnail;
+
+    public Integer offset;
+
+    public Integer width;
+
+    public Integer height;
 
     public Builder() {
     }
 
-    public Builder thumbnail(String thumbnail) {
-      this.thumbnail = thumbnail;
+    public Builder src(String src) {
+      this.src = src;
       return this;
     }
 
-    public Builder normal(String normal) {
-      this.normal = normal;
-      return this;
-    }
-
-    public Builder origin(String origin) {
-      this.origin = origin;
+    public Builder origin_url(String origin_url) {
+      this.origin_url = origin_url;
       return this;
     }
 
@@ -145,9 +186,29 @@ public final class Image extends Message<Image, Image.Builder> {
       return this;
     }
 
+    public Builder is_thumbnail(Boolean is_thumbnail) {
+      this.is_thumbnail = is_thumbnail;
+      return this;
+    }
+
+    public Builder offset(Integer offset) {
+      this.offset = offset;
+      return this;
+    }
+
+    public Builder width(Integer width) {
+      this.width = width;
+      return this;
+    }
+
+    public Builder height(Integer height) {
+      this.height = height;
+      return this;
+    }
+
     @Override
     public Image build() {
-      return new Image(thumbnail, normal, origin, number, buildUnknownFields());
+      return new Image(src, origin_url, number, is_thumbnail, offset, width, height, buildUnknownFields());
     }
   }
 
@@ -158,19 +219,25 @@ public final class Image extends Message<Image, Image.Builder> {
 
     @Override
     public int encodedSize(Image value) {
-      return (value.thumbnail != null ? ProtoAdapter.STRING.encodedSizeWithTag(1, value.thumbnail) : 0)
-          + (value.normal != null ? ProtoAdapter.STRING.encodedSizeWithTag(2, value.normal) : 0)
-          + (value.origin != null ? ProtoAdapter.STRING.encodedSizeWithTag(3, value.origin) : 0)
-          + (value.number != null ? ProtoAdapter.INT32.encodedSizeWithTag(4, value.number) : 0)
+      return (value.src != null ? ProtoAdapter.STRING.encodedSizeWithTag(1, value.src) : 0)
+          + (value.origin_url != null ? ProtoAdapter.STRING.encodedSizeWithTag(2, value.origin_url) : 0)
+          + (value.number != null ? ProtoAdapter.UINT32.encodedSizeWithTag(3, value.number) : 0)
+          + (value.is_thumbnail != null ? ProtoAdapter.BOOL.encodedSizeWithTag(4, value.is_thumbnail) : 0)
+          + (value.offset != null ? ProtoAdapter.INT32.encodedSizeWithTag(5, value.offset) : 0)
+          + (value.width != null ? ProtoAdapter.INT32.encodedSizeWithTag(6, value.width) : 0)
+          + (value.height != null ? ProtoAdapter.INT32.encodedSizeWithTag(7, value.height) : 0)
           + value.unknownFields().size();
     }
 
     @Override
     public void encode(ProtoWriter writer, Image value) throws IOException {
-      if (value.thumbnail != null) ProtoAdapter.STRING.encodeWithTag(writer, 1, value.thumbnail);
-      if (value.normal != null) ProtoAdapter.STRING.encodeWithTag(writer, 2, value.normal);
-      if (value.origin != null) ProtoAdapter.STRING.encodeWithTag(writer, 3, value.origin);
-      if (value.number != null) ProtoAdapter.INT32.encodeWithTag(writer, 4, value.number);
+      if (value.src != null) ProtoAdapter.STRING.encodeWithTag(writer, 1, value.src);
+      if (value.origin_url != null) ProtoAdapter.STRING.encodeWithTag(writer, 2, value.origin_url);
+      if (value.number != null) ProtoAdapter.UINT32.encodeWithTag(writer, 3, value.number);
+      if (value.is_thumbnail != null) ProtoAdapter.BOOL.encodeWithTag(writer, 4, value.is_thumbnail);
+      if (value.offset != null) ProtoAdapter.INT32.encodeWithTag(writer, 5, value.offset);
+      if (value.width != null) ProtoAdapter.INT32.encodeWithTag(writer, 6, value.width);
+      if (value.height != null) ProtoAdapter.INT32.encodeWithTag(writer, 7, value.height);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -180,10 +247,13 @@ public final class Image extends Message<Image, Image.Builder> {
       long token = reader.beginMessage();
       for (int tag; (tag = reader.nextTag()) != -1;) {
         switch (tag) {
-          case 1: builder.thumbnail(ProtoAdapter.STRING.decode(reader)); break;
-          case 2: builder.normal(ProtoAdapter.STRING.decode(reader)); break;
-          case 3: builder.origin(ProtoAdapter.STRING.decode(reader)); break;
-          case 4: builder.number(ProtoAdapter.INT32.decode(reader)); break;
+          case 1: builder.src(ProtoAdapter.STRING.decode(reader)); break;
+          case 2: builder.origin_url(ProtoAdapter.STRING.decode(reader)); break;
+          case 3: builder.number(ProtoAdapter.UINT32.decode(reader)); break;
+          case 4: builder.is_thumbnail(ProtoAdapter.BOOL.decode(reader)); break;
+          case 5: builder.offset(ProtoAdapter.INT32.decode(reader)); break;
+          case 6: builder.width(ProtoAdapter.INT32.decode(reader)); break;
+          case 7: builder.height(ProtoAdapter.INT32.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);

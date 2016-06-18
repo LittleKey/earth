@@ -1,14 +1,17 @@
 package me.littlekey.earth.fragment;
 
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yuanqi.base.utils.FormatUtils;
 import com.yuanqi.mvp.adapter.HeaderFooterAdapter;
 import com.yuanqi.mvp.widget.MvpRecyclerView;
 import com.yuanqi.network.NameValuePair;
@@ -29,6 +32,9 @@ import me.littlekey.earth.widget.EarthSwipeRefreshLayout;
  * Created by littlekey on 16/6/10.
  */
 public class ListFragment extends BaseFragment {
+
+  private final static int ART_VIEWER_GRID_SPAN = 2;
+
   private EarthSwipeRefreshLayout mSwipeRefreshLayout;
   private MvpRecyclerView mRecyclerView;
   private EarthApiList<?> mList;
@@ -145,12 +151,42 @@ public class ListFragment extends BaseFragment {
     RecyclerView.LayoutManager layoutManager;
     switch (apiType) {
       case ART_VIEWER:
-        layoutManager = new LinearLayoutManager(getActivity()) {
+        layoutManager = new GridLayoutManager(getActivity(), ART_VIEWER_GRID_SPAN) {
           @Override
           protected int getExtraLayoutSpace(RecyclerView.State state) {
+            // for preload more image
             return 5 * getHeight();
           }
         };
+        ((GridLayoutManager) layoutManager).setSpanSizeLookup(
+            new GridLayoutManager.SpanSizeLookup() {
+              @Override
+              public int getSpanSize(int position) {
+                if (position >= adapter.size()) {
+                  // NOTE : footer or header
+                  return ART_VIEWER_GRID_SPAN;
+                }
+                int view_type = adapter.getDataItemViewType(position);
+                Model.Template template = Model.Template.values()[view_type];
+                switch (template) {
+                  case PREVIEW_IMAGE:
+                    return ART_VIEWER_GRID_SPAN / 2;
+                  default:
+                    return ART_VIEWER_GRID_SPAN / 2;
+                }
+              }
+            }
+        );
+        // NOTE : add top margin on first item
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+          @Override
+          public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            if (parent.getChildAdapterPosition(view) < 2) {
+              outRect.top = FormatUtils.dipsToPix(10);
+            }
+          }
+        });
         break;
       default:
         layoutManager = new LinearLayoutManager(getActivity());

@@ -137,13 +137,19 @@ public class ModelFactory {
     }
     Count count = new Count.Builder()
         .number(image.number)
+        .width(image.width)
+        .height(image.height)
+        .x_offset(image.offset)
         .build();
+    Flag flag = new Flag.Builder().is_thumbnail(image.is_thumbnail).build();
     return new Model.Builder()
         .type(Model.Type.IMAGE)
         .template(template)
         .image(image)
         .count(count)
-        .cover(image.thumbnail)
+        .url(image.origin_url)
+        .flag(flag)
+        .cover(image.src)
         .build();
   }
 

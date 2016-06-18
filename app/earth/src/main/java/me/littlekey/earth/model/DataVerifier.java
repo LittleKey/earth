@@ -88,16 +88,12 @@ public class DataVerifier {
     if (image == null) {
       return null;
     }
-    if (TextUtils.isEmpty(image.thumbnail)
-        && TextUtils.isEmpty(image.normal)
-        && TextUtils.isEmpty(image.origin)) {
+    if (TextUtils.isEmpty(image.src)) {
       return null;
     }
     return image.newBuilder()
-        .number(Wire.get(image.number, 0))
-        .thumbnail(Wire.get(image.thumbnail, Const.EMPTY_STRING))
-        .normal(Wire.get(image.normal, Const.EMPTY_STRING))
-        .origin(Wire.get(image.origin, Const.EMPTY_STRING))
+        .origin_url(Wire.get(image.origin_url, Const.EMPTY_STRING))
+        .offset(Wire.get(image.offset, 0))
         .build();
   }
 }

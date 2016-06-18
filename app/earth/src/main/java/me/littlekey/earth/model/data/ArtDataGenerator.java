@@ -22,10 +22,14 @@ import me.littlekey.earth.event.OnLoadedPageEvent;
 import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
+import me.littlekey.earth.model.proto.Art;
+import me.littlekey.earth.model.proto.Count;
+import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
+import timber.log.Timber;
 
 /**
  * Created by littlekey on 16/6/16.
@@ -51,30 +55,54 @@ public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
   public ApiRequest<EarthResponse> getNextRequestFromResponse(EarthResponse response) {
     Map<String, String> params = new HashMap<>();
     // page argument was base 0, and website page was base 1. so not need modify page number.
-    params.put(Const.KEY_P,
-        response.document.select("table.ptt > tbody > tr > td.ptds > a").text());
-    return onCreateRequest(mApiType, params);
+    Count count = null;
+    try {
+      count = EarthCrawler.createPageCountFromElements(response.document.select("table.ptt > tbody > tr > td"));
+    } catch (Exception e) {
+      Timber.e("parse page number error");
+    }
+    if (count != null) {
+      params.put(Const.KEY_P, String.valueOf(count.number));
+      return onCreateRequest(mApiType, params);
+    }
+    return null;
   }
 
   @Override
   public boolean getHasMoreFromResponse(EarthResponse response) {
     Elements pageElements = response.document.select("table.ptt > tbody > tr > td");
-    int currentPage = Integer.valueOf(pageElements.select("td.ptds > a").text());
-    int totalPage = Integer.valueOf(pageElements.get(pageElements.size() - 2).select("a").text());
-
-    return currentPage < totalPage;
+    Count count = null;
+    try {
+      count = EarthCrawler.createPageCountFromElements(pageElements);
+    } catch (Exception e) {
+      Timber.e(e, "parse page number error");
+    }
+    return count != null && count.number < count.pages;
   }
 
   @Override
   public List<Model> getItemsFromResponse(@NonNull EarthResponse response) {
     List<Model> models = new ArrayList<>();
     Elements artDetailElements = response.document.select("body > div.gm");
-    EventBus.getDefault().post(new OnLoadedPageEvent(mBaseUrl, ModelFactory.createModelFromArt(
-        EarthCrawler.createArtDetailFromElements(artDetailElements), Model.Template.DATA)));
-    Elements imageElements = response.document.select("#gdt > div.gdtl");
+    Art artDetail = null;
+    try {
+      artDetail =EarthCrawler.createArtDetailFromElements(artDetailElements);
+    } catch (Exception e) {
+      Timber.e(e, "parse art detail error");
+    }
+    if (artDetail != null) {
+    EventBus.getDefault().post(new OnLoadedPageEvent(mBaseUrl,
+        ModelFactory.createModelFromArt(artDetail, Model.Template.DATA)));
+    }
+    Elements imageElements = response.document.select("#gdt > div");
     for (Element imageEle: imageElements) {
-      CollectionUtils.add(models, ModelFactory.createModelFromImage(
-          EarthCrawler.createImageFromElement(imageEle), Model.Template.Thumbnail));
+      Image image = null;
+      try {
+            image = EarthCrawler.createImageFromElement(imageEle);
+      } catch (Exception e) {
+        Timber.e(e, "parse image error");
+      }
+      CollectionUtils.add(models, ModelFactory.createModelFromImage(image, Model.Template.PREVIEW_IMAGE));
     }
     return models;
   }

@@ -367,7 +367,7 @@ public final class Model implements Parcelable {
     ITEM_ART(4),
     PARENT_TAG(5),
     CHILD_TAG(6),
-    Thumbnail(7);
+    PREVIEW_IMAGE(7);
 
     private final int value;
 

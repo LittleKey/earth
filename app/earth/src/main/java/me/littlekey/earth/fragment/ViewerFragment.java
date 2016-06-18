@@ -146,6 +146,7 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
       mPresenter.bind(event.getModel());
       mTags = event.getModel().getSubModels();
       mTabAdapter.setData(mTags);
+      mSelectIndex = -1;
       mPagerAdapter.notifyDataSetChanged();
       mViewPager.addOnPageChangeListener(this);
       selectTag(mViewPager.getCurrentItem());

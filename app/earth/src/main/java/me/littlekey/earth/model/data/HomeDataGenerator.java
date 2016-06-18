@@ -49,6 +49,7 @@ public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
       request = EarthApplication.getInstance().getRequestManager()
           .newEarthRequest(mBaseUrl, Request.Method.GET, mListener, mErrorListener);
     }
+    request.setParams(pairs);
     return request;
   }
 

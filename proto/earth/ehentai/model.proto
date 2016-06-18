@@ -3,7 +3,7 @@ syntax = "proto3";
 package model;
 option java_package = "me.littlekey.earth.model.proto";
 
-import "./vitality.proto";
+import "./earth.proto";
 
 message Art {
     string title = 1;
@@ -26,8 +26,11 @@ message Tag {
 }
 
 message Image {
-    string thumbnail = 1;
-    string normal = 2;
-    string origin = 3;
-    int32 number = 4;
+    string src = 1;
+    string origin_url = 2;
+    int32 number = 3;
+    bool is_thumbnail = 4;
+    int32 offset = 5;
+    int32 width = 6;
+    int32 height = 7;
 }

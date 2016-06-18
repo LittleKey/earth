@@ -85,7 +85,7 @@ public class EarthRequestManager extends RequestManager {
 
   private String getUrl(ApiType apiType) {
     switch (apiType) {
-      case HOME_LIST:
+      case ART_LIST:
         return Const.API_HOME_LIST;
       case LOGIN:
         Map<String, String> loginPairs = new HashMap<>();

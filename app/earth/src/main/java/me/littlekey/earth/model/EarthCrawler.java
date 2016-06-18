@@ -190,6 +190,9 @@ public class EarthCrawler {
   }
 
   public static Count createPageCountFromElements(Elements elements) throws Exception {
+    if (elements.size() == 0) {
+      return null;
+    }
     int currentPage = Integer.valueOf(elements.select("td.ptds > a").text());
     int totalPage = Integer.valueOf(elements.get(elements.size() - 2).select("a").text());
 

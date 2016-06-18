@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
-import me.littlekey.earth.activity.HomeActivity;
+import me.littlekey.earth.activity.ArtListActivity;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
@@ -157,7 +157,7 @@ public class LoginFragment extends BaseFragment
         return;
       }
       EarthApplication.getInstance().getAccountManager().login(userId, passHash);
-      Intent intent = new Intent(getActivity(), HomeActivity.class);
+      Intent intent = new Intent(getActivity(), ArtListActivity.class);
       intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
       startActivity(intent);
       getActivity().finish();

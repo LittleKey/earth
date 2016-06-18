@@ -2,9 +2,9 @@ package me.littlekey.earth.model.data;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.android.volley.Request;
+import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.network.ApiRequest;
 import com.yuanqi.network.NameValuePair;
@@ -31,12 +31,12 @@ import timber.log.Timber;
 /**
  * Created by littlekey on 16/6/12.
  */
-public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
+public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
 
   private String mBaseUrl;
 
-  public HomeDataGenerator(Bundle bundle, NameValuePair... pairs) {
-    super(ApiType.HOME_LIST, pairs);
+  public ArtListsDataGenerator(ApiType apiType, Bundle bundle, NameValuePair... pairs) {
+    super(apiType, pairs);
     if (bundle != null) {
       mBaseUrl = bundle.getString(Const.EXTRA_URL);
     }
@@ -45,14 +45,21 @@ public class HomeDataGenerator extends EarthDataGenerator<EarthResponse> {
   @Override
   protected ApiRequest<EarthResponse> onCreateRequest(ApiType apiType, Map<String, String> pairs) {
     ApiRequest<EarthResponse> request;
-    if (TextUtils.isEmpty(mBaseUrl)) {
-      request = EarthApplication.getInstance().getRequestManager()
-          .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
-    } else {
-      request = EarthApplication.getInstance().getRequestManager()
-          .newEarthRequest(mBaseUrl, Request.Method.GET, mListener, mErrorListener);
+    switch (apiType) {
+      case ART_LIST:
+        request = EarthApplication.getInstance().getRequestManager()
+            .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
+        request.setParams(pairs);
+        break;
+      case TAG_LIST:
+        String url = String.format("%s/%s", mBaseUrl,
+            Wire.get(pairs.get(Const.KEY_PAGE), Const.EMPTY_STRING));
+        request = EarthApplication.getInstance().getRequestManager()
+            .newEarthRequest(url, Request.Method.GET, mListener, mErrorListener);
+        break;
+      default:
+        request = null;
     }
-    request.setParams(pairs);
     return request;
   }
 

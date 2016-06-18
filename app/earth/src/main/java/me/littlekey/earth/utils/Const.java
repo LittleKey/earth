@@ -51,6 +51,7 @@ public class Const {
   public static final String KEY_ACT = "act";
   public static final String KEY_CODE = "CODE";
   public static final String KEY_ENABLE_SWIPE_REFRESH = "enable_swipe_refresh";
+  public static final String KEY_PATH = "key_path";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";

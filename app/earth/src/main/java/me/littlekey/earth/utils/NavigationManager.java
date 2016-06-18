@@ -77,8 +77,10 @@ public class NavigationManager {
   public static Bundle parseIntent(Intent intent) {
     Uri uri = intent.getData();
     Set<String> names = null;
+    ArrayList<String> paths = null;
     if (uri != null) {
       names = uri.getQueryParameterNames();
+      paths = new ArrayList<>(uri.getPathSegments());
     }
     Bundle bundle = intent.getExtras();
     if (bundle == null) {
@@ -94,6 +96,9 @@ public class NavigationManager {
         pairs.add(new NameValuePair(name, uri.getQueryParameter(name)));
       }
       bundle.putSerializable(Const.KEY_API_QUERY, pairs);
+    }
+    if (!CollectionUtils.isEmpty(paths)) {
+      bundle.putStringArrayList(Const.KEY_PATH, paths);
     }
     return bundle;
   }

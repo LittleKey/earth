@@ -1,17 +1,17 @@
 package me.littlekey.earth.activity;
 
 import me.littlekey.earth.fragment.BaseFragment;
-import me.littlekey.earth.fragment.HomeFragment;
+import me.littlekey.earth.fragment.ArtListFragment;
 import me.littlekey.earth.utils.NavigationManager;
 
 /**
  * Created by littlekey on 16/6/11.
  */
-public class HomeActivity extends SingleFragmentActivity {
+public class ArtListActivity extends SingleFragmentActivity {
 
   @Override
   protected BaseFragment createFragment() {
-    return HomeFragment.newInstance(NavigationManager.parseIntent(getIntent()));
+    return ArtListFragment.newInstance(NavigationManager.parseIntent(getIntent()));
   }
 
   @Override

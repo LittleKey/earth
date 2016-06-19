@@ -2,6 +2,7 @@ package me.littlekey.earth.presenter;
 
 
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.EarthUtils;
+import me.littlekey.earth.utils.ResourceUtils;
 
 /**
  * Created by nengxiangzhou on 15/5/8.
@@ -26,9 +28,20 @@ public class FlagPresenter extends EarthPresenter {
       case R.id.mask:
         judgeMask(model);
         break;
+      case R.id.fab:
+        judgeShowHide(model);
+        break;
       default:
         judgeSelected(model);
         break;
+    }
+  }
+
+  private void judgeShowHide(Model model) {
+    if (view() instanceof FloatingActionButton) {
+      ((FloatingActionButton) view()).setImageDrawable(ResourceUtils.getDrawable(
+          Wire.get(model.getFlag().is_selected, false) ?
+              R.drawable.arrow_up_gray : R.drawable.arrow_down_gray));
     }
   }
 

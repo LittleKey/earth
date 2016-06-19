@@ -1,5 +1,8 @@
 package me.littlekey.earth.fragment;
 
+import android.annotation.TargetApi;
+import android.database.DataSetObserver;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +21,9 @@ import com.yuanqi.mvp.widget.MvpRecyclerView;
 import com.yuanqi.network.NameValuePair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.R;
@@ -26,6 +31,7 @@ import me.littlekey.earth.adapter.OfflineListAdapter;
 import me.littlekey.earth.event.OnClickTagItemEvent;
 import me.littlekey.earth.event.OnLoadedPageEvent;
 import me.littlekey.earth.model.Model;
+import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.presenter.EarthPresenterFactory;
@@ -45,7 +51,7 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
   private MvpRecyclerView mRecyclerView;
   private OfflineListAdapter mTabAdapter;
   private TabLayoutManager mTabLayoutManager;
-  private int mSelectIndex = -1;
+  private int mSelectIndex = RecyclerView.NO_POSITION;
 
   public static ViewerFragment newInstance(Bundle bundle) {
     ViewerFragment fragment = new ViewerFragment();
@@ -80,8 +86,7 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
     mRecyclerView.setItemAnimator(null);
     mRecyclerView.setAdapter(mTabAdapter);
     mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-    FragmentManager fm = getChildFragmentManager();
-    mPagerAdapter = new FragmentStatePagerAdapter(fm) {
+    mPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
       @Override
       public Fragment getItem(int position) {
         return createFragment(mTags.get(position));
@@ -89,7 +94,7 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
 
       @Override
       public int getCount() {
-        return mTags == null ? 0 :mTags.size();
+        return mTags == null || !mViewPager.isShown() ? 0 :mTags.size();
       }
 
       @Override
@@ -98,7 +103,27 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
       }
     };
     mViewPager.setAdapter(mPagerAdapter);
+    mViewPager.addOnPageChangeListener(this);
+    mPagerAdapter.registerDataSetObserver(new DataSetObserver() {
+      @Override
+      public void onChanged() {
+        selectTag(mViewPager.getCurrentItem());
+      }
+
+      @Override
+      public void onInvalidated() {
+        selectTag(mViewPager.getCurrentItem());
+      }
+    });
     EventBus.getDefault().register(this);
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      onTransitionEnd();
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public void onTransitionEnd() {
+    FragmentManager fm = getChildFragmentManager();
     Fragment fragment = fm.findFragmentById(R.id.fragment_container);
     if (fragment == null) {
       fm.beginTransaction()
@@ -111,6 +136,20 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
   public void onDestroyView() {
     EventBus.getDefault().unregister(this);
     super.onDestroyView();
+  }
+
+  public boolean onBackPressed() {
+    // if transition not visible then finish activity without transition animation
+    View transitionView = mPresenter.view.findViewById(R.id.cover);
+    int[] transitionViewCoordinate = new int[2];
+    transitionView.getLocationInWindow(transitionViewCoordinate);
+    int[] parentViewCoordinate = new int[2];
+    mPresenter.view.getLocationInWindow(parentViewCoordinate);
+    if (transitionViewCoordinate[1] - parentViewCoordinate[1] + transitionView.getHeight() < 0) {
+      getActivity().finish();
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -143,13 +182,25 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
 
   public void onEventMainThread(OnLoadedPageEvent event) {
     if (mModel != null && TextUtils.equals(event.getBaseUrl(), mModel.getUrl())) {
-      mPresenter.bind(event.getModel());
-      mTags = event.getModel().getSubModels();
+      Map<Integer, Action> actions = new HashMap<>();
+      actions.putAll(mModel.getActions());
+      actions.putAll(event.getModel().getActions());
+      actions.put(Const.ACTION_SHOW_HIDE, new Action.Builder()
+          .type(Action.Type.RUNNABLE)
+          .runnable(new Runnable() {
+            @Override
+            public void run() {
+              showViewPager(!mViewPager.isShown());
+            }
+          }).build());
+      mModel = new Model.Builder(event.getModel())
+          .flag(event.getModel().getFlag().newBuilder().is_selected(false).build())
+          .actions(actions)
+          .build();
+      mPresenter.bind(mModel);
+      mTags = mModel.getSubModels();
       mTabAdapter.setData(mTags);
-      mSelectIndex = -1;
-      mPagerAdapter.notifyDataSetChanged();
-      mViewPager.addOnPageChangeListener(this);
-      selectTag(mViewPager.getCurrentItem());
+      mSelectIndex = RecyclerView.NO_POSITION;
     }
   }
 
@@ -159,8 +210,18 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
     if ((index = mTags.indexOf(event.getTag())) != -1
         && (flag = mTabAdapter.getItem(index).getFlag()) != null
         && !Wire.get(flag.is_selected, false)) {
+      showViewPager(true);
       mViewPager.setCurrentItem(index);
     }
+  }
+
+  private void showViewPager(boolean show) {
+    mModel = new Model.Builder(mModel)
+        .flag(mModel.getFlag().newBuilder().is_selected(show).build())
+        .build();
+    mPresenter.bind(mModel);
+    mViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
+    mPagerAdapter.notifyDataSetChanged();
   }
 
   private void selectTag(int index) {

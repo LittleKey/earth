@@ -39,7 +39,9 @@ public class EarthPresenterFactory {
         .add(R.id.page_number, new BasePresenter())
         .add(R.id.size, new BasePresenter())
         .add(R.id.likes, new BasePresenter())
-        .add(R.id.date, new BasePresenter());
+        .add(R.id.date, new BasePresenter())
+        .add(R.id.fab, new ActionPresenter())
+        .add(R.id.fab, new FlagPresenter());
   }
 
   public static ViewGroupPresenter createChildTagPresenter(ViewGroup parent, int layout) {

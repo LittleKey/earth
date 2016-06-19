@@ -19,6 +19,7 @@ public class Const {
   public static final String UCONFIG_VALUE = "uh_y-xr_a-rx_0-ry_0-tl_r-ar_0-dm_l-prn_y-cats_6-fs_f-xns_0-xl_null-rc_0-lt_m-ts_l-tr_2-cs_a-sc_0-to_a-pn_1-hp_-hk_-tf_n-oi_n-qb_n-ms_n-mt_n";
   /*********************************** Action **********************************/
   public static final Integer ACTION_MAIN = 0;
+  public static final Integer ACTION_SHOW_HIDE = 1;
   /************************************ Key ***********************************/
   public static final String KEY_EXTRA = "extra";
   public static final String KEY_API_TYPE = "api_url";

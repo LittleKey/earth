@@ -46,7 +46,7 @@ public class ActionPresenter extends EarthPresenter {
             if (null != action.clazz) {
               NavigationManager.navigationTo(view().getContext(), action.clazz, action.bundle);
             } else if (null != action.uri) {
-              if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                   && !TextUtils.isEmpty(action.transitionName)) {
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                     (FragmentActivity) view().getContext(), view().findViewById(R.id.cover), action.transitionName);
@@ -187,6 +187,8 @@ public class ActionPresenter extends EarthPresenter {
       case 0:
 //      case R.id.mask:
         return model.getActions().get(Const.ACTION_MAIN);
+      case R.id.fab:
+        return model.getActions().get(Const.ACTION_SHOW_HIDE);
     }
     return null;
   }

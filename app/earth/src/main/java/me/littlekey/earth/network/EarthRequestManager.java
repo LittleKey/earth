@@ -79,7 +79,7 @@ public class EarthRequestManager extends RequestManager {
         return headers;
       }
     };
-    request.setShouldCache(false);
+    request.setShouldCache(true);
     return request;
   }
 

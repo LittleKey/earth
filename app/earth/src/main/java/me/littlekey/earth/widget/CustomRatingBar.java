@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.widget.RatingBar;
 
 import me.littlekey.earth.R;
+import me.littlekey.earth.utils.ResourceUtils;
 
 /**
  * Created by littlekey on 16/6/16.
@@ -24,9 +25,9 @@ public class CustomRatingBar extends RatingBar {
 
   public CustomRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setDrawableColor(context.getResources().getColor(R.color.gray),
-        context.getResources().getColor(R.color.white),
-        context.getResources().getColor(R.color.yellow));
+    setDrawableColor(ResourceUtils.getColor(R.color.gray),
+        ResourceUtils.getColor(R.color.white),
+        ResourceUtils.getColor(R.color.yellow));
   }
 
   public void setDrawableColor(@ColorInt int emptyColor, @ColorInt int halfColor, @ColorInt int fullColor) {

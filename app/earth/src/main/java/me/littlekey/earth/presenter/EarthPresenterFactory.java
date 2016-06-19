@@ -44,14 +44,13 @@ public class EarthPresenterFactory {
 
   public static ViewGroupPresenter createChildTagPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
-        .add(R.id.title, new TagPresenter(R.drawable.blue_circle_background))
+        .add(R.id.title, new TagPresenter())
         .add(new ActionPresenter());
   }
 
   public static ViewGroupPresenter createParentTagPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
-        .add(R.id.title, new TagPresenter(R.drawable.red_circle_background))
-        .add(R.id.title, new FlagPresenter())
+        .add(R.id.title, new TagPresenter().selectable(true))
         .add(new ActionPresenter());
   }
 

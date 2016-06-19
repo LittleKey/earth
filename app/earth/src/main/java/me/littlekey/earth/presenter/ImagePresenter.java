@@ -22,7 +22,7 @@ import me.littlekey.earth.model.Model;
  */
 public class ImagePresenter extends EarthPresenter {
 
-  private ImageRequest mCurrentRequest;
+  private ImageRequest mLowResRequest;
   private boolean mSmoothSwitch;
 
   public ImagePresenter() {
@@ -51,10 +51,13 @@ public class ImagePresenter extends EarthPresenter {
     }
     PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
         .setOldController(view.getController());
-    if (mSmoothSwitch && mCurrentRequest != null) {
-      controllerBuilder.setLowResImageRequest(mCurrentRequest);
+    if (mSmoothSwitch && mLowResRequest != null) {
+      controllerBuilder.setLowResImageRequest(mLowResRequest);
     }
-    controllerBuilder.setImageRequest(mCurrentRequest = requestBuilder.build());
+    controllerBuilder.setImageRequest(requestBuilder.build());
+    if (mSmoothSwitch && mLowResRequest == null) {
+      mLowResRequest = controllerBuilder.getImageRequest();
+    }
     view.setController(controllerBuilder.build());
   }
 

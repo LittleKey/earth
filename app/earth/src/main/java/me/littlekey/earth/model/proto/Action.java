@@ -31,6 +31,8 @@ public final class Action {
 
   public final Runnable runnable;
 
+  public final String transitionName;
+
   private Action(Builder builder) {
     this.type = builder.type;
     this.name = builder.name;
@@ -40,6 +42,7 @@ public final class Action {
     this.url = builder.url;
     this.bundle = builder.bundle;
     this.runnable = builder.runnable;
+    this.transitionName = builder.transitionName;
   }
 
   public static final class Builder {
@@ -52,6 +55,7 @@ public final class Action {
     public String url;
     public Bundle bundle;
     public Runnable runnable;
+    public String transitionName;
 
     public Builder() {
     }
@@ -66,6 +70,7 @@ public final class Action {
       this.url = message.url;
       this.bundle = message.bundle;
       this.runnable = message.runnable;
+      this.transitionName = message.transitionName;
     }
 
     public Builder type(Type type) {
@@ -105,6 +110,11 @@ public final class Action {
 
     public Builder runnable(Runnable runnable) {
       this.runnable = runnable;
+      return this;
+    }
+
+    public Builder transitionName(String transitionName) {
+      this.transitionName = transitionName;
       return this;
     }
 

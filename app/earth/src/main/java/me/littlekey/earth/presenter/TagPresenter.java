@@ -1,43 +1,43 @@
 package me.littlekey.earth.presenter;
 
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.DrawableRes;
-import android.view.View;
 import android.widget.TextView;
 
-import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
+import me.littlekey.earth.utils.ResourceUtils;
 
 /**
  * Created by littlekey on 16/6/18.
  */
 public class TagPresenter extends EarthPresenter {
 
-  private Drawable mDrawable;
+  private boolean mIsSelectable;
 
-  public TagPresenter(@DrawableRes int drawableId) {
-    mDrawable = EarthApplication.getInstance().getResources().getDrawable(drawableId);
+  public TagPresenter selectable(boolean selectable) {
+    mIsSelectable = selectable;
+    return this;
   }
 
   @Override
   public void bind(Model model) {
-    String tagName = model.getTitle();
-    if (tagName == null) {
-      return;
-    }
-    view().setVisibility(View.VISIBLE);
     if (view() instanceof TextView) {
-      bindText((TextView) view(), tagName);
+      bindText((TextView) view(), model);
     }
   }
 
-  private void bindText(TextView view, CharSequence tagName) {
-    view.setText(tagName);
-    if (Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT) {
-      view.setBackground(mDrawable);
-    } else {
-      view.setBackgroundDrawable(mDrawable);
+  private void bindText(TextView view, Model model) {
+    view.setText(model.getTitle());
+    if (mIsSelectable) {
+      view.setTextColor(ResourceUtils.getColor(model.getFlag().is_selected ?
+          R.color.white : R.color.half_transparent_white));
+    }
+    switch (model.getTemplate()) {
+      case CHILD_TAG:
+        view.setBackgroundResource(R.drawable.blue_circle_background);
+        break;
+      case PARENT_TAG:
+        view.setBackgroundResource(R.drawable.red_circle_background);
+        break;
     }
   }
 }

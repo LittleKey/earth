@@ -9,7 +9,7 @@
         <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="BaseAppTheme.HomePage">
+    <style name="BaseAppTheme.ArtListPage">
         <item name="android:windowBackground">@color/white</item>
     </style>
 

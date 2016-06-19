@@ -1,8 +1,11 @@
 package me.littlekey.earth.utils;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.yuanqi.base.utils.CollectionUtils;
@@ -36,7 +39,7 @@ public class NavigationManager {
   }
 
   public static void navigationTo(Context context, Uri uri) {
-    navigationTo(context, uri, null);
+    navigationTo(context, uri, null, null);
   }
 
   public static void navigationTo(Context context, String url) {
@@ -50,6 +53,15 @@ public class NavigationManager {
       intent.putExtras(bundle);
     }
     context.startActivity(intent);
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public static void navigationTo(Context context, Uri uri, Bundle bundle, ActivityOptions options) {
+    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+    if (bundle != null) {
+      intent.putExtras(bundle);
+    }
+    context.startActivity(intent, options.toBundle());
   }
 
   public static Uri buildUri(String path, NameValuePair... pairs) {

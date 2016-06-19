@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
+import me.littlekey.earth.utils.ResourceUtils;
 
 /**
  * Created by littlekey on 16/6/16.
@@ -33,7 +34,7 @@ public class CategoryPresenter extends EarthPresenter {
       mTextColor = ((TextView) view()).getCurrentTextColor();
     }
     ((TextView) view()).setText(category.getName());
-    @ColorInt int backgroundColor = group().context.getResources().getColor(getColor(category));
+    @ColorInt int backgroundColor = ResourceUtils.getColor(getColor(category));
     ((TextView) view()).setTextColor(mReverse ? backgroundColor : mTextColor);
     view().setBackgroundColor(mReverse ? mTextColor : backgroundColor);
   }

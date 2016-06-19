@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
 
-import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Action;
@@ -24,11 +23,11 @@ public class FlagPresenter extends EarthPresenter {
   public void bind(Model model) {
     switch (id()) {
     /** Common **/
-      case R.id.title:
-        judgeSelected(model);
-        break;
       case R.id.mask:
         judgeMask(model);
+        break;
+      default:
+        judgeSelected(model);
         break;
     }
   }
@@ -54,12 +53,7 @@ public class FlagPresenter extends EarthPresenter {
   }
 
   private void judgeSelected(Model model) {
-    if (view() instanceof TextView) {
-      ((TextView) view()).setTextColor(EarthApplication.getInstance().getResources()
-          .getColor(model.getFlag().is_selected ? R.color.white : R.color.half_transparent_white));
-    } else {
-      view().setVisibility(model.getFlag().is_selected ? View.VISIBLE : View.GONE);
-    }
+    view().setVisibility(model.getFlag().is_selected ? View.VISIBLE : View.GONE);
   }
 
   private void judgeHasMore(Model model) {

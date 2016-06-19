@@ -13,6 +13,8 @@ import android.view.View;
  */
 public class FixedFlingBehavior extends AppBarLayout.Behavior {
 
+  private boolean isPositive;
+
   public FixedFlingBehavior() {
 
   }
@@ -23,13 +25,22 @@ public class FixedFlingBehavior extends AppBarLayout.Behavior {
 
   @Override
   public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY, boolean consumed) {
+    if (velocityY > 0 && !isPositive || velocityY < 0 && isPositive) {
+      velocityY = velocityY * -1;
+    }
     if (target instanceof SwipeRefreshLayout && velocityY < 0) {
       target = ((SwipeRefreshLayout) target).getChildAt(0);
     }
     if (target instanceof RecyclerView && velocityY < 0) {
       RecyclerView recyclerView = (RecyclerView) target;
-      consumed = velocityY > 0 || recyclerView.computeVerticalScrollOffset() > 0;
+      consumed = recyclerView.computeVerticalScrollOffset() > 0;
     }
     return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
+  }
+
+  @Override
+  public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dx, int dy, int[] consumed) {
+    super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
+    isPositive = dy > 0;
   }
 }

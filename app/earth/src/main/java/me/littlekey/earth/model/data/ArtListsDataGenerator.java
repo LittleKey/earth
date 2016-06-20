@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.R;
 import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
@@ -26,6 +27,7 @@ import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.EarthUtils;
 import timber.log.Timber;
 
 /**
@@ -65,7 +67,7 @@ public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
     try {
       count = EarthCrawler.createPageCountFromElements(response.document.select("table.ptt > tbody > tr > td"));
     } catch (Exception e) {
-      Timber.e("parse page number error");
+      Timber.e(EarthUtils.formatString(R.string.parse_error, Const.PAGE_NUMBER));
     }
     if (count != null) {
       pairs.put(Const.KEY_PAGE, String.valueOf(count.number));
@@ -81,7 +83,7 @@ public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
     try {
       count = EarthCrawler.createPageCountFromElements(pageElements);
     } catch (Exception e) {
-      Timber.e(e, "parse page number error");
+      Timber.e(EarthUtils.formatString(R.string.parse_error, Const.PAGE_NUMBER));
     }
     return count != null && count.number < count.pages;
   }
@@ -97,9 +99,8 @@ public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
         Art art = null;
         try {
           art = EarthCrawler.createArtItemFromElement(element);
-          ;
         } catch (Exception e) {
-          Timber.e(e, "parse art item error");
+          Timber.e(EarthUtils.formatString(R.string.parse_error, Const.ART_ITEM));
         }
         CollectionUtils.add(models, ModelFactory.createModelFromArt(art, Model.Template.ITEM_ART));
       }

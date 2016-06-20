@@ -110,6 +110,11 @@ public class Const {
   public static final String LOGIN = "Login";
   public static final String ADD_FAV = "addfav";
   public static final String FAV_DEL = "favdel";
+  public static final String PAGE_NUMBER = "page number";
+  public static final String ART_ITEM = "art item";
+  public static final String ART_DETAIL = "art detail";
+  public static final String IMAGE = "image";
+  public static final String FAV = "fav";
   public static final String APPLY_CHANGES = "apply_changes";
   public static final String ADD_TO_FAVOURITES = "add_to_favourites";
   public static final int MIN_PASSWORD_LENGTH = 6;

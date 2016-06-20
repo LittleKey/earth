@@ -4,7 +4,7 @@ import com.yuanqi.network.NameValuePair;
 
 import java.util.List;
 
-import me.littlekey.earth.model.data.ArtDataGenerator;
+import me.littlekey.earth.model.data.ArtDetailDataGenerator;
 import me.littlekey.earth.model.data.ArtListsDataGenerator;
 import me.littlekey.earth.model.data.EarthDataGenerator;
 import me.littlekey.earth.model.data.LikedDataGenerator;
@@ -23,7 +23,7 @@ public class DataGeneratorFactory {
       case HOME_LIST:
         return new ArtListsDataGenerator(apiType, paths, pairs);
       case ART_DETAIL:
-        return new ArtDataGenerator(paths, pairs);
+        return new ArtDetailDataGenerator(paths, pairs);
       case LIKED:
         return new LikedDataGenerator(pairs);
       default:

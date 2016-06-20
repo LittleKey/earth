@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.R;
 import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
@@ -26,6 +27,7 @@ import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.EarthUtils;
 import timber.log.Timber;
 
 /**
@@ -67,7 +69,7 @@ public class LikedDataGenerator extends EarthDataGenerator<EarthResponse> {
       try {
         fav = EarthCrawler.createFavFromElement(element, apply);
       } catch (Exception e) {
-        Timber.e(e, "parse fav error");
+        Timber.e(EarthUtils.formatString(R.string.parse_error, Const.FAV));
       }
       Map<Integer, Action> actions = new HashMap<>();
       Bundle bundle = new Bundle();

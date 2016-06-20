@@ -17,6 +17,7 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.R;
 import me.littlekey.earth.event.OnLoadedPageEvent;
 import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
@@ -28,14 +29,15 @@ import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.EarthUtils;
 import timber.log.Timber;
 
 /**
  * Created by littlekey on 16/6/16.
  */
-public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
+public class ArtDetailDataGenerator extends EarthDataGenerator<EarthResponse> {
 
-  public ArtDataGenerator(List<String> paths, NameValuePair... pairs) {
+  public ArtDetailDataGenerator(List<String> paths, NameValuePair... pairs) {
     super(ApiType.ART_DETAIL, pairs);
     mPaths = paths;
   }
@@ -59,7 +61,7 @@ public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
     try {
       count = EarthCrawler.createPageCountFromElements(response.document.select("table.ptt > tbody > tr > td"));
     } catch (Exception e) {
-      Timber.e("parse page number error");
+      Timber.e(EarthUtils.formatString(R.string.parse_error, Const.PAGE_NUMBER));
     }
     if (count != null) {
       params.put(Const.KEY_P, String.valueOf(count.number));
@@ -75,7 +77,7 @@ public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
     try {
       count = EarthCrawler.createPageCountFromElements(pageElements);
     } catch (Exception e) {
-      Timber.e(e, "parse page number error");
+      Timber.e(EarthUtils.formatString(R.string.parse_error, Const.PAGE_NUMBER));
     }
     return count != null && count.number < count.pages;
   }
@@ -90,7 +92,7 @@ public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
     try {
       artDetail = EarthCrawler.createArtDetailFromElements(artDetailElements, gallery_id, token);
     } catch (Exception e) {
-      Timber.e(e, "parse art detail error");
+      Timber.e(EarthUtils.formatString(R.string.parse_error, Const.ART_DETAIL));
     }
     if (artDetail != null) {
     EventBus.getDefault().post(new OnLoadedPageEvent(
@@ -102,7 +104,7 @@ public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
       try {
             image = EarthCrawler.createImageFromElement(imageEle);
       } catch (Exception e) {
-        Timber.e(e, "parse image error");
+        Timber.e(EarthUtils.formatString(R.string.parse_error, Const.IMAGE));
       }
       CollectionUtils.add(models, ModelFactory.createModelFromImage(image, Model.Template.PREVIEW_IMAGE));
     }

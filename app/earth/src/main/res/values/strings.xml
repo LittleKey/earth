@@ -6,6 +6,7 @@
     <string name="btn_submit">提交</string>
     <string name="unknown">unknown</string>
     <string name="loading_hint">加载中</string>
+    <string name="parse_error">parse %s error</string>
 
     <!-- favourite -->
     <string name="unlike_error">取消收藏失败</string>

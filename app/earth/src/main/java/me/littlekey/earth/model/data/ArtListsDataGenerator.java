@@ -1,6 +1,5 @@
 package me.littlekey.earth.model.data;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
@@ -24,6 +23,7 @@ import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.network.ApiType;
+import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
 import timber.log.Timber;
@@ -33,39 +33,33 @@ import timber.log.Timber;
  */
 public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
 
-  private String mBaseUrl;
-
-  public ArtListsDataGenerator(ApiType apiType, Bundle bundle, NameValuePair... pairs) {
+  public ArtListsDataGenerator(ApiType apiType, List<String> paths, NameValuePair... pairs) {
     super(apiType, pairs);
-    if (bundle != null) {
-      mBaseUrl = bundle.getString(Const.EXTRA_URL);
-    }
+    mPaths = paths;
   }
 
   @Override
   protected ApiRequest<EarthResponse> onCreateRequest(ApiType apiType, Map<String, String> pairs) {
-    ApiRequest<EarthResponse> request;
+    EarthRequest request = EarthApplication.getInstance().getRequestManager()
+        .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
     switch (apiType) {
-      case ART_LIST:
-        request = EarthApplication.getInstance().getRequestManager()
-            .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
-        request.setParams(pairs);
+      case HOME_LIST:
+        request.setQuery(pairs);
         break;
       case TAG_LIST:
-        String url = String.format("%s/%s", mBaseUrl,
-            Wire.get(pairs.get(Const.KEY_PAGE), Const.EMPTY_STRING));
-        request = EarthApplication.getInstance().getRequestManager()
-            .newEarthRequest(url, Request.Method.GET, mListener, mErrorListener);
+        assert mPaths != null;
+        for (String path: mPaths) {
+          request.appendPath(path);
+        }
+        request.appendPath(Wire.get(pairs.get(Const.KEY_PAGE), Const.EMPTY_STRING));
         break;
-      default:
-        request = null;
     }
     return request;
   }
 
   @Override
   public ApiRequest<EarthResponse> getNextRequestFromResponse(EarthResponse response) {
-    Map<String, String> params = new HashMap<>();
+    Map<String, String> pairs = new HashMap<>();
     // page argument was base 0, and website page was base 1. so not need modify page number.
     Count count = null;
     try {
@@ -74,8 +68,8 @@ public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
       Timber.e("parse page number error");
     }
     if (count != null) {
-      params.put(Const.KEY_PAGE, String.valueOf(count.number));
-      return onCreateRequest(mApiType, params);
+      pairs.put(Const.KEY_PAGE, String.valueOf(count.number));
+      return onCreateRequest(mApiType, pairs);
     }
     return null;
   }

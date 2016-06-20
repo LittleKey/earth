@@ -60,19 +60,6 @@ public class EarthRequestManager extends RequestManager {
         url, listener, errorListener, mCacheConfig) {
 
       @Override
-      public String getUrl() {
-        try {
-          if (getMethod() == Method.POST || getMethod() == Method.PUT) {
-            return super.getUrl();
-          }
-          return RequestManager.parseUrl(super.getUrl(), getParams());
-        } catch (AuthFailureError ignore) {
-          ignore.printStackTrace();
-        }
-        return null;
-      }
-
-      @Override
       public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> headers = new HashMap<>();
         headers.put(Const.KEY_COOKIE, convertCookies(buildCookie()));
@@ -85,8 +72,12 @@ public class EarthRequestManager extends RequestManager {
 
   private String getUrl(ApiType apiType) {
     switch (apiType) {
-      case ART_LIST:
-        return Const.API_HOME_LIST;
+      case TAG_LIST:
+      case ART_DETAIL:
+      case HOME_LIST:
+        return Const.API_ROOT;
+      case LIKED:
+        return Const.API_LIKED;
       case LOGIN:
         Map<String, String> loginPairs = new HashMap<>();
         loginPairs.put(Const.KEY_ACT, Const.LOGIN);

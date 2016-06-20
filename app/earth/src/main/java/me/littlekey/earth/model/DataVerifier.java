@@ -7,12 +7,15 @@ import com.squareup.wire.Wire;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.littlekey.earth.R;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
+import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.model.proto.User;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.EarthUtils;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -37,7 +40,9 @@ public class DataVerifier {
     if (art == null) {
       return null;
     }
-    if (TextUtils.isEmpty(art.title)) {
+    if (TextUtils.isEmpty(art.gid)
+        || TextUtils.isEmpty(art.token)
+        || TextUtils.isEmpty(art.title)) {
       return null;
     }
     Count count = verify(Wire.get(art.count, new Count.Builder().build()));
@@ -94,6 +99,18 @@ public class DataVerifier {
     return image.newBuilder()
         .origin_url(Wire.get(image.origin_url, Const.EMPTY_STRING))
         .offset(Wire.get(image.offset, 0))
+        .build();
+  }
+
+  public static Fav verify(Fav fav) {
+    if (fav == null) {
+      return null;
+    }
+    if (TextUtils.isEmpty(fav.id)) {
+      return null;
+    }
+    return fav.newBuilder()
+        .name(Wire.get(fav.name, EarthUtils.formatString(R.string.default_format_name, fav.id)))
         .build();
   }
 }

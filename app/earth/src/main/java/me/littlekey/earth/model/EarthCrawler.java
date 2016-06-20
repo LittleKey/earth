@@ -1,5 +1,6 @@
 package me.littlekey.earth.model;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
+import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.utils.EarthUtils;
@@ -43,6 +45,9 @@ public class EarthCrawler {
     }
     Elements titleAndUrlElements = artEle.select("div.it5 > a");
     String artUrl  = titleAndUrlElements.attr("href");
+    List<String> paths = Uri.parse(artUrl).getPathSegments();
+    String gallery_id = paths.get(1);
+    String token = paths.get(2);
     String title = titleAndUrlElements.text();
     Pattern ratingPattern = Pattern.compile("background-position:\\s*?-?(\\d*?)px\\s*?-?(\\d*?)px;");
     Matcher ratingMatcher = ratingPattern.matcher(artEle.select("div.it4 > div").attr("style"));
@@ -61,6 +66,8 @@ public class EarthCrawler {
 
     return new Art.Builder()
         .title(title)
+        .gid(gallery_id)
+        .token(token)
         .publisher_name(publisherName)
         .category(category.getValue())
         .count(count)
@@ -70,7 +77,8 @@ public class EarthCrawler {
         .build();
   }
 
-  public static Art createArtDetailFromElements(Elements elements) throws Exception {
+  public static Art createArtDetailFromElements(Elements elements, String gid, String token)
+      throws Exception {
     // NOTE : find cover
     String cover = elements.select("#gd1 > img").attr("src");
     // NOTE : find title
@@ -104,6 +112,7 @@ public class EarthCrawler {
     if (ratingMatcher.find()) {
       rating = Float.valueOf(ratingMatcher.group(1));
     }
+    boolean liked = elements.select("#fav > div").size() != 0;
     List<Tag> tags = new ArrayList<>();
     Elements tagsElements = elements.select("#taglist > table > tbody > tr");
     for (Element tagEle: tagsElements) {
@@ -126,6 +135,8 @@ public class EarthCrawler {
         .build();
     return new Art.Builder()
         .title(title)
+        .gid(gid)
+        .token(token)
         .cover(cover)
         .date(date)
         .file_size(fileSize)
@@ -134,6 +145,7 @@ public class EarthCrawler {
         .publisher_name(publisherName)
         .count(count)
         .tags(tags)
+        .liked(liked)
         .build();
   }
 
@@ -199,6 +211,17 @@ public class EarthCrawler {
     return new Count.Builder()
         .number(currentPage)
         .pages(totalPage)
+        .build();
+  }
+
+  public static Fav createFavFromElement(Element element, String apply) throws Exception {
+    String id = element.select("div > input").attr("value");
+    Elements elements = element.select("div");
+    String name = elements.get(elements.size() - 2).text();
+    return new Fav.Builder()
+        .id(id)
+        .name(name)
+        .apply(apply)
         .build();
   }
 }

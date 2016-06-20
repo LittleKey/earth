@@ -20,10 +20,12 @@ public class Const {
   /*********************************** Action **********************************/
   public static final Integer ACTION_MAIN = 0;
   public static final Integer ACTION_SHOW_HIDE = 1;
+  public static final Integer ACTION_LIKED = 2;
   /************************************ Key ***********************************/
   public static final String KEY_EXTRA = "extra";
   public static final String KEY_API_TYPE = "api_url";
   public static final String KEY_API_QUERY = "api_query";
+  public static final String KEY_API_PATH = "api_path";
   public static final String KEY_ID = "id";
   public static final String KEY_MODEL = "model";
   public static final String KEY_NEW_PASSWORD = "new_password";
@@ -40,7 +42,6 @@ public class Const {
   public static final String KEY_USER_ID = "user_id";
   public static final String KEY_TYPE = "type";
   public static final String KEY_GROUP_COUNT = "group_count";
-  public static final String KEY_BUNDLE = "bundle";
   public static final String KEY_DISPLAY_NAME = "display_name";
   public static final String KEY_BIO = "bio";
   public static final String KEY_HEIGHT = "height";
@@ -49,10 +50,17 @@ public class Const {
   public static final String KEY_SET_COOKIE = "Set-Cookie";
   public static final String KEY_PAGE = "page";
   public static final String KEY_P = "p";
+  public static final String KEY_T = "t";
   public static final String KEY_ACT = "act";
   public static final String KEY_CODE = "CODE";
   public static final String KEY_ENABLE_SWIPE_REFRESH = "enable_swipe_refresh";
   public static final String KEY_PATH = "key_path";
+  public static final String KEY_GID = "gid";
+  public static final String KEY_FAV_NOTE = "favnote";
+  public static final String KEY_UPDATE = "update";
+  public static final String KEY_FAV_CAT = "favcat";
+  public static final String KEY_APPLY = "apply";
+  public static final String KEY_TOKEN = "token";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -70,9 +78,12 @@ public class Const {
   private static final String API_EX_HOST_URL = "http://exhentai.org";
   private static final String API_LOGIN_HOST_URL = "http://forums.e-hentai.org";
   // earth
+  public static final String API_ROOT = API_EX_HOST_URL + "/";
   public static final String API_HOME_LIST = API_EX_HOST_URL + "/";
   // business_account
   public static final String API_LOGIN = API_LOGIN_HOST_URL + "/index.php";
+  // like art
+  public static final String API_LIKED = API_EX_HOST_URL + "/gallerypopups.php";
   /******************************** Network Related ********************************/
   public static final String NETWORK_HEADER_SSID = "SSID";
   /*********************************** UM Social ***********************************/
@@ -97,6 +108,10 @@ public class Const {
   public static final String ONE = "1";
   public static final String ZERO_ONE = "01";
   public static final String LOGIN = "Login";
+  public static final String ADD_FAV = "addfav";
+  public static final String FAV_DEL = "favdel";
+  public static final String APPLY_CHANGES = "apply_changes";
+  public static final String ADD_TO_FAVOURITES = "add_to_favourites";
   public static final int MIN_PASSWORD_LENGTH = 6;
   public static final int MAX_PASSWORD_LENGTH = 30;
   public static final int MIN_NICKNAME_LENGTH = 1;

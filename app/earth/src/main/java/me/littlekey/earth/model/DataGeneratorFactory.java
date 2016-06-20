@@ -1,12 +1,13 @@
 package me.littlekey.earth.model;
 
-import android.os.Bundle;
-
 import com.yuanqi.network.NameValuePair;
 
+import java.util.List;
+
 import me.littlekey.earth.model.data.ArtDataGenerator;
-import me.littlekey.earth.model.data.EarthDataGenerator;
 import me.littlekey.earth.model.data.ArtListsDataGenerator;
+import me.littlekey.earth.model.data.EarthDataGenerator;
+import me.littlekey.earth.model.data.LikedDataGenerator;
 import me.littlekey.earth.network.ApiType;
 
 /**
@@ -16,13 +17,15 @@ public class DataGeneratorFactory {
   private DataGeneratorFactory() {}
 
   public static EarthDataGenerator<?>
-  createDataGenerator(ApiType apiType, Bundle bundle, NameValuePair... pairs) {
+  createDataGenerator(ApiType apiType, List<String> paths, NameValuePair... pairs) {
     switch (apiType) {
       case TAG_LIST:
-      case ART_LIST:
-        return new ArtListsDataGenerator(apiType, bundle, pairs);
-      case ART_VIEWER:
-        return new ArtDataGenerator(bundle, pairs);
+      case HOME_LIST:
+        return new ArtListsDataGenerator(apiType, paths, pairs);
+      case ART_DETAIL:
+        return new ArtDataGenerator(paths, pairs);
+      case LIKED:
+        return new LikedDataGenerator(pairs);
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }

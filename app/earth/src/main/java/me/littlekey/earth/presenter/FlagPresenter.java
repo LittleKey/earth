@@ -31,9 +31,20 @@ public class FlagPresenter extends EarthPresenter {
       case R.id.fab:
         judgeShowHide(model);
         break;
+      case R.id.likes:
+        judgeLiked(model);
+        break;
       default:
         judgeSelected(model);
         break;
+    }
+  }
+
+  private void judgeLiked(Model model) {
+    if (view() instanceof TextView) {
+      Drawable drawable = EarthUtils.setDrawableBounds(ResourceUtils.getDrawable(
+          Wire.get(model.getFlag().is_liked, false) ? R.drawable.liked : R.drawable.unlike));
+      ((TextView) view()).setCompoundDrawables(drawable, null, null, null);
     }
   }
 

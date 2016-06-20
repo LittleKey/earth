@@ -5,6 +5,14 @@
     <string name="rights_warning">Copyright @2016 All right reserved</string>
     <string name="btn_submit">提交</string>
     <string name="unknown">unknown</string>
+    <string name="loading_hint">加载中</string>
+
+    <!-- favourite -->
+    <string name="unlike_error">取消收藏失败</string>
+    <string name="unlike_succeed">取消收藏成功</string>
+    <string name="like_succeed">收藏成功</string>
+    <string name="like_error">收藏失败</string>
+    <string name="default_format_name">Favourites %s</string>
 
     <!-- transition name -->
     <string name="art_detail_transition_name">art_detail</string>

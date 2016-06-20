@@ -39,7 +39,8 @@ public abstract class AsyncLoadFragment extends BaseFragment implements DataLoad
       pairs = new ArrayList<>();
     }
     mList = new EarthApiList<>(DataGeneratorFactory.createDataGenerator(apiType,
-        getArguments().getBundle(Const.KEY_BUNDLE), pairs.toArray(new NameValuePair[pairs.size()])));
+        getArguments().getStringArrayList(Const.KEY_API_PATH),
+        pairs.toArray(new NameValuePair[pairs.size()])));
     mList.registerDataLoadObserver(this);
     mList.refresh();
   }

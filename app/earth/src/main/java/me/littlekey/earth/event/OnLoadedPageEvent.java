@@ -7,16 +7,10 @@ import me.littlekey.earth.model.Model;
  */
 public class OnLoadedPageEvent {
 
-  private String baseUrl;
   private Model model;
 
-  public OnLoadedPageEvent(String baseUrl, Model model) {
-    this.baseUrl = baseUrl;
+  public OnLoadedPageEvent(Model model) {
     this.model = model;
-  }
-
-  public String getBaseUrl() {
-    return baseUrl;
   }
 
   public Model getModel() {

@@ -73,7 +73,7 @@ public class ListFragment extends BaseFragment {
     } else {
       pairs = pairList.toArray(new NameValuePair[pairList.size()]);
     }
-    resetApi(apiType, getArguments().getBundle(Const.KEY_BUNDLE), pairs);
+    resetApi(apiType, getArguments().getStringArrayList(Const.KEY_API_PATH), pairs);
     mSwipeRefreshLayout.setEnabled(getArguments().getBoolean(Const.KEY_ENABLE_SWIPE_REFRESH, true));
   }
 
@@ -133,24 +133,16 @@ public class ListFragment extends BaseFragment {
     });
   }
 
-  public void refresh(NameValuePair... pairs) {
-    mList.refresh(pairs);
-  }
-
-  public void resetApi(@NonNull ApiType apiType, NameValuePair... pairs) {
-    resetApi(apiType, null, pairs);
-  }
-
-  public void resetApi(@NonNull ApiType apiType, Bundle bundle, NameValuePair... pairs) {
-    mList = new EarthApiList<>(DataGeneratorFactory.createDataGenerator(apiType, bundle, pairs));
+  public void resetApi(@NonNull ApiType apiType, List<String> paths, NameValuePair... pairs) {
+    mList = new EarthApiList<>(DataGeneratorFactory.createDataGenerator(apiType, paths, pairs));
     final ListAdapter adapter = new ListAdapter(getArguments());
     mList.registerDataLoadObserver(adapter);
     mList.registerDataLoadObserver(mSwipeRefreshLayout);
     mSwipeRefreshLayout.setAdapter(adapter);
     adapter.setList(mList);
-    RecyclerView.LayoutManager layoutManager;
+    final RecyclerView.LayoutManager layoutManager;
     switch (apiType) {
-      case ART_VIEWER:
+      case ART_DETAIL:
         layoutManager = new GridLayoutManager(getActivity(), ART_VIEWER_GRID_SPAN) {
           @Override
           protected int getExtraLayoutSpace(RecyclerView.State state) {
@@ -184,6 +176,25 @@ public class ListFragment extends BaseFragment {
             super.getItemOffsets(outRect, view, parent, state);
             if (parent.getChildAdapterPosition(view) < 2) {
               outRect.top = FormatUtils.dipsToPix(10);
+            }
+          }
+        });
+        break;
+      case LIKED:
+        layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+          @Override
+          public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view);
+            if (position == 0) {
+              outRect.top = FormatUtils.dipsToPix(10);
+            } else {
+              outRect.top = FormatUtils.dipsToPix(5);
+            }
+            if (position == layoutManager.getItemCount() - 1) {
+              outRect.bottom = FormatUtils.dipsToPix(10);
+            } else {
+              outRect.bottom = FormatUtils.dipsToPix(5);
             }
           }
         });

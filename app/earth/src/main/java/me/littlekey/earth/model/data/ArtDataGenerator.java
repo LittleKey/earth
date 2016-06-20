@@ -1,6 +1,5 @@
 package me.littlekey.earth.model.data;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
@@ -36,18 +35,19 @@ import timber.log.Timber;
  */
 public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
 
-  private String mBaseUrl;
-
-  public ArtDataGenerator(Bundle bundle, NameValuePair... pairs) {
-    super(ApiType.ART_VIEWER, pairs);
-    mBaseUrl = bundle.getString(Const.EXTRA_URL);
+  public ArtDataGenerator(List<String> paths, NameValuePair... pairs) {
+    super(ApiType.ART_DETAIL, pairs);
+    mPaths = paths;
   }
 
   @Override
   protected ApiRequest<EarthResponse> onCreateRequest(ApiType apiType, Map<String, String> pairs) {
     EarthRequest request = EarthApplication.getInstance().getRequestManager()
-        .newEarthRequest(mBaseUrl, Request.Method.GET, mListener, mErrorListener);
-    request.setParams(pairs);
+        .newEarthRequest(ApiType.ART_DETAIL, Request.Method.GET, mListener, mErrorListener);
+    for (String path: mPaths) {
+      request.appendPath(path);
+    }
+    request.setQuery(pairs);
     return request;
   }
 
@@ -85,13 +85,15 @@ public class ArtDataGenerator extends EarthDataGenerator<EarthResponse> {
     List<Model> models = new ArrayList<>();
     Elements artDetailElements = response.document.select("body > div.gm");
     Art artDetail = null;
+    String gallery_id = mPaths.get(1);
+    String token = mPaths.get(2);
     try {
-      artDetail =EarthCrawler.createArtDetailFromElements(artDetailElements);
+      artDetail = EarthCrawler.createArtDetailFromElements(artDetailElements, gallery_id, token);
     } catch (Exception e) {
       Timber.e(e, "parse art detail error");
     }
     if (artDetail != null) {
-    EventBus.getDefault().post(new OnLoadedPageEvent(mBaseUrl,
+    EventBus.getDefault().post(new OnLoadedPageEvent(
         ModelFactory.createModelFromArt(artDetail, Model.Template.DATA)));
     }
     Elements imageElements = response.document.select("#gdt > div");

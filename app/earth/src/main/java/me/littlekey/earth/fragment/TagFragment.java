@@ -71,10 +71,8 @@ public class TagFragment extends BaseFragment {
     int index;
     if ((index = mModel.getSubModels().indexOf(event.getTag())) != -1) {
       String url = buildUrl(mModel.getSubModels().get(index));
-      Bundle bundle = new Bundle();
-      bundle.putString(Const.EXTRA_URL, url);
       NavigationManager.navigationTo(getActivity(),
-          NavigationManager.buildUri(Uri.parse(url).getEncodedPath()), bundle);
+          NavigationManager.buildUri(Uri.parse(url).getEncodedPath()));
     }
   }
 

@@ -6,24 +6,36 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.mvp.widget.MvpRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
+import me.littlekey.earth.dialog.LikedDialog;
+import me.littlekey.earth.dialog.ProgressDialog;
 import me.littlekey.earth.event.OnClickTagItemEvent;
+import me.littlekey.earth.event.OnLikedEvent;
 import me.littlekey.earth.event.OnSelectEvent;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Flag;
+import me.littlekey.earth.network.ApiType;
+import me.littlekey.earth.network.EarthRequest;
+import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.NavigationManager;
+import me.littlekey.earth.utils.ToastUtils;
 
 
 /**
@@ -76,6 +88,18 @@ public class ActionPresenter extends EarthPresenter {
           case EVENT:
             EventBus.getDefault().post(new OnClickTagItemEvent(model));
             break;
+          case LIKED:
+            if (action.bundle != null) {
+              liked(model, action.bundle.getString(Const.KEY_GID),
+                  action.bundle.getString(Const.KEY_TOKEN));
+            }
+            break;
+          case SELECT_FAV:
+            if (action.bundle != null) {
+              selectFav(action.bundle.getString(Const.KEY_GID),
+                  action.bundle.getString(Const.KEY_TOKEN));
+            }
+            break;
         }
       }
     });
@@ -84,6 +108,45 @@ public class ActionPresenter extends EarthPresenter {
 
   private void logout() {
     EarthApplication.getInstance().getAccountManager().logout();
+  }
+
+  private void liked(Model model, final String gid, String token) {
+    final boolean isUnlike = model.getIdentity().equals(Const.FAV_DEL);
+    final ProgressDialog dialog = new ProgressDialog(group().context);
+    dialog.show();
+    Map<String, String> query = new HashMap<>();
+    query.put(Const.KEY_GID, gid);
+    query.put(Const.KEY_T, token);
+    query.put(Const.KEY_ACT, Const.ADD_FAV);
+    Map<String, String> params = new HashMap<>();
+    params.put(Const.KEY_FAV_NOTE, Const.EMPTY_STRING);
+    params.put(Const.KEY_UPDATE, Const.ONE);
+    params.put(Const.KEY_FAV_CAT, model.getIdentity());
+    params.put(Const.KEY_APPLY, model.getDescription());
+    EarthRequest request = EarthApplication.getInstance().getRequestManager()
+        .newEarthRequest(ApiType.LIKED, Request.Method.POST, new Response.Listener<EarthResponse>() {
+          @Override
+          public void onResponse(EarthResponse response) {
+            EventBus.getDefault().post(new OnLikedEvent(gid, !isUnlike));
+            ToastUtils.toast(isUnlike ? R.string.unlike_succeed : R.string.like_succeed);
+            dialog.dismiss();
+          }
+        }, new Response.ErrorListener() {
+          @Override
+          public void onErrorResponse(VolleyError error) {
+            EventBus.getDefault().post(new OnLikedEvent(gid, isUnlike));
+            ToastUtils.toast(isUnlike ? R.string.unlike_error : R.string.like_succeed);
+            dialog.dismiss();
+          }
+        });
+    request.setTag(this);
+    request.setQuery(query);
+    request.setParams(params);
+    request.submit();
+  }
+
+  private void selectFav(String gid, String token) {
+    LikedDialog.newInstance(gid, token).show(group().context);
   }
 
   @SuppressWarnings("unchecked")
@@ -189,6 +252,8 @@ public class ActionPresenter extends EarthPresenter {
         return model.getActions().get(Const.ACTION_MAIN);
       case R.id.fab:
         return model.getActions().get(Const.ACTION_SHOW_HIDE);
+      case R.id.likes:
+        return model.getActions().get(Const.ACTION_LIKED);
     }
     return null;
   }

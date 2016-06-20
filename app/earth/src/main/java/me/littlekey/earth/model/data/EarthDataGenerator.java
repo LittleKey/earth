@@ -8,6 +8,7 @@ import com.yuanqi.network.ApiRequest;
 import com.yuanqi.network.NameValuePair;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.model.Model;
@@ -20,6 +21,7 @@ public abstract class EarthDataGenerator<R> implements DataGenerator<R, Model> {
   private boolean mEnableCache = false;
   protected ApiType mApiType;
   protected Map<String, String> mBasePairs;
+  protected List<String> mPaths;
   protected ApiRequest<R> mInitRequest;
   protected Response.Listener<R> mListener;
   protected Response.ErrorListener mErrorListener;
@@ -47,14 +49,6 @@ public abstract class EarthDataGenerator<R> implements DataGenerator<R, Model> {
   }
 
   protected abstract ApiRequest<R> onCreateRequest(ApiType apiType, Map<String, String> pairs);
-
-  public void resetUrl(NameValuePair... pairs) {
-    init(mApiType, pairs);
-  }
-
-  public void resetUrl(@NonNull ApiType apiType, NameValuePair... pairs) {
-    init(apiType, pairs);
-  }
 
   public void setEnableCache(boolean enableCache) {
     this.mEnableCache = enableCache;

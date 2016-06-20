@@ -29,6 +29,7 @@ import de.greenrobot.event.EventBus;
 import me.littlekey.earth.R;
 import me.littlekey.earth.adapter.OfflineListAdapter;
 import me.littlekey.earth.event.OnClickTagItemEvent;
+import me.littlekey.earth.event.OnLikedEvent;
 import me.littlekey.earth.event.OnLoadedPageEvent;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Action;
@@ -41,7 +42,7 @@ import me.littlekey.earth.widget.TabLayoutManager;
 /**
  * Created by littlekey on 16/6/16.
  */
-public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public class DetailFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
   private ViewGroupPresenter mPresenter;
   private Model mModel;
@@ -53,9 +54,9 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
   private TabLayoutManager mTabLayoutManager;
   private int mSelectIndex = RecyclerView.NO_POSITION;
 
-  public static ViewerFragment newInstance(Bundle bundle) {
-    ViewerFragment fragment = new ViewerFragment();
-    bundle.putInt(Const.KEY_API_TYPE, ApiType.ART_VIEWER.ordinal());
+  public static DetailFragment newInstance(Bundle bundle) {
+    DetailFragment fragment = new DetailFragment();
+    bundle.putInt(Const.KEY_API_TYPE, ApiType.ART_DETAIL.ordinal());
     ArrayList<NameValuePair> pairList = new ArrayList<>();
     pairList.add(new NameValuePair(Const.KEY_P, Const.ZERO));
     bundle.putSerializable(Const.KEY_API_QUERY, pairList);
@@ -134,6 +135,7 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
 
   @Override
   public void onDestroyView() {
+    mPresenter.unbind();
     EventBus.getDefault().unregister(this);
     super.onDestroyView();
   }
@@ -181,7 +183,7 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
   }
 
   public void onEventMainThread(OnLoadedPageEvent event) {
-    if (mModel != null && TextUtils.equals(event.getBaseUrl(), mModel.getUrl())) {
+    if (mModel != null && TextUtils.equals(event.getModel().getIdentity(), mModel.getIdentity())) {
       Map<Integer, Action> actions = new HashMap<>();
       actions.putAll(mModel.getActions());
       actions.putAll(event.getModel().getActions());
@@ -212,6 +214,16 @@ public class ViewerFragment extends BaseFragment implements ViewPager.OnPageChan
         && !Wire.get(flag.is_selected, false)) {
       showViewPager(true);
       mViewPager.setCurrentItem(index);
+    }
+  }
+
+  public void onEventMainThread(OnLikedEvent event) {
+    if (mModel != null && TextUtils.equals(mModel.getIdentity(), event.getIdentity())) {
+      mModel = new Model.Builder(mModel)
+          .flag(mModel.getFlag().newBuilder().is_liked(event.isLiked()).build())
+          .art(mModel.getArt().newBuilder().liked(event.isLiked()).build())
+          .build();
+      mPresenter.bind(mModel);
     }
   }
 

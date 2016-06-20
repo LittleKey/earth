@@ -13,9 +13,9 @@ form-data
 
 - **CookieDate** `1`
 
-- **UserName** `username`
+- **UserName** `{username}`
 
-- **PassWord** `password`
+- **PassWord** `{password}`
 
 ## exhentai
 
@@ -32,3 +32,24 @@ user_pass_hash = login_response_header['Set-Cookie'].findall("ipb_pass_hash=(.*?
 
 - **Cookie** `ipb_member_id={{ user_id }};ipb_pass_hash={{ user_pass_hash }}`
 
+#### add to favorites
+
+**POST** `/gallerypopups.php`
+
+query params
+
+- **gid** `{grallery_id}`
+
+- **t** `{grallery_token}`
+
+- **act** `addfav`
+
+from data
+
+- **favcat** `{fav_id}` [0~9 and favdel]
+
+- **favnote** `{note}`(optional)
+
+- **apply** `Add to Favorites` or `Apply Changes`
+
+- **update** `1`

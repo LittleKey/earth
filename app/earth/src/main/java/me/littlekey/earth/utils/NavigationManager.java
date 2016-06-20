@@ -39,7 +39,7 @@ public class NavigationManager {
   }
 
   public static void navigationTo(Context context, Uri uri) {
-    navigationTo(context, uri, null, null);
+    navigationTo(context, uri, null);
   }
 
   public static void navigationTo(Context context, String url) {
@@ -110,7 +110,7 @@ public class NavigationManager {
       bundle.putSerializable(Const.KEY_API_QUERY, pairs);
     }
     if (!CollectionUtils.isEmpty(paths)) {
-      bundle.putStringArrayList(Const.KEY_PATH, paths);
+      bundle.putStringArrayList(Const.KEY_API_PATH, paths);
     }
     return bundle;
   }

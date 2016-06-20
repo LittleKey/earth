@@ -1,5 +1,7 @@
 package me.littlekey.earth.network;
 
+import android.net.Uri;
+
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -10,7 +12,9 @@ import com.yuanqi.network.RequestManager;
 
 import org.jsoup.Jsoup;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,12 +26,41 @@ import me.littlekey.earth.utils.EarthUtils;
  */
 public class EarthRequest extends ApiRequest<EarthResponse> {
   private final RequestManager.CacheConfig mCacheConfig;
+  private Map<String, String> mPairs;
+  private final List<String> mPaths;
 
   public EarthRequest(ApiContext apiContext, int method, String url,
                       Response.Listener<EarthResponse> listener, Response.ErrorListener errorListener,
                       RequestManager.CacheConfig config) {
     super(apiContext, method, url, listener, errorListener);
     this.mCacheConfig = config;
+    mPaths = new ArrayList<>();
+  }
+
+  public void setQuery(Map<String, String> pairs) {
+    mPairs = pairs;
+  }
+
+  public void appendPath(String path) {
+    mPaths.add(path);
+  }
+
+  public Map<String, String> getQuery() {
+    return mPairs;
+  }
+
+  @Override
+  public String getUrl() {
+    Uri.Builder builder = Uri.parse(super.getUrl()).buildUpon();
+    for (String path: mPaths) {
+      builder.appendPath(path);
+    }
+    if (mPairs != null) {
+      for (Map.Entry<String, String> entry : mPairs.entrySet()) {
+        builder.appendQueryParameter(entry.getKey(), entry.getValue());
+      }
+    }
+    return builder.build().toString();
   }
 
   @Override
@@ -44,7 +77,6 @@ public class EarthRequest extends ApiRequest<EarthResponse> {
           EarthApplication.getInstance().getRequestManager().addCookie(key, fieldMap.get(key));
         }
       }
-
     }
     return new EarthResponse(
         Jsoup.parse(new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf8"))),

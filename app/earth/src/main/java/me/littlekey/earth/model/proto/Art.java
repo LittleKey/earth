@@ -42,6 +42,10 @@ public final class Art extends Message<Art, Art.Builder> {
 
   public static final String DEFAULT_FILE_SIZE = "";
 
+  public static final String DEFAULT_GID = "";
+
+  public static final String DEFAULT_TOKEN = "";
+
   @WireField(
       tag = 1,
       adapter = "com.squareup.wire.ProtoAdapter#STRING"
@@ -109,11 +113,23 @@ public final class Art extends Message<Art, Art.Builder> {
   )
   public final List<Tag> tags;
 
-  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags) {
-    this(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, ByteString.EMPTY);
+  @WireField(
+      tag = 12,
+      adapter = "com.squareup.wire.ProtoAdapter#STRING"
+  )
+  public final String gid;
+
+  @WireField(
+      tag = 13,
+      adapter = "com.squareup.wire.ProtoAdapter#STRING"
+  )
+  public final String token;
+
+  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token) {
+    this(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, ByteString.EMPTY);
   }
 
-  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, ByteString unknownFields) {
+  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
     this.title = title;
     this.publisher_name = publisher_name;
@@ -126,6 +142,8 @@ public final class Art extends Message<Art, Art.Builder> {
     this.liked = liked;
     this.file_size = file_size;
     this.tags = Internal.immutableCopyOf("tags", tags);
+    this.gid = gid;
+    this.token = token;
   }
 
   @Override
@@ -142,6 +160,8 @@ public final class Art extends Message<Art, Art.Builder> {
     builder.liked = liked;
     builder.file_size = file_size;
     builder.tags = Internal.copyOf("tags", tags);
+    builder.gid = gid;
+    builder.token = token;
     builder.addUnknownFields(unknownFields());
     return builder;
   }
@@ -162,7 +182,9 @@ public final class Art extends Message<Art, Art.Builder> {
         && Internal.equals(language, o.language)
         && Internal.equals(liked, o.liked)
         && Internal.equals(file_size, o.file_size)
-        && Internal.equals(tags, o.tags);
+        && Internal.equals(tags, o.tags)
+        && Internal.equals(gid, o.gid)
+        && Internal.equals(token, o.token);
   }
 
   @Override
@@ -181,6 +203,8 @@ public final class Art extends Message<Art, Art.Builder> {
       result = result * 37 + (liked != null ? liked.hashCode() : 0);
       result = result * 37 + (file_size != null ? file_size.hashCode() : 0);
       result = result * 37 + (tags != null ? tags.hashCode() : 1);
+      result = result * 37 + (gid != null ? gid.hashCode() : 0);
+      result = result * 37 + (token != null ? token.hashCode() : 0);
       super.hashCode = result;
     }
     return result;
@@ -200,6 +224,8 @@ public final class Art extends Message<Art, Art.Builder> {
     if (liked != null) builder.append(", liked=").append(liked);
     if (file_size != null) builder.append(", file_size=").append(file_size);
     if (tags != null) builder.append(", tags=").append(tags);
+    if (gid != null) builder.append(", gid=").append(gid);
+    if (token != null) builder.append(", token=").append(token);
     return builder.replace(0, 2, "Art{").append('}').toString();
   }
 
@@ -225,6 +251,10 @@ public final class Art extends Message<Art, Art.Builder> {
     public String file_size;
 
     public List<Tag> tags;
+
+    public String gid;
+
+    public String token;
 
     public Builder() {
       tags = Internal.newMutableList();
@@ -286,9 +316,19 @@ public final class Art extends Message<Art, Art.Builder> {
       return this;
     }
 
+    public Builder gid(String gid) {
+      this.gid = gid;
+      return this;
+    }
+
+    public Builder token(String token) {
+      this.token = token;
+      return this;
+    }
+
     @Override
     public Art build() {
-      return new Art(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, buildUnknownFields());
+      return new Art(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, buildUnknownFields());
     }
   }
 
@@ -310,6 +350,8 @@ public final class Art extends Message<Art, Art.Builder> {
           + (value.liked != null ? ProtoAdapter.BOOL.encodedSizeWithTag(9, value.liked) : 0)
           + (value.file_size != null ? ProtoAdapter.STRING.encodedSizeWithTag(10, value.file_size) : 0)
           + Tag.ADAPTER.asRepeated().encodedSizeWithTag(11, value.tags)
+          + (value.gid != null ? ProtoAdapter.STRING.encodedSizeWithTag(12, value.gid) : 0)
+          + (value.token != null ? ProtoAdapter.STRING.encodedSizeWithTag(13, value.token) : 0)
           + value.unknownFields().size();
     }
 
@@ -326,6 +368,8 @@ public final class Art extends Message<Art, Art.Builder> {
       if (value.liked != null) ProtoAdapter.BOOL.encodeWithTag(writer, 9, value.liked);
       if (value.file_size != null) ProtoAdapter.STRING.encodeWithTag(writer, 10, value.file_size);
       if (value.tags != null) Tag.ADAPTER.asRepeated().encodeWithTag(writer, 11, value.tags);
+      if (value.gid != null) ProtoAdapter.STRING.encodeWithTag(writer, 12, value.gid);
+      if (value.token != null) ProtoAdapter.STRING.encodeWithTag(writer, 13, value.token);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -346,6 +390,8 @@ public final class Art extends Message<Art, Art.Builder> {
           case 9: builder.liked(ProtoAdapter.BOOL.decode(reader)); break;
           case 10: builder.file_size(ProtoAdapter.STRING.decode(reader)); break;
           case 11: builder.tags.add(Tag.ADAPTER.decode(reader)); break;
+          case 12: builder.gid(ProtoAdapter.STRING.decode(reader)); break;
+          case 13: builder.token(ProtoAdapter.STRING.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);

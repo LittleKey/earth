@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.transition.Transition;
 
 import me.littlekey.earth.fragment.BaseFragment;
-import me.littlekey.earth.fragment.ViewerFragment;
+import me.littlekey.earth.fragment.DetailFragment;
 import me.littlekey.earth.utils.NavigationManager;
 
 /**
@@ -14,7 +14,7 @@ import me.littlekey.earth.utils.NavigationManager;
  */
 public class ViewerActivity extends SingleFragmentActivity {
 
-  private ViewerFragment mFragment;
+  private DetailFragment mFragment;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class ViewerActivity extends SingleFragmentActivity {
 
   @Override
   protected BaseFragment createFragment() {
-    return mFragment = ViewerFragment.newInstance(NavigationManager.parseIntent(getIntent()));
+    return mFragment = DetailFragment.newInstance(NavigationManager.parseIntent(getIntent()));
   }
 
   @Override

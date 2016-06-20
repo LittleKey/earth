@@ -17,6 +17,8 @@ message Art {
     bool liked = 9;
     string file_size = 10;
     repeated Tag tags = 11;
+    string gid = 12;
+    string token = 13;
 }
 
 message Tag {
@@ -33,4 +35,10 @@ message Image {
     int32 offset = 5;
     int32 width = 6;
     int32 height = 7;
+}
+
+message Fav {
+    string id = 1;
+    string name = 2;
+    string apply = 3;
 }

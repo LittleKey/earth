@@ -137,7 +137,9 @@ public final class Action {
     SELECT_STYLE(10),
     SELECT_STATURE(11),
     JUMP_CLEAR_BADGE(12),
-    EVENT(13);
+    EVENT(13),
+    LIKED(14),
+    SELECT_FAV(15);
 
     private final int value;
 

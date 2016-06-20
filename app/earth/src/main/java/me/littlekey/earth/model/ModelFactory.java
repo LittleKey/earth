@@ -15,6 +15,7 @@ import me.littlekey.earth.R;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
+import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.model.proto.Tag;
@@ -78,6 +79,8 @@ public class ModelFactory {
         .type(Model.Type.ART)
         .template(template)
         .art(art)
+        .identity(art.gid)
+        .token(art.token)
         .title(art.title)
         .subtitle(art.publisher_name)
         .category(category)
@@ -92,10 +95,14 @@ public class ModelFactory {
         .subModels(subModels);
     Bundle bundle = new Bundle();
     bundle.putParcelable(Const.EXTRA_MODEL, builder.build());
-    Bundle artBundle = new Bundle();
-    artBundle.putString(Const.EXTRA_URL, art.url);
-    bundle.putBundle(Const.KEY_BUNDLE, artBundle);
     Map<Integer, Action> actions = new HashMap<>();
+    Bundle favBundle = new Bundle();
+    favBundle.putString(Const.KEY_GID, art.gid);
+    favBundle.putString(Const.KEY_TOKEN, art.token);
+    actions.put(Const.ACTION_LIKED, new Action.Builder()
+        .type(Action.Type.SELECT_FAV)
+        .bundle(favBundle)
+        .build());
     actions.put(Const.ACTION_MAIN, new Action.Builder()
         .type(Action.Type.JUMP)
         .bundle(bundle)
@@ -152,6 +159,21 @@ public class ModelFactory {
         .url(image.origin_url)
         .flag(flag)
         .cover(image.src)
+        .build();
+  }
+
+  public static Model createModelFromFav(Fav fav, Model.Template template) {
+    fav = DataVerifier.verify(fav);
+    if (fav == null) {
+      return null;
+    }
+    return new Model.Builder()
+        .type(Model.Type.FAV)
+        .template(template)
+        .fav(fav)
+        .identity(fav.id)
+        .title(fav.name)
+        .description(fav.apply)
         .build();
   }
 

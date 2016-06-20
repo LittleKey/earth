@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.yuanqi.base.utils.CollectionUtils;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
@@ -56,19 +56,18 @@ public class ArtListFragment extends BaseFragment {
   }
 
   protected Fragment createContentFragment() {
-    Bundle bundle = new Bundle();
-    Bundle argBundle = getArguments();
-    List<String> paths = argBundle.getStringArrayList(Const.KEY_PATH);
-    if (!CollectionUtils.isEmpty(paths)) {
-      switch (paths.get(0)) {
-        case "tag":
-          bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());
-          break;
-      }
-    } else {
-      bundle.putInt(Const.KEY_API_TYPE, ApiType.ART_LIST.ordinal());
+    Bundle bundle = getArguments();
+    ArrayList<String> paths = bundle.getStringArrayList(Const.KEY_API_PATH);
+    // TODO : add to Const
+    switch (CollectionUtils.isEmpty(paths) ? "/" : paths.get(0)) {
+      case "tag":
+        bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());
+        bundle.putStringArrayList(Const.KEY_API_PATH, paths);
+        break;
+      case "/":
+        bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
+        break;
     }
-    bundle.putBundle(Const.KEY_BUNDLE, argBundle);
     return ListFragment.newInstance(bundle);
   }
 }

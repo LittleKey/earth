@@ -39,6 +39,8 @@ public class EarthPresenterFactory {
         .add(R.id.page_number, new BasePresenter())
         .add(R.id.size, new BasePresenter())
         .add(R.id.likes, new BasePresenter())
+        .add(R.id.likes, new FlagPresenter())
+        .add(R.id.likes, new ActionPresenter())
         .add(R.id.date, new BasePresenter())
         .add(R.id.fab, new ActionPresenter())
         .add(R.id.fab, new FlagPresenter());
@@ -60,5 +62,11 @@ public class EarthPresenterFactory {
     return new ViewGroupPresenter(parent, layout)
         .add(R.id.image, new ImagePresenter())
         .add(R.id.number, new BasePresenter());
+  }
+
+  public static ViewGroupPresenter createFavSelectPresenter(ViewGroup parent, int layout) {
+    return new ViewGroupPresenter(parent, layout)
+        .add(R.id.title, new BasePresenter())
+        .add(new ActionPresenter());
   }
 }

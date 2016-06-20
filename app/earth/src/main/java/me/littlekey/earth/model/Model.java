@@ -16,6 +16,7 @@ import java.util.Map;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
+import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.model.proto.Tag;
@@ -58,6 +59,9 @@ public final class Model implements Parcelable {
           case IMAGE:
             Image image = Image.ADAPTER.decode(bytes);
             return ModelFactory.createModelFromImage(image, template);
+          case FAV:
+            Fav fav = Fav.ADAPTER.decode(bytes);
+            return ModelFactory.createModelFromFav(fav, template);
           default:
             throw new ParcelFormatException(String.format("can not parcel '%s'", type.name()));
         }
@@ -73,6 +77,7 @@ public final class Model implements Parcelable {
     }
   };
   private final String identity;
+  private final String token;
   private final Type type;
   private final Template template;
   private final String title;
@@ -89,6 +94,7 @@ public final class Model implements Parcelable {
   private final Art art;
   private final Tag tag;
   private final Image image;
+  private final Fav fav;
   private final Count count;
   private final Member member;
   private final Flag flag;
@@ -99,6 +105,7 @@ public final class Model implements Parcelable {
 
   private Model(Builder builder) {
     this.identity = builder.identity;
+    this.token = builder.token;
     this.type = builder.type;
     this.template = builder.template;
     this.title = builder.title;
@@ -115,6 +122,7 @@ public final class Model implements Parcelable {
     this.art = builder.art;
     this.tag = builder.tag;
     this.image = builder.image;
+    this.fav = builder.fav;
     this.count = builder.count;
     this.member = builder.member;
     this.flag = builder.flag;
@@ -136,6 +144,10 @@ public final class Model implements Parcelable {
 
   public String getIdentity() {
     return identity;
+  }
+
+  public String getToken() {
+    return token;
   }
 
   public Type getType() {
@@ -204,6 +216,10 @@ public final class Model implements Parcelable {
     return image;
   }
 
+  public Fav getFav() {
+    return fav;
+  }
+
   public Count getCount() {
     return count;
   }
@@ -242,6 +258,7 @@ public final class Model implements Parcelable {
     if (!(other instanceof Model)) return false;
     Model o = (Model) other;
     return equals(identity, o.identity)
+        && equals(token, o.token)
         && equals(type, o.type)
         && equals(template, o.template)
         && equals(title, o.title)
@@ -258,6 +275,7 @@ public final class Model implements Parcelable {
         && equals(art, o.art)
         && equals(tag, o.tag)
         && equals(image, o.image)
+        && equals(fav, o.fav)
         && equals(count, o.count)
         && equals(member, o.member)
         && equals(flag, o.flag)
@@ -276,6 +294,7 @@ public final class Model implements Parcelable {
     int result = hashCode;
     if (result == 0) {
       result = identity != null ? identity.hashCode() : 0;
+      result = result * 37 + (token != null ? token.hashCode() : 0);
       result = result * 37 + (type != null ? type.hashCode() : 0);
       result = result * 37 + (template != null ? template.hashCode() : 0);
       result = result * 37 + (title != null ? title.hashCode() : 0);
@@ -292,6 +311,7 @@ public final class Model implements Parcelable {
       result = result * 37 + (art != null ? art.hashCode() : 0);
       result = result * 37 + (tag != null ? tag.hashCode() : 0);
       result = result * 37 + (image != null ? image.hashCode() : 0);
+      result = result * 37 + (fav != null ? fav.hashCode() : 0);
       result = result * 37 + (count != null ? count.hashCode() : 0);
       result = result * 37 + (member != null ? member.hashCode() : 0);
       result = result * 37 + (flag != null ? flag.hashCode() : 0);
@@ -334,6 +354,10 @@ public final class Model implements Parcelable {
         break;
       case IMAGE:
         dest.writeByteArray(image.encode());
+        break;
+      case FAV:
+        dest.writeByteArray(fav.encode());
+        break;
       default:
         break;
     }
@@ -345,7 +369,8 @@ public final class Model implements Parcelable {
     USER(2),
     ART(3),
     TAG(4),
-    IMAGE(5);
+    IMAGE(5),
+    FAV(6);
 
     private final int value;
 
@@ -367,7 +392,8 @@ public final class Model implements Parcelable {
     ITEM_ART(4),
     PARENT_TAG(5),
     CHILD_TAG(6),
-    PREVIEW_IMAGE(7);
+    PREVIEW_IMAGE(7),
+    SELECT_FAV(8);
 
     private final int value;
 
@@ -428,6 +454,7 @@ public final class Model implements Parcelable {
   public static final class Builder {
 
     public String identity;
+    public String token;
     public Type type;
     public Template template;
     public String title;
@@ -444,6 +471,7 @@ public final class Model implements Parcelable {
     public Art art;
     public Tag tag;
     public Image image;
+    public Fav fav;
     public Count count;
     public Member member;
     public Flag flag;
@@ -456,6 +484,7 @@ public final class Model implements Parcelable {
     public Builder(Model message) {
       if (message == null) return;
       this.identity = message.identity;
+      this.token = message.token;
       this.type = message.type;
       this.template = message.template;
       this.title = message.title;
@@ -472,6 +501,7 @@ public final class Model implements Parcelable {
       this.art = message.art;
       this.tag = message.tag;
       this.image = message.image;
+      this.fav = message.fav;
       this.count = message.count;
       this.member = message.member;
       this.flag = message.flag;
@@ -501,6 +531,11 @@ public final class Model implements Parcelable {
 
     public Builder identity(String identity) {
       this.identity = identity;
+      return this;
+    }
+
+    public Builder token(String token) {
+      this.token = token;
       return this;
     }
 
@@ -583,6 +618,11 @@ public final class Model implements Parcelable {
 
     public Builder image(Image image) {
       this.image = image;
+      return this;
+    }
+
+    public Builder fav(Fav fav) {
+      this.fav = fav;
       return this;
     }
 

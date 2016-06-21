@@ -21,6 +21,7 @@ public class DataGeneratorFactory {
     switch (apiType) {
       case TAG_LIST:
       case HOME_LIST:
+      case SEARCH_LIST:
         return new ArtListsDataGenerator(apiType, paths, pairs);
       case ART_DETAIL:
         return new ArtDetailDataGenerator(paths, pairs);

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:ignore="RtlHardcoded">
 
-    <include layout="@layout/fragment_home_content" />
+    <include layout="@layout/fragment_art_list_content" />
 
     <include
         layout="@layout/drawer_navigation"

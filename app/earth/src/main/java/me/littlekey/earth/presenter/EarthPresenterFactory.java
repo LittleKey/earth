@@ -3,6 +3,7 @@ package me.littlekey.earth.presenter;
 import android.view.ViewGroup;
 
 import com.yuanqi.mvp.presenter.ViewGroupPresenter;
+import com.yuanqi.mvp.widget.MvpRecyclerView;
 
 import me.littlekey.earth.R;
 
@@ -68,5 +69,18 @@ public class EarthPresenterFactory {
     return new ViewGroupPresenter(parent, layout)
         .add(R.id.title, new BasePresenter())
         .add(new ActionPresenter());
+  }
+
+  public static ViewGroupPresenter createCategoryItemPresenter(ViewGroup parent, int layout,
+      MvpRecyclerView.Adapter adapter) {
+    return new ViewGroupPresenter(parent, layout, adapter)
+        .add(R.id.title, new CategoryPresenter())
+        .add(R.id.black_background, new FlagPresenter())
+        .add(new ActionPresenter());
+  }
+
+  public static ViewGroupPresenter createTitlePresenter(ViewGroup parent, int layout) {
+    return new ViewGroupPresenter(parent, layout)
+        .add(R.id.title, new BasePresenter());
   }
 }

@@ -2,6 +2,8 @@ package me.littlekey.earth.utils;
 
 import android.content.Context;
 
+import java.util.Set;
+
 import me.littlekey.earth.EarthApplication;
 
 /**
@@ -44,5 +46,15 @@ public class PreferenceUtils {
   public static void removeString(final String name, final String key) {
     EarthApplication.getInstance().getSharedPreferences(name, Context.MODE_PRIVATE).edit()
         .remove(key).commit();
+  }
+
+  public static void setStringSet(final String name, final String key, final Set<String> value) {
+    EarthApplication.getInstance().getSharedPreferences(name, Context.MODE_PRIVATE).edit()
+        .putStringSet(key, value).commit();
+  }
+
+  public static Set<String> getStringSet(final String name, final String key, final Set<String> defaultValue) {
+    return EarthApplication.getInstance().getSharedPreferences(name, Context.MODE_PRIVATE)
+        .getStringSet(key, defaultValue);
   }
 }

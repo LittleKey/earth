@@ -26,6 +26,8 @@ public final class Tag extends Message<Tag, Tag.Builder> {
 
   public static final String DEFAULT_KEY = "";
 
+  public static final String DEFAULT_URL = "";
+
   @WireField(
       tag = 1,
       adapter = "com.squareup.wire.ProtoAdapter#STRING"
@@ -40,19 +42,26 @@ public final class Tag extends Message<Tag, Tag.Builder> {
 
   @WireField(
       tag = 3,
+      adapter = "com.squareup.wire.ProtoAdapter#STRING"
+  )
+  public final String url;
+
+  @WireField(
+      tag = 4,
       adapter = "me.littlekey.earth.model.proto.Tag#ADAPTER",
       label = WireField.Label.REPEATED
   )
   public final List<Tag> values;
 
-  public Tag(String id, String key, List<Tag> values) {
-    this(id, key, values, ByteString.EMPTY);
+  public Tag(String id, String key, String url, List<Tag> values) {
+    this(id, key, url, values, ByteString.EMPTY);
   }
 
-  public Tag(String id, String key, List<Tag> values, ByteString unknownFields) {
+  public Tag(String id, String key, String url, List<Tag> values, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
     this.id = id;
     this.key = key;
+    this.url = url;
     this.values = Internal.immutableCopyOf("values", values);
   }
 
@@ -61,6 +70,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     Builder builder = new Builder();
     builder.id = id;
     builder.key = key;
+    builder.url = url;
     builder.values = Internal.copyOf("values", values);
     builder.addUnknownFields(unknownFields());
     return builder;
@@ -74,6 +84,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     return Internal.equals(unknownFields(), o.unknownFields())
         && Internal.equals(id, o.id)
         && Internal.equals(key, o.key)
+        && Internal.equals(url, o.url)
         && Internal.equals(values, o.values);
   }
 
@@ -84,6 +95,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
       result = unknownFields().hashCode();
       result = result * 37 + (id != null ? id.hashCode() : 0);
       result = result * 37 + (key != null ? key.hashCode() : 0);
+      result = result * 37 + (url != null ? url.hashCode() : 0);
       result = result * 37 + (values != null ? values.hashCode() : 1);
       super.hashCode = result;
     }
@@ -95,6 +107,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     StringBuilder builder = new StringBuilder();
     if (id != null) builder.append(", id=").append(id);
     if (key != null) builder.append(", key=").append(key);
+    if (url != null) builder.append(", url=").append(url);
     if (values != null) builder.append(", values=").append(values);
     return builder.replace(0, 2, "Tag{").append('}').toString();
   }
@@ -103,6 +116,8 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     public String id;
 
     public String key;
+
+    public String url;
 
     public List<Tag> values;
 
@@ -120,6 +135,11 @@ public final class Tag extends Message<Tag, Tag.Builder> {
       return this;
     }
 
+    public Builder url(String url) {
+      this.url = url;
+      return this;
+    }
+
     public Builder values(List<Tag> values) {
       Internal.checkElementsNotNull(values);
       this.values = values;
@@ -128,7 +148,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
 
     @Override
     public Tag build() {
-      return new Tag(id, key, values, buildUnknownFields());
+      return new Tag(id, key, url, values, buildUnknownFields());
     }
   }
 
@@ -141,7 +161,8 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     public int encodedSize(Tag value) {
       return (value.id != null ? ProtoAdapter.STRING.encodedSizeWithTag(1, value.id) : 0)
           + (value.key != null ? ProtoAdapter.STRING.encodedSizeWithTag(2, value.key) : 0)
-          + Tag.ADAPTER.asRepeated().encodedSizeWithTag(3, value.values)
+          + (value.url != null ? ProtoAdapter.STRING.encodedSizeWithTag(3, value.url) : 0)
+          + Tag.ADAPTER.asRepeated().encodedSizeWithTag(4, value.values)
           + value.unknownFields().size();
     }
 
@@ -149,7 +170,8 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     public void encode(ProtoWriter writer, Tag value) throws IOException {
       if (value.id != null) ProtoAdapter.STRING.encodeWithTag(writer, 1, value.id);
       if (value.key != null) ProtoAdapter.STRING.encodeWithTag(writer, 2, value.key);
-      if (value.values != null) Tag.ADAPTER.asRepeated().encodeWithTag(writer, 3, value.values);
+      if (value.url != null) ProtoAdapter.STRING.encodeWithTag(writer, 3, value.url);
+      if (value.values != null) Tag.ADAPTER.asRepeated().encodeWithTag(writer, 4, value.values);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -161,7 +183,8 @@ public final class Tag extends Message<Tag, Tag.Builder> {
         switch (tag) {
           case 1: builder.id(ProtoAdapter.STRING.decode(reader)); break;
           case 2: builder.key(ProtoAdapter.STRING.decode(reader)); break;
-          case 3: builder.values.add(Tag.ADAPTER.decode(reader)); break;
+          case 3: builder.url(ProtoAdapter.STRING.decode(reader)); break;
+          case 4: builder.values.add(Tag.ADAPTER.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);

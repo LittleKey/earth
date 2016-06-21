@@ -70,7 +70,8 @@ public class TagFragment extends BaseFragment {
   public void onEventMainThread(OnClickTagItemEvent event) {
     int index;
     if ((index = mModel.getSubModels().indexOf(event.getTag())) != -1) {
-      String url = buildUrl(mModel.getSubModels().get(index));
+//      String url = buildUrl(mModel.getSubModels().get(index));
+      String url = mModel.getSubModels().get(index).getUrl();
       NavigationManager.navigationTo(getActivity(),
           NavigationManager.buildUri(Uri.parse(url).getEncodedPath()));
     }

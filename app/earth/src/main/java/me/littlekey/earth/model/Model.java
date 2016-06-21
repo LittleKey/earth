@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.littlekey.earth.R;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
@@ -21,6 +22,7 @@ import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.model.proto.User;
+import me.littlekey.earth.utils.EarthUtils;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -370,7 +372,8 @@ public final class Model implements Parcelable {
     ART(3),
     TAG(4),
     IMAGE(5),
-    FAV(6);
+    FAV(6),
+    TEXT(7);
 
     private final int value;
 
@@ -393,7 +396,9 @@ public final class Model implements Parcelable {
     PARENT_TAG(5),
     CHILD_TAG(6),
     PREVIEW_IMAGE(7),
-    SELECT_FAV(8);
+    SELECT_FAV(8),
+    Category(9),
+    TITLE(10);
 
     private final int value;
 
@@ -433,6 +438,11 @@ public final class Model implements Parcelable {
 
     public String getName() {
       return name().replace("__", "-").replace("_", " ").toUpperCase();
+    }
+
+    public String getSearchName() {
+      return EarthUtils.formatString(R.string.category_search_key,
+          name().replace("__", "-").replace("_", "").toLowerCase());
     }
 
     public static Category from(String name) {

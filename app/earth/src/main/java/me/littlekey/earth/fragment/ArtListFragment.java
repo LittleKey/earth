@@ -5,23 +5,36 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.yuanqi.base.utils.CollectionUtils;
+import com.yuanqi.network.NameValuePair;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
+import me.littlekey.earth.dialog.CategoryDialog;
+import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
 
 /**
  * Created by littlekey on 16/6/11.
  */
-public class ArtListFragment extends BaseFragment {
+public class ArtListFragment extends BaseFragment
+    implements
+      View.OnClickListener,
+      TextView.OnEditorActionListener {
+
+  private ListFragment mContentFragment;
+  private EditText mSearchView;
 
   public static ArtListFragment newInstance(Bundle bundle) {
     ArtListFragment fragment = new ArtListFragment();
@@ -32,7 +45,7 @@ public class ArtListFragment extends BaseFragment {
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_home, container, false);
+    return inflater.inflate(R.layout.fragment_art_list, container, false);
   }
 
   @Override
@@ -47,12 +60,47 @@ public class ArtListFragment extends BaseFragment {
           .add(R.id.fragment_container, contentFragment)
           .commit();
     }
+    view.findViewById(R.id.btn_search).setOnClickListener(this);
+    view.findViewById(R.id.fab).setOnClickListener(this);
+    mSearchView = (EditText) view.findViewById(R.id.search);
+    mSearchView.setOnEditorActionListener(this);
   }
 
   @Override
   public void onDestroyView() {
     EarthApplication.getInstance().getRequestManager().cancel(this);
     super.onDestroyView();
+  }
+
+  @Override
+  public void onClick(View v) {
+    switch (v.getId()) {
+      case R.id.fab:
+//        mContentFragment.smoothScrollToPosition(0);
+        CategoryDialog.newInstance().show(getActivity());
+        break;
+      case R.id.btn_search:
+        search();
+        break;
+    }
+  }
+
+  @Override
+  public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+    if (2 <= actionId && actionId <= 6) {
+      search();
+    }
+    return false;
+  }
+
+  private void search() {
+    List<NameValuePair> pairs = new ArrayList<>();
+    pairs.add(new NameValuePair(Const.KEY_F_SEARCH, mSearchView.getText().toString()));
+    for (Model.Category category: EarthApplication.getInstance().getSelectedCategory()) {
+      pairs.add(new NameValuePair(category.getSearchName(), Const.ONE));
+    }
+    pairs.add(new NameValuePair(Const.KEY_F_APPLY, Const.APPLY_AND_FILTER));
+    mContentFragment.resetApi(ApiType.SEARCH_LIST, null, pairs.toArray(new NameValuePair[pairs.size()]));
   }
 
   protected Fragment createContentFragment() {
@@ -68,6 +116,6 @@ public class ArtListFragment extends BaseFragment {
         bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
         break;
     }
-    return ListFragment.newInstance(bundle);
+    return mContentFragment = ListFragment.newInstance(bundle);
   }
 }

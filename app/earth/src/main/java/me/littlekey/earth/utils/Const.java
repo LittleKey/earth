@@ -1,5 +1,7 @@
 package me.littlekey.earth.utils;
 
+import com.yuanqi.base.utils.FormatUtils;
+
 /**
  * Created by nengxiangzhou on 15/12/24.
  */
@@ -11,6 +13,8 @@ public class Const {
   public static final String LAST_CONTACT = "last_contact";
   public static final String LAST_REGIONS_ID = "last_regions_id";
   public static final String LAST_REGION_TEXT = "last_region_text";
+  public static final String LAST_SELECTED = "last_selected";
+  public static final String LAST_CATEGORY = "last_category";
   public static final String FIRST_SYNC = "first_sync";
   public static final String EMPTY_STRING = "";
   public static final String IPB_MEMBER_ID = "ipb_member_id";
@@ -60,7 +64,9 @@ public class Const {
   public static final String KEY_UPDATE = "update";
   public static final String KEY_FAV_CAT = "favcat";
   public static final String KEY_APPLY = "apply";
+  public static final String KEY_F_APPLY = "f_apply";
   public static final String KEY_TOKEN = "token";
+  public static final String KEY_F_SEARCH = "f_search";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -117,6 +123,8 @@ public class Const {
   public static final String FAV = "fav";
   public static final String APPLY_CHANGES = "apply_changes";
   public static final String ADD_TO_FAVOURITES = "add_to_favourites";
+  public static final String APPLY_AND_FILTER = "Apply+Filter";
+  public static final int ART_LIST_TOP_PADDING = FormatUtils.dipsToPix(60);
   public static final int MIN_PASSWORD_LENGTH = 6;
   public static final int MAX_PASSWORD_LENGTH = 30;
   public static final int MIN_NICKNAME_LENGTH = 1;

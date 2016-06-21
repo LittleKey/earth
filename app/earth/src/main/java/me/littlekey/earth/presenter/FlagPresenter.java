@@ -34,6 +34,9 @@ public class FlagPresenter extends EarthPresenter {
       case R.id.likes:
         judgeLiked(model);
         break;
+      case R.id.black_background:
+        judgeBlackBackgroundSelected(model);
+        break;
       default:
         judgeSelected(model);
         break;
@@ -78,6 +81,10 @@ public class FlagPresenter extends EarthPresenter {
 
   private void judgeSelected(Model model) {
     view().setVisibility(model.getFlag().is_selected ? View.VISIBLE : View.GONE);
+  }
+
+  private void judgeBlackBackgroundSelected(Model model) {
+    view().setVisibility(Wire.get(model.getFlag().is_selected, false) ? View.GONE : View.VISIBLE);
   }
 
   private void judgeHasMore(Model model) {

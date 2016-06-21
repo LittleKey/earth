@@ -139,7 +139,8 @@ public final class Action {
     JUMP_CLEAR_BADGE(12),
     EVENT(13),
     LIKED(14),
-    SELECT_FAV(15);
+    SELECT_FAV(15),
+    SELECT_CATEGORY(16);
 
     private final int value;
 

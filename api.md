@@ -53,3 +53,34 @@ from data
 - **apply** `Add to Favorites` or `Apply Changes`
 
 - **update** `1`
+
+#### search
+
+**GET** '/'
+
+query params
+
+- **f_doujinshi** `[0|1]`
+
+- **f_manga** `[0|1]`
+
+- **f_artistcg** `[0|1]`
+
+- **f_gamecg** `[0|1]`
+
+- **f_western** `[0|1]`
+
+- **f_non-h** `[0|1]`
+
+- **f_imageset** `[0|1]`
+
+- **f_cosplay** `[0|1]`
+
+- **f_asianporn** `[0|1]`
+
+- **f_misc** `[0|1]`
+
+- **f_search** `{search content}`
+
+- **f_apply** `Apply+Filter`
+

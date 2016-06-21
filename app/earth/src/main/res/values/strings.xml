@@ -8,6 +8,10 @@
     <string name="loading_hint">加载中</string>
     <string name="parse_error">parse %s error</string>
 
+    <!-- category -->
+    <string name="select_category">分类选择</string>
+    <string name="category_search_key">f_%s</string>
+
     <!-- favourite -->
     <string name="unlike_error">取消收藏失败</string>
     <string name="unlike_succeed">取消收藏成功</string>
@@ -20,6 +24,9 @@
 
     <!-- behavior -->
     <string name="fixed_fling_behavior">me.littlekey.earth.widget.FixedFlingBehavior</string>
+    <string name="hide_fab_on_scroll_behavior">me.littlekey.earth.widget.HideFabOnScrollBehavior</string>
+    <string name="search_scroll_behavior">android.support.design.widget.SearchScrollBehavior</string>
+    <string name="search_app_bar_behavior">android.support.design.widget.SearchAppBarBehavior</string>
 
     <!-- Login -->
     <string name="login">登陆</string>

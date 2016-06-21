@@ -46,6 +46,7 @@ public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
         .newEarthRequest(apiType, Request.Method.GET, mListener, mErrorListener);
     switch (apiType) {
       case HOME_LIST:
+      case SEARCH_LIST:
         request.setQuery(pairs);
         break;
       case TAG_LIST:

@@ -24,7 +24,8 @@ message Art {
 message Tag {
     string id = 1;
     string key = 2;
-    repeated Tag values = 3;
+    string url = 3;
+    repeated Tag values = 4;
 }
 
 message Image {

@@ -119,7 +119,11 @@ public class EarthCrawler {
       String key = tagEle.select("td.tc").text();
       List<Tag> values = new ArrayList<>();
       for (Element valueEle: tagEle.select("td > div > a")) {
-        values.add(new Tag.Builder().id(UUID.randomUUID().toString()).key(valueEle.text()).build());
+        values.add(new Tag.Builder()
+            .id(UUID.randomUUID().toString())
+            .key(valueEle.text())
+            .url(valueEle.attr("href"))
+            .build());
       }
       tags.add(new Tag.Builder()
           .id(UUID.randomUUID().toString())

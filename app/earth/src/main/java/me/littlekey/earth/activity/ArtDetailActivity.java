@@ -12,7 +12,7 @@ import me.littlekey.earth.utils.NavigationManager;
 /**
  * Created by littlekey on 16/6/16.
  */
-public class ViewerActivity extends SingleFragmentActivity {
+public class ArtDetailActivity extends SingleFragmentActivity {
 
   private DetailFragment mFragment;
 

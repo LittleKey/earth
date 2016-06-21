@@ -43,6 +43,7 @@
     <color name="light_black_bg">#414246</color>
     <color name="light_black_bg1">#303135</color>
     <color name="half_transparent_white">#7Fffffff</color>
+    <color name="half_transparent_black">#7F000000</color>
     <color name="transparent_white">#19ffffff</color>
     <color name="transparent">#00000000</color>
 

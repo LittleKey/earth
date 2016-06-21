@@ -2,6 +2,7 @@ package me.littlekey.earth.model;
 
 import com.yuanqi.mvp.PageList;
 import com.yuanqi.network.ApiRequest;
+import com.yuanqi.network.NameValuePair;
 
 import me.littlekey.earth.model.data.EarthDataGenerator;
 
@@ -20,5 +21,9 @@ public class EarthApiList<T> extends PageList<T, Model> {
   protected void onRequestCreated(ApiRequest<T> request, boolean clearData) {
     super.onRequestCreated(request, clearData);
     mDataGenerator.onRequestCreated(request, clearData);
+  }
+
+  public void refresh(NameValuePair... pairs) {
+    mDataGenerator.resetPairs(pairs);
   }
 }

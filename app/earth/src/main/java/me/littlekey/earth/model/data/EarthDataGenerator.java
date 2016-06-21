@@ -50,6 +50,10 @@ public abstract class EarthDataGenerator<R> implements DataGenerator<R, Model> {
 
   protected abstract ApiRequest<R> onCreateRequest(ApiType apiType, Map<String, String> pairs);
 
+  public void resetPairs(NameValuePair... pairs) {
+    init(mApiType, pairs);
+  }
+
   public void setEnableCache(boolean enableCache) {
     this.mEnableCache = enableCache;
   }

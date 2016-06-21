@@ -33,7 +33,7 @@ import me.littlekey.earth.widget.EarthSwipeRefreshLayout;
  */
 public class ListFragment extends BaseFragment {
 
-  private final static int ART_VIEWER_GRID_SPAN = 2;
+  private final static int ART_DETAIL_GRID_SPAN = 2;
 
   private EarthSwipeRefreshLayout mSwipeRefreshLayout;
   private MvpRecyclerView mRecyclerView;
@@ -133,6 +133,16 @@ public class ListFragment extends BaseFragment {
     });
   }
 
+  public void smoothScrollToPosition(int position) {
+    if (mRecyclerView != null) {
+      mRecyclerView.smoothScrollToPosition(position);
+    }
+  }
+
+  public void refresh(NameValuePair... pairs) {
+    mList.refresh(pairs);
+  }
+
   public void resetApi(@NonNull ApiType apiType, List<String> paths, NameValuePair... pairs) {
     mList = new EarthApiList<>(DataGeneratorFactory.createDataGenerator(apiType, paths, pairs));
     final ListAdapter adapter = new ListAdapter(getArguments());
@@ -140,14 +150,15 @@ public class ListFragment extends BaseFragment {
     mList.registerDataLoadObserver(mSwipeRefreshLayout);
     mSwipeRefreshLayout.setAdapter(adapter);
     adapter.setList(mList);
+    mList.refresh();
     final RecyclerView.LayoutManager layoutManager;
     switch (apiType) {
       case ART_DETAIL:
-        layoutManager = new GridLayoutManager(getActivity(), ART_VIEWER_GRID_SPAN) {
+        layoutManager = new GridLayoutManager(getActivity(), ART_DETAIL_GRID_SPAN) {
           @Override
           protected int getExtraLayoutSpace(RecyclerView.State state) {
             // for preload more image
-            return 5 * getHeight();
+            return Math.max(super.getExtraLayoutSpace(state), 3 * getHeight());
           }
         };
         ((GridLayoutManager) layoutManager).setSpanSizeLookup(
@@ -156,15 +167,15 @@ public class ListFragment extends BaseFragment {
               public int getSpanSize(int position) {
                 if (position >= adapter.size()) {
                   // NOTE : footer or header
-                  return ART_VIEWER_GRID_SPAN;
+                  return ART_DETAIL_GRID_SPAN;
                 }
                 int view_type = adapter.getDataItemViewType(position);
                 Model.Template template = Model.Template.values()[view_type];
                 switch (template) {
                   case PREVIEW_IMAGE:
-                    return ART_VIEWER_GRID_SPAN / 2;
+                    return ART_DETAIL_GRID_SPAN / 2;
                   default:
-                    return ART_VIEWER_GRID_SPAN / 2;
+                    return ART_DETAIL_GRID_SPAN / 2;
                 }
               }
             }
@@ -199,6 +210,22 @@ public class ListFragment extends BaseFragment {
           }
         });
         break;
+      case HOME_LIST:
+      case TAG_LIST:
+      case SEARCH_LIST:
+        /** TODO : code refactoring
+         *  {@link android.support.design.widget.SearchAppBarBehavior}
+         *  {@link android.support.design.widget.SearchScrollBehavior}
+         */
+        mRecyclerView.setClipToPadding(false);
+        mRecyclerView.setPadding(mRecyclerView.getPaddingLeft(),
+            Const.ART_LIST_TOP_PADDING,
+            mRecyclerView.getPaddingRight(),
+            mRecyclerView.getPaddingBottom());
+        mSwipeRefreshLayout.setProgressViewOffset(true,
+            Const.ART_LIST_TOP_PADDING - EarthSwipeRefreshLayout.DEFAULT_CIRCLE_TARGET,
+            Const.ART_LIST_TOP_PADDING + EarthSwipeRefreshLayout.DEFAULT_CIRCLE_TARGET);
+        // NOTE : don't break, let it go to default
       default:
         layoutManager = new LinearLayoutManager(getActivity());
     }

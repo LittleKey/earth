@@ -75,6 +75,7 @@ public class EarthRequestManager extends RequestManager {
       case TAG_LIST:
       case ART_DETAIL:
       case HOME_LIST:
+      case SEARCH_LIST:
         return Const.API_ROOT;
       case LIKED:
         return Const.API_LIKED;

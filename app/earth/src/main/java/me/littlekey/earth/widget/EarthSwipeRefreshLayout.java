@@ -12,6 +12,8 @@ import me.littlekey.earth.model.Model;
  */
 public class EarthSwipeRefreshLayout extends MvpSwipeRefreshLayout<Model> {
 
+  public static final int DEFAULT_CIRCLE_TARGET = 64;
+
   public EarthSwipeRefreshLayout(Context context) {
     this(context, null);
   }

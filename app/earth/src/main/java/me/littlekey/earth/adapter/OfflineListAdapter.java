@@ -26,6 +26,10 @@ public class OfflineListAdapter extends MvpRecyclerView.Adapter<Model> {
         return EarthPresenterFactory.createParentTagPresenter(parent, R.layout.item_parent_tag);
       case CHILD_TAG:
         return EarthPresenterFactory.createChildTagPresenter(parent, R.layout.item_child_tag);
+      case Category:
+        return EarthPresenterFactory.createCategoryItemPresenter(parent, R.layout.item_category, this);
+      case TITLE:
+        return EarthPresenterFactory.createTitlePresenter(parent, R.layout.item_title);
       default:
         throw new IllegalStateException("Nonsupport template : " + template.name());
     }

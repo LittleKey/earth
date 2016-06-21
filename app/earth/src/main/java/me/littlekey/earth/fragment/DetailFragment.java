@@ -68,7 +68,7 @@ public class DetailFragment extends BaseFragment implements ViewPager.OnPageChan
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    mPresenter = EarthPresenterFactory.createArtDetailPresenter(container, R.layout.fragment_viewer);
+    mPresenter = EarthPresenterFactory.createArtDetailPresenter(container, R.layout.fragment_detail);
     return mPresenter.view;
   }
 

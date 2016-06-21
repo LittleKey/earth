@@ -12,6 +12,7 @@ import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
+import me.littlekey.earth.event.OnClickTagItemEvent;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Count;
@@ -126,6 +127,7 @@ public class ModelFactory {
     Map<Integer, Action> actions = new HashMap<>();
     actions.put(Const.ACTION_MAIN, new Action.Builder()
         .type(Action.Type.EVENT)
+        .clazz(OnClickTagItemEvent.class)
         .build());
     return new Model.Builder()
         .type(Model.Type.TAG)
@@ -133,6 +135,7 @@ public class ModelFactory {
         .tag(tag)
         .identity(tag.id)
         .title(tag.key)
+        .url(tag.url)
         .subModels(subModels)
         .flag(flag)
         .actions(actions)
@@ -174,6 +177,26 @@ public class ModelFactory {
         .identity(fav.id)
         .title(fav.name)
         .description(fav.apply)
+        .build();
+  }
+
+  public static Model createModelFromCategory(Model.Category category, Model.Template template) {
+    if (category == null) {
+      return null;
+    }
+    Flag flag = new Flag.Builder()
+        .is_selected(EarthApplication.getInstance().getSelectedCategory().contains(category))
+        .build();
+    Map<Integer, Action> actions = new HashMap<>();
+    actions.put(Const.ACTION_MAIN, new Action.Builder()
+        .type(Action.Type.SELECT_CATEGORY)
+        .build());
+    return new Model.Builder()
+        .category(category)
+        .template(template)
+        .title(category.getName())
+        .flag(flag)
+        .actions(actions)
         .build();
   }
 

@@ -1,10 +1,12 @@
 package me.littlekey.earth.presenter;
 
 import android.app.ActivityOptions;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -13,6 +15,7 @@ import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.mvp.widget.MvpRecyclerView;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +26,6 @@ import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.dialog.LikedDialog;
 import me.littlekey.earth.dialog.ProgressDialog;
-import me.littlekey.earth.event.OnClickTagItemEvent;
 import me.littlekey.earth.event.OnLikedEvent;
 import me.littlekey.earth.event.OnSelectEvent;
 import me.littlekey.earth.model.Model;
@@ -36,6 +38,7 @@ import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.NavigationManager;
 import me.littlekey.earth.utils.ToastUtils;
+import timber.log.Timber;
 
 
 /**
@@ -58,8 +61,12 @@ public class ActionPresenter extends EarthPresenter {
             if (null != action.clazz) {
               NavigationManager.navigationTo(view().getContext(), action.clazz, action.bundle);
             } else if (null != action.uri) {
+              Rect rectangle = new Rect();
+              Window window = ((FragmentActivity) group().context).getWindow();
+              window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                  && !TextUtils.isEmpty(action.transitionName)) {
+                  && !TextUtils.isEmpty(action.transitionName)
+                  && view().getTop() > 0 && view().getBottom() <= rectangle.height()) {
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                     (FragmentActivity) view().getContext(), view().findViewById(R.id.cover), action.transitionName);
                 NavigationManager.navigationTo(view().getContext(), action.uri, action.bundle, options);
@@ -86,7 +93,20 @@ public class ActionPresenter extends EarthPresenter {
             check(model);
             break;
           case EVENT:
-            EventBus.getDefault().post(new OnClickTagItemEvent(model));
+            if (action.clazz != null) {
+              try {
+                EventBus.getDefault().post(
+                    action.clazz.getDeclaredConstructor(Model.class).newInstance(model));
+              } catch (IllegalAccessException e) {
+                Timber.e(e, "IllegalAccessException in ActionPresenter");
+              } catch (NoSuchMethodException e) {
+                Timber.e(e, "NoSuchMethodException in ActionPresenter");
+              } catch (InstantiationException e) {
+                Timber.e(e, "InstantiationException ActionPresenter");
+              } catch (InvocationTargetException e) {
+                Timber.e(e, "InvocationTargetException ActionPresenter");
+              }
+            }
             break;
           case LIKED:
             if (action.bundle != null) {
@@ -99,6 +119,9 @@ public class ActionPresenter extends EarthPresenter {
               selectFav(action.bundle.getString(Const.KEY_GID),
                   action.bundle.getString(Const.KEY_TOKEN));
             }
+            break;
+          case SELECT_CATEGORY:
+            selectCategory(model);
             break;
         }
       }
@@ -147,6 +170,24 @@ public class ActionPresenter extends EarthPresenter {
 
   private void selectFav(String gid, String token) {
     LikedDialog.newInstance(gid, token).show(group().context);
+  }
+
+  private void selectCategory(Model model) {
+    @SuppressWarnings("unchecked")
+    MvpRecyclerView.Adapter<Model> adapter = group().pageContext.adapter;
+    int position = adapter.indexOf(model);
+    if (position != -1) {
+      Model oldItem = adapter.getItem(position);
+      Flag flag = oldItem.getFlag();
+      adapter.changeData(position, new Model.Builder(oldItem)
+          .flag(flag.newBuilder().is_selected(!flag.is_selected).build())
+          .build());
+      if (flag.is_selected) {
+        EarthApplication.getInstance().removeSelectCategory(model.getCategory());
+      } else {
+        EarthApplication.getInstance().addSelectCategory(model.getCategory());
+      }
+    }
   }
 
   @SuppressWarnings("unchecked")

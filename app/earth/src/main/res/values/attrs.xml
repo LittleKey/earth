@@ -13,4 +13,12 @@
         <attr name="stateDone" format="reference"/>
         <attr name="stateCanceled" format="reference"/>
     </declare-styleable>
+    
+    <declare-styleable name="SearchAppBarBehavior">
+        <attr name="appbarPaddingTop" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="SearchScrollBehavior">
+        <attr name="scrollPaddingTop" format="dimension"/>
+    </declare-styleable>
 </resources>

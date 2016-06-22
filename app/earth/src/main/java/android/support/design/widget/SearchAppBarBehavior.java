@@ -1,6 +1,7 @@
 package android.support.design.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import me.littlekey.earth.R;
 import me.littlekey.earth.utils.Const;
 
 
@@ -25,24 +27,26 @@ public class SearchAppBarBehavior extends AppBarLayout.Behavior {
   private int mDownPreScrollRange = INVALID_SCROLL_RANGE;
 
   private boolean isPositive;
+  private int mScrollPaddingTop;
 
   public SearchAppBarBehavior() {
   }
 
   public SearchAppBarBehavior(Context context, AttributeSet attrs) {
     super(context, attrs);
+    final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SearchAppBarBehavior);
+    try {
+      mScrollPaddingTop = a.getDimensionPixelSize(R.styleable.SearchAppBarBehavior_appbarPaddingTop, 0);
+    } finally {
+      a.recycle();
+    }
   }
 
   @Override
   public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child,
       View target, int dx, int dy, int[] consumed) {
     isPositive = dy > 0;
-    if (!(target instanceof RecyclerView)) {
-      return;
-    }
-    if (((RecyclerView) target).computeVerticalScrollOffset() <= Const.ART_LIST_TOP_PADDING) {
-      super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
-    } else if (dy != 0 && !mSkipNestedPreScroll) {
+    if (dy != 0 && !mSkipNestedPreScroll) {
       int min, max;
       min = -child.getTotalScrollRange();
       max = dy < 0 ? min + getDownNestedPreScrollRange(child) : 0;
@@ -54,6 +58,20 @@ public class SearchAppBarBehavior extends AppBarLayout.Behavior {
   public void onNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child,
       View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
     mSkipNestedPreScroll = dyUnconsumed < 0;
+    if (target instanceof RecyclerView) {
+      // NOTE : major dy. i don't know why, but it's work fine.
+      int dy = dyUnconsumed < 0 ? dyUnconsumed + dyConsumed : dyUnconsumed;
+      if (((RecyclerView) target).computeVerticalScrollOffset() == 0) {
+        if (target.getPaddingTop() > 0 || dy < 0) {
+          target.setPadding(target.getPaddingLeft(),
+              Math.max(0, Math.min(mScrollPaddingTop, target.getPaddingTop() - dy)),
+              target.getPaddingRight(),
+              target.getPaddingBottom());
+          // NOTE : when scroll down (dy < 0) do not consume Y
+          dyUnconsumed = dy <= 0 ? dyUnconsumed : 0;
+        }
+      }
+    }
     super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
   }
 
@@ -69,6 +87,14 @@ public class SearchAppBarBehavior extends AppBarLayout.Behavior {
     if (target instanceof RecyclerView && velocityY < 0) {
       RecyclerView recyclerView = (RecyclerView) target;
       consumed = recyclerView.computeVerticalScrollOffset() > 0;
+    }
+    if (consumed) {
+      if (target.getPaddingTop() > 0 || velocityY < 0) {
+        target.setPadding(target.getPaddingLeft(),
+            (int) Math.max(0, Math.min(mScrollPaddingTop, target.getPaddingTop() - velocityY)),
+            target.getPaddingRight(),
+            target.getPaddingBottom());
+      }
     }
     return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
   }

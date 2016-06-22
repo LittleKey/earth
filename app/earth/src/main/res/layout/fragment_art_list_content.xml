@@ -9,14 +9,16 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/search_scroll_behavior"/>
+        app:layout_behavior="@string/search_scroll_behavior"
+        app:scrollPaddingTop="60dp"/>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
         app:elevation="0dp"
-        app:layout_behavior="@string/search_app_bar_behavior">
+        app:layout_behavior="@string/search_app_bar_behavior"
+        app:appbarPaddingTop="60dp">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

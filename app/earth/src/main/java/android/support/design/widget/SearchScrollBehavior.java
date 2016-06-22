@@ -1,6 +1,7 @@
 package android.support.design.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
@@ -26,11 +27,18 @@ public class SearchScrollBehavior extends AppBarLayout.ScrollingViewBehavior {
 
   private RecyclerView mRecyclerView;
   private Integer mLast = null;
+  private int mScrollPaddingTop;
 
   public SearchScrollBehavior() {}
 
   public SearchScrollBehavior(Context context, AttributeSet attrs) {
     super(context, attrs);
+    final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SearchScrollBehavior);
+    try {
+      mScrollPaddingTop = a.getDimensionPixelSize(R.styleable.SearchScrollBehavior_scrollPaddingTop, 0);
+    } finally {
+      a.recycle();
+    }
   }
 
   @Override
@@ -39,7 +47,7 @@ public class SearchScrollBehavior extends AppBarLayout.ScrollingViewBehavior {
     if (mRecyclerView == null) {
       mRecyclerView = (RecyclerView) child.findViewById(R.id.recycler);
     }
-    if (mRecyclerView.computeVerticalScrollOffset() <= Const.ART_LIST_TOP_PADDING) {
+    if (mRecyclerView.computeVerticalScrollOffset() < mScrollPaddingTop) {
       final CoordinatorLayout.Behavior behavior =
           ((CoordinatorLayout.LayoutParams) dependency.getLayoutParams()).getBehavior();
       if (behavior instanceof AppBarLayout.Behavior) {
@@ -51,14 +59,12 @@ public class SearchScrollBehavior extends AppBarLayout.ScrollingViewBehavior {
             + getVerticalLayoutGap()
             - getOverlapPixelsForOffset(dependency);
         if (mLast != null) {
-          if (mRecyclerView.computeVerticalScrollOffset() == 0) {
-            mRecyclerView.setPadding(mRecyclerView.getPaddingLeft(),
-                mRecyclerView.getPaddingTop() + offset - mLast,
-                mRecyclerView.getPaddingRight(),
-                mRecyclerView.getPaddingBottom());
-          } else {
-            mRecyclerView.scrollBy(0, mLast - offset);
-          }
+          mRecyclerView.setPadding(
+              mRecyclerView.getPaddingLeft(),
+              Math.max(0, Math.min(mScrollPaddingTop,
+                  mRecyclerView.getPaddingTop() + offset - mLast)),
+              mRecyclerView.getPaddingRight(),
+              mRecyclerView.getPaddingBottom());
           rlt = true;
         }
         mLast = offset;

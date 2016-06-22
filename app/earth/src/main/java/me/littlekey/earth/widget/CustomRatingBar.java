@@ -1,6 +1,7 @@
 package me.littlekey.earth.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.ColorInt;
@@ -25,9 +26,18 @@ public class CustomRatingBar extends RatingBar {
 
   public CustomRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setDrawableColor(ResourceUtils.getColor(R.color.gray),
-        ResourceUtils.getColor(R.color.white),
-        ResourceUtils.getColor(R.color.yellow));
+    final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomRatingBar);
+    try {
+      @ColorInt int emptyColor = a.getColor(R.styleable.CustomRatingBar_emptyColor,
+          ResourceUtils.getColor(R.color.gray));
+      @ColorInt int halfColor = a.getColor(R.styleable.CustomRatingBar_halfColor,
+          ResourceUtils.getColor(R.color.white));
+      @ColorInt int fullColor = a.getColor(R.styleable.CustomRatingBar_fullColor,
+          ResourceUtils.getColor(R.color.yellow));
+      setDrawableColor(emptyColor, halfColor, fullColor);
+    } finally {
+      a.recycle();
+    }
   }
 
   public void setDrawableColor(@ColorInt int emptyColor, @ColorInt int halfColor, @ColorInt int fullColor) {

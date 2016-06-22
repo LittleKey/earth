@@ -18,11 +18,13 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
+import me.littlekey.earth.event.OnLoadedCommentsEvent;
 import me.littlekey.earth.event.OnLoadedPageEvent;
 import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Art;
+import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.network.ApiType;
@@ -39,6 +41,7 @@ public class ArtDetailDataGenerator extends EarthDataGenerator<EarthResponse> {
 
   public ArtDetailDataGenerator(List<String> paths, NameValuePair... pairs) {
     super(ApiType.ART_DETAIL, pairs);
+    mBasePairs.put(Const.KEY_HC, Const.ONE);
     mPaths = paths;
   }
 
@@ -59,7 +62,8 @@ public class ArtDetailDataGenerator extends EarthDataGenerator<EarthResponse> {
     // page argument was base 0, and website page was base 1. so not need modify page number.
     Count count = null;
     try {
-      count = EarthCrawler.createPageCountFromElements(response.document.select("table.ptt > tbody > tr > td"));
+      count = EarthCrawler.createPageCountFromElements(
+          response.document.select("table.ptt > tbody > tr > td"));
     } catch (Exception e) {
       Timber.e(EarthUtils.formatString(R.string.parse_error, Const.PAGE_NUMBER));
     }
@@ -98,6 +102,18 @@ public class ArtDetailDataGenerator extends EarthDataGenerator<EarthResponse> {
     EventBus.getDefault().post(new OnLoadedPageEvent(
         ModelFactory.createModelFromArt(artDetail, Model.Template.DATA)));
     }
+    List<Model> comments = new ArrayList<>();
+    for (Element commentEle: response.document.select("#cdiv > div.c1")) {
+      Comment comment = null;
+      try {
+        comment = EarthCrawler.createCommentFromElement(commentEle);
+      } catch (Exception e) {
+        Timber.e(EarthUtils.formatString(R.string.parse_error, Const.COMMENT));
+      }
+      CollectionUtils.add(comments,
+          ModelFactory.createModelFromComment(comment, Model.Template.ITEM_COMMENT));
+    }
+    EventBus.getDefault().post(new OnLoadedCommentsEvent(gallery_id, comments));
     Elements imageElements = response.document.select("#gdt > div");
     for (Element imageEle: imageElements) {
       Image image = null;
@@ -106,7 +122,8 @@ public class ArtDetailDataGenerator extends EarthDataGenerator<EarthResponse> {
       } catch (Exception e) {
         Timber.e(EarthUtils.formatString(R.string.parse_error, Const.IMAGE));
       }
-      CollectionUtils.add(models, ModelFactory.createModelFromImage(image, Model.Template.PREVIEW_IMAGE));
+      CollectionUtils.add(models,
+          ModelFactory.createModelFromImage(image, Model.Template.PREVIEW_IMAGE));
     }
     return models;
   }

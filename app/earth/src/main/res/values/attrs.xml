@@ -21,4 +21,10 @@
     <declare-styleable name="SearchScrollBehavior">
         <attr name="scrollPaddingTop" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomRatingBar">
+        <attr name="emptyColor" format="color"/>
+        <attr name="halfColor" format="color"/>
+        <attr name="fullColor" format="color"/>
+    </declare-styleable>
 </resources>

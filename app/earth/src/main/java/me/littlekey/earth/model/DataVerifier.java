@@ -9,6 +9,7 @@ import java.util.List;
 
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.proto.Art;
+import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Image;
@@ -112,5 +113,17 @@ public class DataVerifier {
     return fav.newBuilder()
         .name(Wire.get(fav.name, EarthUtils.formatString(R.string.default_format_name, fav.id)))
         .build();
+  }
+
+  public static Comment verify(Comment comment) {
+    if (comment == null) {
+      return null;
+    }
+    if (TextUtils.isEmpty(comment.author)
+        || TextUtils.isEmpty(comment.date)
+        || TextUtils.isEmpty(comment.content)) {
+      return null;
+    }
+    return comment.newBuilder().build();
   }
 }

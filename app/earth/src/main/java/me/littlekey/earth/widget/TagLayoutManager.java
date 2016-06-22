@@ -10,11 +10,11 @@ import android.view.View;
 /**
  * Created by littlekey on 16/6/18.
  */
-public class TabLayoutManager extends LinearLayoutManager {
+public class TagLayoutManager extends LinearLayoutManager {
 
   private Context mContext;
 
-  public TabLayoutManager(Context context) {
+  public TagLayoutManager(Context context) {
     super(context, HORIZONTAL, false);
     mContext = context;
   }
@@ -38,7 +38,7 @@ public class TabLayoutManager extends LinearLayoutManager {
 
           @Override
           public PointF computeScrollVectorForPosition(int targetPosition) {
-            return TabLayoutManager.this.computeScrollVectorForPosition(targetPosition);
+            return TagLayoutManager.this.computeScrollVectorForPosition(targetPosition);
           }
         };
     smoothScroller.setTargetPosition(position);

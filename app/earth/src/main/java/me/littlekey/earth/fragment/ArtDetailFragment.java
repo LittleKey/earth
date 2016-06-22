@@ -1,8 +1,6 @@
 package me.littlekey.earth.fragment;
 
-import android.annotation.TargetApi;
 import android.database.DataSetObserver;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.squareup.wire.Wire;
+import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.mvp.presenter.ViewGroupPresenter;
 import com.yuanqi.mvp.widget.MvpRecyclerView;
 import com.yuanqi.network.NameValuePair;
@@ -37,25 +36,28 @@ import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.presenter.EarthPresenterFactory;
 import me.littlekey.earth.utils.Const;
-import me.littlekey.earth.widget.TabLayoutManager;
+import me.littlekey.earth.widget.TagLayoutManager;
 
 /**
  * Created by littlekey on 16/6/16.
  */
-public class DetailFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
   private ViewGroupPresenter mPresenter;
   private Model mModel;
   private List<Model> mTags;
   private ViewPager mViewPager;
   private FragmentStatePagerAdapter mPagerAdapter;
-  private MvpRecyclerView mRecyclerView;
-  private OfflineListAdapter mTabAdapter;
-  private TabLayoutManager mTabLayoutManager;
+  private MvpRecyclerView mTagRecyclerView;
+  private OfflineListAdapter mTagAdapter;
+  private TagLayoutManager mTagLayoutManager;
   private int mSelectIndex = RecyclerView.NO_POSITION;
+  private ViewPager mContentViewPager;
+  private FragmentStatePagerAdapter mContentPagerAdapter;
+  private List<String> mPaths;
 
-  public static DetailFragment newInstance(Bundle bundle) {
-    DetailFragment fragment = new DetailFragment();
+  public static ArtDetailFragment newInstance(Bundle bundle) {
+    ArtDetailFragment fragment = new ArtDetailFragment();
     bundle.putInt(Const.KEY_API_TYPE, ApiType.ART_DETAIL.ordinal());
     ArrayList<NameValuePair> pairList = new ArrayList<>();
     pairList.add(new NameValuePair(Const.KEY_P, Const.ZERO));
@@ -76,18 +78,21 @@ public class DetailFragment extends BaseFragment implements ViewPager.OnPageChan
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     mModel = getArguments().getParcelable(Const.EXTRA_MODEL);
+    mPaths = getArguments().getStringArrayList(Const.KEY_API_PATH);
     if (mModel != null) {
       mPresenter.bind(mModel);
     }
     mTags = new ArrayList<>();
-    mRecyclerView = (MvpRecyclerView) view.findViewById(R.id.recycler);
-    mTabAdapter = new OfflineListAdapter();
-    mTabLayoutManager = new TabLayoutManager(getActivity());
-    mRecyclerView.setLayoutManager(mTabLayoutManager);
-    mRecyclerView.setItemAnimator(null);
-    mRecyclerView.setAdapter(mTabAdapter);
-    mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-    mPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
+    mTagRecyclerView = (MvpRecyclerView) view.findViewById(R.id.tag_recycler);
+    mTagAdapter = new OfflineListAdapter();
+    mTagLayoutManager = new TagLayoutManager(getActivity());
+    mTagRecyclerView.setLayoutManager(mTagLayoutManager);
+    mTagRecyclerView.setItemAnimator(null);
+    mTagRecyclerView.setAdapter(mTagAdapter);
+
+    mViewPager = (ViewPager) view.findViewById(R.id.tag_viewpager);
+    FragmentManager fm = getChildFragmentManager();
+    mPagerAdapter = new FragmentStatePagerAdapter(fm) {
       @Override
       public Fragment getItem(int position) {
         return createFragment(mTags.get(position));
@@ -116,21 +121,21 @@ public class DetailFragment extends BaseFragment implements ViewPager.OnPageChan
         selectTag(mViewPager.getCurrentItem());
       }
     });
-    EventBus.getDefault().register(this);
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      onTransitionEnd();
-    }
-  }
+    mContentViewPager = (ViewPager) view.findViewById(R.id.content_viewpager);
+    mContentPagerAdapter = new FragmentStatePagerAdapter(fm) {
+      @Override
+      public Fragment getItem(int position) {
+        return createFragment(position);
+      }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public void onTransitionEnd() {
-    FragmentManager fm = getChildFragmentManager();
-    Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-    if (fragment == null) {
-      fm.beginTransaction()
-          .add(R.id.fragment_container, createFragment())
-          .commit();
-    }
+      @Override
+      public int getCount() {
+        return !CollectionUtils.isEmpty(mPaths) && mPaths.size() >= 2 ? 2 : 1;
+      }
+    };
+    EventBus.getDefault().register(this);
+    mContentViewPager.setAdapter(mContentPagerAdapter);
+    mContentPagerAdapter.notifyDataSetChanged();
   }
 
   @Override
@@ -176,16 +181,29 @@ public class DetailFragment extends BaseFragment implements ViewPager.OnPageChan
     return TagFragment.newInstance(bundle);
   }
 
-  protected Fragment createFragment() {
-    Bundle bundle = getArguments();
-    bundle.putBoolean(Const.KEY_ENABLE_SWIPE_REFRESH, false);
-    return ListFragment.newInstance(bundle);
+  protected Fragment createFragment(int position) {
+    Bundle bundle;
+    switch (position) {
+      case 0:
+        bundle = getArguments();
+        bundle.putBoolean(Const.KEY_ENABLE_SWIPE_REFRESH, false);
+        return ListFragment.newInstance(bundle);
+      case 1:
+        bundle = new Bundle();
+        bundle.putString(Const.EXTRA_IDENTITY, mPaths.get(1));
+        return CommentFragment.newInstance(bundle);
+    }
+    return null;
   }
 
+  @SuppressWarnings("unused")
   public void onEventMainThread(OnLoadedPageEvent event) {
-    if (mModel != null && TextUtils.equals(event.getModel().getIdentity(), mModel.getIdentity())) {
+    if (!CollectionUtils.isEmpty(mPaths) && mPaths.size() >= 2
+        && TextUtils.equals(event.getModel().getIdentity(), mPaths.get(1))) {
       Map<Integer, Action> actions = new HashMap<>();
-      actions.putAll(mModel.getActions());
+      if (mModel != null) {
+        actions.putAll(mModel.getActions());
+      }
       actions.putAll(event.getModel().getActions());
       actions.put(Const.ACTION_SHOW_HIDE, new Action.Builder()
           .type(Action.Type.RUNNABLE)
@@ -201,22 +219,24 @@ public class DetailFragment extends BaseFragment implements ViewPager.OnPageChan
           .build();
       mPresenter.bind(mModel);
       mTags = mModel.getSubModels();
-      mTabAdapter.setData(mTags);
+      mTagAdapter.setData(mTags);
       mSelectIndex = RecyclerView.NO_POSITION;
     }
   }
 
+  @SuppressWarnings("unused")
   public void onEventMainThread(OnClickTagItemEvent event) {
     int index;
     Flag flag;
     if ((index = mTags.indexOf(event.getTag())) != -1
-        && (flag = mTabAdapter.getItem(index).getFlag()) != null
+        && (flag = mTagAdapter.getItem(index).getFlag()) != null
         && !Wire.get(flag.is_selected, false)) {
       showViewPager(true);
       mViewPager.setCurrentItem(index);
     }
   }
 
+  @SuppressWarnings("unused")
   public void onEventMainThread(OnLikedEvent event) {
     if (mModel != null && TextUtils.equals(mModel.getIdentity(), event.getIdentity())) {
       mModel = new Model.Builder(mModel)
@@ -240,21 +260,21 @@ public class DetailFragment extends BaseFragment implements ViewPager.OnPageChan
     if (mSelectIndex != index) {
       setItemSelectState(mSelectIndex, false);
       setItemSelectState(index, true);
-      if (mTabLayoutManager.findLastCompletelyVisibleItemPosition() != RecyclerView.NO_POSITION
-          && (mTabLayoutManager.findFirstCompletelyVisibleItemPosition() < index
-            || mTabLayoutManager.findLastCompletelyVisibleItemPosition() > index)) {
-        mRecyclerView.smoothScrollToPosition(index);
+      if (mTagLayoutManager.findLastCompletelyVisibleItemPosition() != RecyclerView.NO_POSITION
+          && (mTagLayoutManager.findFirstCompletelyVisibleItemPosition() < index
+            || mTagLayoutManager.findLastCompletelyVisibleItemPosition() > index)) {
+        mTagRecyclerView.smoothScrollToPosition(index);
       }
       mSelectIndex = index;
     }
   }
 
   private void setItemSelectState(int index, boolean isSelect) {
-    if (index < 0 || index >= mTabAdapter.getItemCount()) {
+    if (index < 0 || index >= mTagAdapter.getItemCount()) {
       return;
     }
-    Model item = mTabAdapter.getItem(index);
-    mTabAdapter.changeData(index, new Model.Builder(item)
+    Model item = mTagAdapter.getItem(index);
+    mTagAdapter.changeData(index, new Model.Builder(item)
         .flag(item.getFlag().newBuilder().is_selected(isSelect).build())
         .build());
   }

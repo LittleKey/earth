@@ -19,6 +19,14 @@ message Art {
     repeated Tag tags = 11;
     string gid = 12;
     string token = 13;
+    repeated Comment comments = 14;
+}
+
+message Comment {
+    string author = 1;
+    string date = 2;
+    string content = 3;
+    int32 score = 4;
 }
 
 message Tag {

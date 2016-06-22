@@ -15,6 +15,7 @@ import me.littlekey.earth.R;
 import me.littlekey.earth.event.OnClickTagItemEvent;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Art;
+import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Flag;
@@ -214,6 +215,23 @@ public class ModelFactory {
           .clazz(clazz).build());
     }
     return new Model.Builder().template(template).title(title).cover(avatar).actions(actions)
+        .build();
+  }
+
+  public static Model createModelFromComment(Comment comment, Model.Template template) {
+    comment = DataVerifier.verify(comment);
+    if (comment == null) {
+      return null;
+    }
+    Count count = new Count.Builder().score(comment.score).build();
+    return new Model.Builder()
+        .type(Model.Type.COMMENT)
+        .template(template)
+        .comment(comment)
+        .title(comment.author)
+        .date(comment.date)
+        .description(comment.content)
+        .count(count)
         .build();
   }
 }

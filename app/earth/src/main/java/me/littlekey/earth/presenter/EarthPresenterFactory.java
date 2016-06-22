@@ -22,29 +22,31 @@ public class EarthPresenterFactory {
   public static ViewGroupPresenter createArtItemPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
         .add(R.id.cover, new ImagePresenter())
-        .add(R.id.title, new BasePresenter())
-        .add(R.id.subtitle, new BasePresenter())
+        .add(R.id.title, new TextPresenter())
+        .add(R.id.subtitle, new TextPresenter())
         .add(R.id.rating, new BasePresenter())
         .add(R.id.category, new CategoryPresenter())
-        .add(R.id.date, new BasePresenter())
+        .add(R.id.date, new TextPresenter())
         .add(new ActionPresenter());
   }
 
   public static ViewGroupPresenter createArtDetailPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
         .add(R.id.cover, new ImagePresenter(true))
-        .add(R.id.title, new BasePresenter())
-        .add(R.id.subtitle, new BasePresenter())
+        .add(R.id.title, new TextPresenter())
+        .add(R.id.subtitle, new TextPresenter())
         .add(R.id.category, new CategoryPresenter(true))
-        .add(R.id.language, new BasePresenter())
-        .add(R.id.page_number, new BasePresenter())
-        .add(R.id.size, new BasePresenter())
-        .add(R.id.likes, new BasePresenter())
+        .add(R.id.language, new TextPresenter())
+        .add(R.id.page_number, new TextPresenter())
+        .add(R.id.size, new TextPresenter())
+        .add(R.id.likes, new TextPresenter())
         .add(R.id.likes, new FlagPresenter())
         .add(R.id.likes, new ActionPresenter())
-        .add(R.id.date, new BasePresenter())
+        .add(R.id.date, new TextPresenter())
         .add(R.id.fab, new ActionPresenter())
-        .add(R.id.fab, new FlagPresenter());
+        .add(R.id.fab, new FlagPresenter())
+        .add(R.id.rating, new BasePresenter())
+        .add(R.id.rating_count, new TextPresenter());
   }
 
   public static ViewGroupPresenter createChildTagPresenter(ViewGroup parent, int layout) {
@@ -62,12 +64,12 @@ public class EarthPresenterFactory {
   public static ViewGroupPresenter createThumbnailPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
         .add(R.id.image, new ImagePresenter())
-        .add(R.id.number, new BasePresenter());
+        .add(R.id.number, new TextPresenter());
   }
 
   public static ViewGroupPresenter createFavSelectPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
-        .add(R.id.title, new BasePresenter())
+        .add(R.id.title, new TextPresenter())
         .add(new ActionPresenter());
   }
 
@@ -81,6 +83,13 @@ public class EarthPresenterFactory {
 
   public static ViewGroupPresenter createTitlePresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
-        .add(R.id.title, new BasePresenter());
+        .add(R.id.title, new TextPresenter());
+  }
+
+  public static ViewGroupPresenter createCommentItemPresenter(ViewGroup parent, int layout) {
+    return new ViewGroupPresenter(parent, layout)
+        .add(R.id.title, new TextPresenter())
+        .add(R.id.content, new TextPresenter())
+        .add(R.id.date, new TextPresenter());
   }
 }

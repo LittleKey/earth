@@ -8,6 +8,9 @@
     <string name="loading_hint">加载中</string>
     <string name="parse_error">parse %s error</string>
 
+    <!-- rating -->
+    <string name="rating_count" formatted="false">%.2f (%d人)</string>
+
     <!-- category -->
     <string name="select_category">分类选择</string>
     <string name="category_search_key">f_%s</string>

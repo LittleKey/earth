@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.littlekey.earth.model.proto.Art;
+import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Image;
@@ -226,6 +227,34 @@ public class EarthCrawler {
         .id(id)
         .name(name)
         .apply(apply)
+        .build();
+  }
+
+  public static Comment createCommentFromElement(Element element) throws Exception {
+    Element dateAndAuthorEle = element.select("div.c2 > div.c3").get(0);
+    Pattern datePattern = Pattern.compile("^Posted on (.*?) UTC by:   (.*?)$");
+    Matcher dateMatcher = datePattern.matcher(dateAndAuthorEle.text());
+    String date = null;
+    String author = null;
+    if (dateMatcher.find()) {
+      date = dateMatcher.group(1);
+      author = dateMatcher.group(2);
+    }
+    Elements scoreElements = element.select("div.c2 > div.c5");
+    int score = 0;
+    if (scoreElements.size() > 0) {
+      Pattern scorePattern = Pattern.compile("^Score +(.*?)$");
+      Matcher scoreMatcher = scorePattern.matcher(scoreElements.get(0).text());
+      if (scoreMatcher.find()) {
+        score = Integer.valueOf(scoreMatcher.group(1));
+      }
+    }
+    String content = element.select("div.c6").html();
+    return new Comment.Builder()
+        .score(score)
+        .date(date)
+        .author(author)
+        .content(content)
         .build();
   }
 }

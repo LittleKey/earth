@@ -16,6 +16,7 @@ import java.util.Map;
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Art;
+import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Flag;
@@ -64,6 +65,9 @@ public final class Model implements Parcelable {
           case FAV:
             Fav fav = Fav.ADAPTER.decode(bytes);
             return ModelFactory.createModelFromFav(fav, template);
+          case COMMENT:
+            Comment comment = Comment.ADAPTER.decode(bytes);
+            return ModelFactory.createModelFromComment(comment, template);
           default:
             throw new ParcelFormatException(String.format("can not parcel '%s'", type.name()));
         }
@@ -97,6 +101,7 @@ public final class Model implements Parcelable {
   private final Tag tag;
   private final Image image;
   private final Fav fav;
+  private final Comment comment;
   private final Count count;
   private final Member member;
   private final Flag flag;
@@ -125,6 +130,7 @@ public final class Model implements Parcelable {
     this.tag = builder.tag;
     this.image = builder.image;
     this.fav = builder.fav;
+    this.comment = builder.comment;
     this.count = builder.count;
     this.member = builder.member;
     this.flag = builder.flag;
@@ -222,6 +228,10 @@ public final class Model implements Parcelable {
     return fav;
   }
 
+  public Comment getComment() {
+    return comment;
+  }
+
   public Count getCount() {
     return count;
   }
@@ -278,6 +288,7 @@ public final class Model implements Parcelable {
         && equals(tag, o.tag)
         && equals(image, o.image)
         && equals(fav, o.fav)
+        && equals(comment, o.comment)
         && equals(count, o.count)
         && equals(member, o.member)
         && equals(flag, o.flag)
@@ -314,6 +325,7 @@ public final class Model implements Parcelable {
       result = result * 37 + (tag != null ? tag.hashCode() : 0);
       result = result * 37 + (image != null ? image.hashCode() : 0);
       result = result * 37 + (fav != null ? fav.hashCode() : 0);
+      result = result * 37 + (comment != null ? comment.hashCode() : 0);
       result = result * 37 + (count != null ? count.hashCode() : 0);
       result = result * 37 + (member != null ? member.hashCode() : 0);
       result = result * 37 + (flag != null ? flag.hashCode() : 0);
@@ -360,6 +372,8 @@ public final class Model implements Parcelable {
       case FAV:
         dest.writeByteArray(fav.encode());
         break;
+      case COMMENT:
+        dest.writeByteArray(comment.encode());
       default:
         break;
     }
@@ -373,7 +387,8 @@ public final class Model implements Parcelable {
     TAG(4),
     IMAGE(5),
     FAV(6),
-    TEXT(7);
+    TEXT(7),
+    COMMENT(8);
 
     private final int value;
 
@@ -398,7 +413,8 @@ public final class Model implements Parcelable {
     PREVIEW_IMAGE(7),
     SELECT_FAV(8),
     Category(9),
-    TITLE(10);
+    TITLE(10),
+    ITEM_COMMENT(11);
 
     private final int value;
 
@@ -482,6 +498,7 @@ public final class Model implements Parcelable {
     public Tag tag;
     public Image image;
     public Fav fav;
+    public Comment comment;
     public Count count;
     public Member member;
     public Flag flag;
@@ -512,6 +529,7 @@ public final class Model implements Parcelable {
       this.tag = message.tag;
       this.image = message.image;
       this.fav = message.fav;
+      this.comment = message.comment;
       this.count = message.count;
       this.member = message.member;
       this.flag = message.flag;
@@ -633,6 +651,11 @@ public final class Model implements Parcelable {
 
     public Builder fav(Fav fav) {
       this.fav = fav;
+      return this;
+    }
+
+    public Builder comment(Comment comment) {
+      this.comment = comment;
       return this;
     }
 

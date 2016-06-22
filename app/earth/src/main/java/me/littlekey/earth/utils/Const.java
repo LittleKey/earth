@@ -67,6 +67,7 @@ public class Const {
   public static final String KEY_F_APPLY = "f_apply";
   public static final String KEY_TOKEN = "token";
   public static final String KEY_F_SEARCH = "f_search";
+  public static final String KEY_HC = "hc";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -78,6 +79,7 @@ public class Const {
   public static final String EXTRA_BORDER_TYPE = KEY_EXTRA + "draw_circle_border";
   public static final String EXTRA_ROOM_IDENTITY = KEY_EXTRA + "room_number";
   public static final String EXTRA_MODEL = KEY_EXTRA + "model";
+  public static final String EXTRA_MODEL_LIST = KEY_EXTRA + "model_list";
   public static final String EXTRA_IDENTITY_LIST = KEY_EXTRA + "identity_list";
   public static final String EXTRA_URL = KEY_EXTRA + "url";
   /*********************************** API ***********************************/
@@ -119,6 +121,7 @@ public class Const {
   public static final String PAGE_NUMBER = "page number";
   public static final String ART_ITEM = "art item";
   public static final String ART_DETAIL = "art detail";
+  public static final String COMMENT = "comment";
   public static final String IMAGE = "image";
   public static final String FAV = "fav";
   public static final String APPLY_CHANGES = "apply_changes";

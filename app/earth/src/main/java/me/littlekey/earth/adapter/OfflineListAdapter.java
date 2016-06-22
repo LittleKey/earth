@@ -30,6 +30,8 @@ public class OfflineListAdapter extends MvpRecyclerView.Adapter<Model> {
         return EarthPresenterFactory.createCategoryItemPresenter(parent, R.layout.item_category, this);
       case TITLE:
         return EarthPresenterFactory.createTitlePresenter(parent, R.layout.item_title);
+      case ITEM_COMMENT:
+        return EarthPresenterFactory.createCommentItemPresenter(parent, R.layout.item_comment);
       default:
         throw new IllegalStateException("Nonsupport template : " + template.name());
     }

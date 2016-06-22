@@ -125,11 +125,18 @@ public final class Art extends Message<Art, Art.Builder> {
   )
   public final String token;
 
-  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token) {
-    this(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, ByteString.EMPTY);
+  @WireField(
+      tag = 14,
+      adapter = "me.littlekey.earth.model.proto.Comment#ADAPTER",
+      label = WireField.Label.REPEATED
+  )
+  public final List<Comment> comments;
+
+  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, List<Comment> comments) {
+    this(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, comments, ByteString.EMPTY);
   }
 
-  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, ByteString unknownFields) {
+  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, List<Comment> comments, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
     this.title = title;
     this.publisher_name = publisher_name;
@@ -144,6 +151,7 @@ public final class Art extends Message<Art, Art.Builder> {
     this.tags = Internal.immutableCopyOf("tags", tags);
     this.gid = gid;
     this.token = token;
+    this.comments = Internal.immutableCopyOf("comments", comments);
   }
 
   @Override
@@ -162,6 +170,7 @@ public final class Art extends Message<Art, Art.Builder> {
     builder.tags = Internal.copyOf("tags", tags);
     builder.gid = gid;
     builder.token = token;
+    builder.comments = Internal.copyOf("comments", comments);
     builder.addUnknownFields(unknownFields());
     return builder;
   }
@@ -184,7 +193,8 @@ public final class Art extends Message<Art, Art.Builder> {
         && Internal.equals(file_size, o.file_size)
         && Internal.equals(tags, o.tags)
         && Internal.equals(gid, o.gid)
-        && Internal.equals(token, o.token);
+        && Internal.equals(token, o.token)
+        && Internal.equals(comments, o.comments);
   }
 
   @Override
@@ -205,6 +215,7 @@ public final class Art extends Message<Art, Art.Builder> {
       result = result * 37 + (tags != null ? tags.hashCode() : 1);
       result = result * 37 + (gid != null ? gid.hashCode() : 0);
       result = result * 37 + (token != null ? token.hashCode() : 0);
+      result = result * 37 + (comments != null ? comments.hashCode() : 1);
       super.hashCode = result;
     }
     return result;
@@ -226,6 +237,7 @@ public final class Art extends Message<Art, Art.Builder> {
     if (tags != null) builder.append(", tags=").append(tags);
     if (gid != null) builder.append(", gid=").append(gid);
     if (token != null) builder.append(", token=").append(token);
+    if (comments != null) builder.append(", comments=").append(comments);
     return builder.replace(0, 2, "Art{").append('}').toString();
   }
 
@@ -256,8 +268,11 @@ public final class Art extends Message<Art, Art.Builder> {
 
     public String token;
 
+    public List<Comment> comments;
+
     public Builder() {
       tags = Internal.newMutableList();
+      comments = Internal.newMutableList();
     }
 
     public Builder title(String title) {
@@ -326,9 +341,15 @@ public final class Art extends Message<Art, Art.Builder> {
       return this;
     }
 
+    public Builder comments(List<Comment> comments) {
+      Internal.checkElementsNotNull(comments);
+      this.comments = comments;
+      return this;
+    }
+
     @Override
     public Art build() {
-      return new Art(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, buildUnknownFields());
+      return new Art(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, comments, buildUnknownFields());
     }
   }
 
@@ -352,6 +373,7 @@ public final class Art extends Message<Art, Art.Builder> {
           + Tag.ADAPTER.asRepeated().encodedSizeWithTag(11, value.tags)
           + (value.gid != null ? ProtoAdapter.STRING.encodedSizeWithTag(12, value.gid) : 0)
           + (value.token != null ? ProtoAdapter.STRING.encodedSizeWithTag(13, value.token) : 0)
+          + Comment.ADAPTER.asRepeated().encodedSizeWithTag(14, value.comments)
           + value.unknownFields().size();
     }
 
@@ -370,6 +392,7 @@ public final class Art extends Message<Art, Art.Builder> {
       if (value.tags != null) Tag.ADAPTER.asRepeated().encodeWithTag(writer, 11, value.tags);
       if (value.gid != null) ProtoAdapter.STRING.encodeWithTag(writer, 12, value.gid);
       if (value.token != null) ProtoAdapter.STRING.encodeWithTag(writer, 13, value.token);
+      if (value.comments != null) Comment.ADAPTER.asRepeated().encodeWithTag(writer, 14, value.comments);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -392,6 +415,7 @@ public final class Art extends Message<Art, Art.Builder> {
           case 11: builder.tags.add(Tag.ADAPTER.decode(reader)); break;
           case 12: builder.gid(ProtoAdapter.STRING.decode(reader)); break;
           case 13: builder.token(ProtoAdapter.STRING.decode(reader)); break;
+          case 14: builder.comments.add(Comment.ADAPTER.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);
@@ -408,6 +432,7 @@ public final class Art extends Message<Art, Art.Builder> {
       Builder builder = value.newBuilder();
       if (builder.count != null) builder.count = Count.ADAPTER.redact(builder.count);
       Internal.redactElements(builder.tags, Tag.ADAPTER);
+      Internal.redactElements(builder.comments, Comment.ADAPTER);
       builder.clearUnknownFields();
       return builder.build();
     }

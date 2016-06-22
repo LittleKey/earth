@@ -64,6 +64,10 @@ public class ArtListFragment extends BaseFragment
     view.findViewById(R.id.fab).setOnClickListener(this);
     mSearchView = (EditText) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
+    ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
+    if (!CollectionUtils.isEmpty(paths)) {
+      mSearchView.setText(paths.get(paths.size() - 1));
+    }
   }
 
   @Override

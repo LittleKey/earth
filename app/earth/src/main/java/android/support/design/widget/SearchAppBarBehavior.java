@@ -40,10 +40,6 @@ public class SearchAppBarBehavior extends AppBarLayout.Behavior {
     if (!(target instanceof RecyclerView)) {
       return;
     }
-    if (((RecyclerView) target).computeVerticalScrollRange()
-        <= ((RecyclerView) target).computeVerticalScrollExtent()) {
-      return;
-    }
     if (((RecyclerView) target).computeVerticalScrollOffset() <= Const.ART_LIST_TOP_PADDING) {
       super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
     } else if (dy != 0 && !mSkipNestedPreScroll) {

@@ -39,9 +39,6 @@ public class SearchScrollBehavior extends AppBarLayout.ScrollingViewBehavior {
     if (mRecyclerView == null) {
       mRecyclerView = (RecyclerView) child.findViewById(R.id.recycler);
     }
-    if (mRecyclerView.computeVerticalScrollRange() <= mRecyclerView.computeVerticalScrollExtent()) {
-      return false;
-    }
     if (mRecyclerView.computeVerticalScrollOffset() <= Const.ART_LIST_TOP_PADDING) {
       final CoordinatorLayout.Behavior behavior =
           ((CoordinatorLayout.LayoutParams) dependency.getLayoutParams()).getBehavior();
@@ -54,7 +51,14 @@ public class SearchScrollBehavior extends AppBarLayout.ScrollingViewBehavior {
             + getVerticalLayoutGap()
             - getOverlapPixelsForOffset(dependency);
         if (mLast != null) {
-          mRecyclerView.scrollBy(0, mLast - offset);
+          if (mRecyclerView.computeVerticalScrollOffset() == 0) {
+            mRecyclerView.setPadding(mRecyclerView.getPaddingLeft(),
+                mRecyclerView.getPaddingTop() + offset - mLast,
+                mRecyclerView.getPaddingRight(),
+                mRecyclerView.getPaddingBottom());
+          } else {
+            mRecyclerView.scrollBy(0, mLast - offset);
+          }
           rlt = true;
         }
         mLast = offset;

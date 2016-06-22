@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.yuanqi.base.utils.FormatUtils;
 import com.yuanqi.mvp.widget.MvpRecyclerView;
@@ -29,16 +30,11 @@ import me.littlekey.earth.model.ModelFactory;
 public class CategoryDialog extends DialogFragment {
 
   public static final Model.Category[] sCategorys = {
-      Model.Category.ARTIST_CG,
-      Model.Category.ASIAN_PORN,
-      Model.Category.GAME_CG,
-      Model.Category.COSPLAY,
-      Model.Category.DOUJINSHI,
-      Model.Category.MANGA,
-      Model.Category.IMAGE_SET,
-      Model.Category.WESTERN,
-      Model.Category.NON__H,
-      Model.Category.MISC,
+      Model.Category.DOUJINSHI, Model.Category.MANGA,
+      Model.Category.ARTIST_CG, Model.Category.GAME_CG,
+      Model.Category.WESTERN, Model.Category.NON__H,
+      Model.Category.IMAGE_SET, Model.Category.COSPLAY,
+      Model.Category.ASIAN_PORN, Model.Category.MISC,
   };
 
   public static CategoryDialog newInstance() {
@@ -111,6 +107,15 @@ public class CategoryDialog extends DialogFragment {
       models.add(ModelFactory.createModelFromCategory(category, Model.Template.Category));
     }
     adapter.setData(models);
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
+    lp.dimAmount = 0f;
+    lp.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+    getDialog().getWindow().setAttributes(lp);
   }
 
   public void show(Context context) {

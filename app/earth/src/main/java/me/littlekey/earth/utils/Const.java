@@ -124,6 +124,8 @@ public class Const {
   public static final String APPLY_CHANGES = "apply_changes";
   public static final String ADD_TO_FAVOURITES = "add_to_favourites";
   public static final String APPLY_AND_FILTER = "Apply+Filter";
+  public static final String ROOT = "/";
+  public static final String TAG = "tag";
   public static final int ART_LIST_TOP_PADDING = FormatUtils.dipsToPix(60);
   public static final int MIN_PASSWORD_LENGTH = 6;
   public static final int MAX_PASSWORD_LENGTH = 30;

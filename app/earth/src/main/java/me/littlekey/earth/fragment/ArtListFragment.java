@@ -111,12 +111,12 @@ public class ArtListFragment extends BaseFragment
     Bundle bundle = getArguments();
     ArrayList<String> paths = bundle.getStringArrayList(Const.KEY_API_PATH);
     // TODO : add to Const
-    switch (CollectionUtils.isEmpty(paths) ? "/" : paths.get(0)) {
-      case "tag":
+    switch (CollectionUtils.isEmpty(paths) ? Const.API_ROOT : paths.get(0)) {
+      case Const.TAG:
         bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());
         bundle.putStringArrayList(Const.KEY_API_PATH, paths);
         break;
-      case "/":
+      case Const.API_ROOT:
         bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
         break;
     }

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/TextStyle.Normal.Black"
     android:layout_width="match_parent"
-    android:padding="10dp"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content">
 
-</TextView>
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextStyle.Large.Black"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:gravity="center_vertical"/>
+
+    <include
+        layout="@layout/thin_light_divider_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/thin_divider_line_height"
+        android:layout_gravity="bottom"/>
+</FrameLayout>

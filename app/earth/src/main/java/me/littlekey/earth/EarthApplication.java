@@ -134,6 +134,9 @@ public class EarthApplication extends BaseApplication implements ApiContext {
   }
 
   public void addSearchHistory(String content) {
+    if (TextUtils.isEmpty(content)) {
+      return;
+    }
     mSearchHistories.add(0, content);
     while (mSearchHistories.size() > Const.SEARCH_HISTORY_RECORD_COUNT) {
       mSearchHistories.remove(Const.SEARCH_HISTORY_RECORD_COUNT);

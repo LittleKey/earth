@@ -144,6 +144,7 @@ public class ArtListFragment extends BaseFragment
     mContentFragment.resetApi(ApiType.SEARCH_LIST, null, pairs.toArray(new NameValuePair[pairs.size()]));
     EarthApplication.getInstance().addSearchHistory(searchContent);
     ((BaseActivity) getActivity()).closeKeyboard();
+    mSearchView.dismissDropDown();
   }
 
   protected Fragment createContentFragment() {

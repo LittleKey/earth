@@ -1,7 +1,7 @@
 package me.littlekey.earth.widget;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.MultiAutoCompleteTextView;
 
 import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
@@ -26,7 +25,7 @@ import me.littlekey.earth.R;
 /**
  * Created by littlekey on 16/6/27.
  */
-public class SearchCompleteView extends AppCompatMultiAutoCompleteTextView
+public class SearchCompleteView extends AppCompatAutoCompleteTextView
     implements View.OnTouchListener {
 
   public SearchCompleteView(Context context) {
@@ -39,7 +38,7 @@ public class SearchCompleteView extends AppCompatMultiAutoCompleteTextView
 
   public SearchCompleteView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+//    setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
     setAdapter(new SearchHistoryAdapter(context));
     setDropDownVerticalOffset(FormatUtils.dipsToPix(10));
     setOnTouchListener(this);
@@ -71,8 +70,13 @@ public class SearchCompleteView extends AppCompatMultiAutoCompleteTextView
   }
 
   @Override
-  protected void performFiltering(CharSequence text, int start, int end, int keyCode) {
-    super.performFiltering(text, start, end, keyCode);
+  public boolean enoughToFilter() {
+    return getText().length() >= getThreshold();
+  }
+
+  @Override
+  protected void performFiltering(CharSequence text, int keyCode) {
+    super.performFiltering(text, keyCode);
     showDropDown();
   }
 
@@ -91,7 +95,7 @@ public class SearchCompleteView extends AppCompatMultiAutoCompleteTextView
     private Filter mFilter;
 
     public SearchHistoryAdapter(Context context) {
-      super(context, R.layout.item_search_complete);
+      super(context, R.layout.item_search_complete, R.id.title);
     }
 
     @Override

@@ -18,6 +18,10 @@
         <item name="android:windowBackground">@color/white</item>
     </style>
 
+    <style name="BaseAppTheme.DetailPage">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
     <style name="BaseAppTheme.DrawableBackground">
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>

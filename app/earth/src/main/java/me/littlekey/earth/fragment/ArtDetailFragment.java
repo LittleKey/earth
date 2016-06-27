@@ -134,8 +134,13 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
       }
     };
     EventBus.getDefault().register(this);
-    mContentViewPager.setAdapter(mContentPagerAdapter);
-    mContentPagerAdapter.notifyDataSetChanged();
+    mContentViewPager.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        mContentViewPager.setAdapter(mContentPagerAdapter);
+        mContentPagerAdapter.notifyDataSetChanged();
+      }
+    }, 360);
   }
 
   @Override

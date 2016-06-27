@@ -54,7 +54,7 @@
     <string name="thursday">星期四</string>
     <string name="friday">星期五</string>
     <string name="saturday">星期六</string>
-    <string name="hour_minute_format">a hh时mm分</string>
+    <string name="hour_minute_format">hh时mm分</string>
     <string name="date_format">MM-dd</string>
     <string name="today">今天</string>
     <string name="date_ymd">yy/MM/dd</string>

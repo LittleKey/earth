@@ -22,8 +22,8 @@ public abstract class BaseActivity extends AppCompatActivity {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow().setSharedElementEnterTransition(new DetailTransition(500, 100));
-      getWindow().setSharedElementReturnTransition(new DetailTransition(500, 100));
+      getWindow().setSharedElementEnterTransition(new DetailTransition(360, 0));
+      getWindow().setSharedElementReturnTransition(new DetailTransition(360, 0));
     }
   }
 

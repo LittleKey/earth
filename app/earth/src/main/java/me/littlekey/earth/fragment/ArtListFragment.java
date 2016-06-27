@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yuanqi.base.utils.CollectionUtils;
@@ -24,11 +23,13 @@ import java.util.List;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
+import me.littlekey.earth.activity.BaseActivity;
 import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.widget.IconFontTextView;
+import me.littlekey.earth.widget.SearchCompleteView;
 
 /**
  * Created by littlekey on 16/6/11.
@@ -40,7 +41,7 @@ public class ArtListFragment extends BaseFragment
       TextWatcher {
 
   private ListFragment mContentFragment;
-  private EditText mSearchView;
+  private SearchCompleteView mSearchView;
   private IconFontTextView mBtnClear;
 
   public static ArtListFragment newInstance(Bundle bundle) {
@@ -71,14 +72,14 @@ public class ArtListFragment extends BaseFragment
     mBtnClear.setOnClickListener(this);
 //    view.findViewById(R.id.fab).setOnClickListener(this);
     view.findViewById(R.id.fab).setVisibility(View.GONE);
-    mSearchView = (EditText) view.findViewById(R.id.search);
+    mSearchView = (SearchCompleteView) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
     if (!CollectionUtils.isEmpty(paths)) {
       mSearchView.setText(paths.get(paths.size() - 1));
       mBtnClear.setText(R.string.img_cross);
     } else {
-      mBtnClear.setText(R.string.img_heart);
+      mBtnClear.setText(R.string.img_search);
     }
     mSearchView.addTextChangedListener(this);
   }
@@ -102,7 +103,7 @@ public class ArtListFragment extends BaseFragment
   @Override
   public void afterTextChanged(Editable s) {
     if (TextUtils.isEmpty(s.toString())) {
-      mBtnClear.setText(R.string.img_heart);
+      mBtnClear.setText(R.string.img_search);
     } else {
       mBtnClear.setText(R.string.img_cross);
     }
@@ -134,12 +135,15 @@ public class ArtListFragment extends BaseFragment
 
   private void search() {
     List<NameValuePair> pairs = new ArrayList<>();
-    pairs.add(new NameValuePair(Const.KEY_F_SEARCH, mSearchView.getText().toString()));
+    String searchContent = mSearchView.getText().toString();
+    pairs.add(new NameValuePair(Const.KEY_F_SEARCH, searchContent));
     for (Model.Category category: EarthApplication.getInstance().getSelectedCategory()) {
       pairs.add(new NameValuePair(category.getSearchName(), Const.ONE));
     }
     pairs.add(new NameValuePair(Const.KEY_F_APPLY, Const.APPLY_AND_FILTER));
     mContentFragment.resetApi(ApiType.SEARCH_LIST, null, pairs.toArray(new NameValuePair[pairs.size()]));
+    EarthApplication.getInstance().addSearchHistory(searchContent);
+    ((BaseActivity) getActivity()).closeKeyboard();
   }
 
   protected Fragment createContentFragment() {

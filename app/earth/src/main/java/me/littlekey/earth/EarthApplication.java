@@ -1,14 +1,22 @@
 package me.littlekey.earth;
 
 import android.graphics.Typeface;
+import android.text.TextUtils;
 
+import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.ImmutableSet;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.yuanqi.base.utils.CollectionUtils;
+import com.yuanqi.base.utils.LinkedHashTreeSet;
 import com.yuanqi.base.utils.LogUtils;
 import com.yuanqi.mvp.BaseApplication;
 import com.yuanqi.network.ApiContext;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import me.littlekey.earth.account.AccountManager;
@@ -28,6 +36,8 @@ public class EarthApplication extends BaseApplication implements ApiContext {
   private Typeface mIconTypeface;
   private AccountManager mAccountManager;
   private HashSet<Model.Category> mSelectedCategory;
+  private Gson mGson;
+  private LinkedHashTreeSet<String> mSearchHistories;
 
   public EarthApplication() {
     sBaseApplicationInstance = this;
@@ -46,6 +56,7 @@ public class EarthApplication extends BaseApplication implements ApiContext {
     initializeAccount();
     initializeIconTypeface();
     initializeSelectedCategory();
+    initializeSearchHistory();
   }
 
   @Override
@@ -68,6 +79,12 @@ public class EarthApplication extends BaseApplication implements ApiContext {
 //  private void initializeUpdate() {
 //    mUpdateAgent = new UpdateAgent(this, this);
 //  }
+
+  private void initializeSearchHistory() {
+    mGson = new Gson();
+    mSearchHistories = new LinkedHashTreeSet<>();
+    getSearchHistories();
+  }
 
   private void initializeIconTypeface() {
     mIconTypeface = Typeface.createFromAsset(getAssets(), "iconfont/iconfont.ttf");
@@ -116,5 +133,30 @@ public class EarthApplication extends BaseApplication implements ApiContext {
     PreferenceUtils.setStringSet(Const.LAST_SELECTED, Const.LAST_CATEGORY, categoryNameSet);
   }
 
+  public void addSearchHistory(String content) {
+    mSearchHistories.add(0, content);
+    while (mSearchHistories.size() > Const.SEARCH_HISTORY_RECORD_COUNT) {
+      mSearchHistories.remove(Const.SEARCH_HISTORY_RECORD_COUNT);
+    }
+    JsonArray jsonArray = new JsonArray();
+    for (String item: mSearchHistories) {
+      jsonArray.add(item);
+    }
+    PreferenceUtils.setString(Const.LAST_HISTORY, Const.LAST_SEARCH, jsonArray.toString());
+  }
+
+  public List<String> getSearchHistories() {
+    if (CollectionUtils.isEmpty(mSearchHistories)) {
+      String searchHistoriesString = PreferenceUtils.getString(Const.LAST_HISTORY,
+          Const.LAST_SEARCH, Const.EMPTY_STRING);
+      JsonArray jsonArray = mGson.fromJson(searchHistoriesString, JsonArray.class);
+      if (!TextUtils.isEmpty(searchHistoriesString)) {
+        for (JsonElement item : jsonArray) {
+          mSearchHistories.add(item.getAsString());
+        }
+      }
+    }
+    return ImmutableList.copyOf(mSearchHistories);
+  }
 }
 

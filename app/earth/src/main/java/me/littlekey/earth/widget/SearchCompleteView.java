@@ -1,10 +1,14 @@
 package me.littlekey.earth.widget;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.MultiAutoCompleteTextView;
@@ -22,7 +26,8 @@ import me.littlekey.earth.R;
 /**
  * Created by littlekey on 16/6/27.
  */
-public class SearchCompleteView extends MultiAutoCompleteTextView implements View.OnTouchListener {
+public class SearchCompleteView extends AppCompatMultiAutoCompleteTextView
+    implements View.OnTouchListener {
 
   public SearchCompleteView(Context context) {
     this(context, null);
@@ -41,11 +46,23 @@ public class SearchCompleteView extends MultiAutoCompleteTextView implements Vie
   }
 
   @Override
-  public void showDropDown() {
-    if (getDropDownHeight() >=  FormatUtils.dipsToPix(180)) {
-      setDropDownHeight(FormatUtils.dipsToPix(180));
+  public int getDropDownHeight() {
+    return ViewGroup.LayoutParams.WRAP_CONTENT;
+  }
+
+  @Override
+  public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && isPopupShowing()) {
+      InputMethodManager inputManager = (InputMethodManager) getContext()
+          .getSystemService(Context.INPUT_METHOD_SERVICE);
+      if(inputManager.hideSoftInputFromWindow(findFocus().getWindowToken(),
+          InputMethodManager.HIDE_NOT_ALWAYS)) {
+        dismissDropDown();
+        return true;
+      }
     }
-    super.showDropDown();
+
+    return super.onKeyPreIme(keyCode, event);
   }
 
   @Override

@@ -60,7 +60,6 @@ public class SearchCompleteView extends AppCompatAutoCompleteTextView
         return true;
       }
     }
-
     return super.onKeyPreIme(keyCode, event);
   }
 
@@ -75,16 +74,11 @@ public class SearchCompleteView extends AppCompatAutoCompleteTextView
   }
 
   @Override
-  protected void performFiltering(CharSequence text, int keyCode) {
-    super.performFiltering(text, keyCode);
-    showDropDown();
-  }
-
-  @Override
   public boolean onTouch(View v, MotionEvent event) {
     switch (event.getActionMasked()) {
       case MotionEvent.ACTION_UP:
         performFiltering(getText(), 0);
+        showDropDown();
         break;
     }
     return false;

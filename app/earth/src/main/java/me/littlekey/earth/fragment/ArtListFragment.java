@@ -71,7 +71,6 @@ public class ArtListFragment extends BaseFragment
     mBtnClear = (IconFontTextView) view.findViewById(R.id.btn_clear);
     mBtnClear.setOnClickListener(this);
 //    view.findViewById(R.id.fab).setOnClickListener(this);
-    view.findViewById(R.id.fab).setVisibility(View.GONE);
     mSearchView = (SearchCompleteView) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
@@ -112,9 +111,9 @@ public class ArtListFragment extends BaseFragment
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
-      case R.id.fab:
+//      case R.id.fab:
 //        mContentFragment.smoothScrollToPosition(0);
-        break;
+//        break;
       case R.id.btn_clear:
         if (TextUtils.isEmpty(mSearchView.getText().toString())) {
           CategoryDialog.newInstance().show(getActivity());

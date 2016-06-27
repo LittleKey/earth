@@ -40,7 +40,7 @@ if [ -z $PROTO_FILES ] ; then
 	PROTO_FILES=*.proto
 fi
 
-WIRE_JAR_PATH=$SCRIPT_DIR_NAME/wire-compiler-2.1.0-jar-with-dependencies.jar
+WIRE_JAR_PATH=$SCRIPT_DIR_NAME/wire-compiler-2.2.0-jar-with-dependencies.jar
 
 cd $PROTO_FILE_DIR
 java -jar $WIRE_JAR_PATH --proto_path=. --java_out=$TARGET_SOURCE_FOLDER $PROTO_FILES

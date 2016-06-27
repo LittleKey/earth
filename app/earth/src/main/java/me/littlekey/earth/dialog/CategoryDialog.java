@@ -104,7 +104,7 @@ public class CategoryDialog extends DialogFragment {
         .title(getString(R.string.select_category))
         .build());
     for (Model.Category category: sCategorys) {
-      models.add(ModelFactory.createModelFromCategory(category, Model.Template.Category));
+      models.add(ModelFactory.createModelFromCategory(category, Model.Template.CATEGORY));
     }
     adapter.setData(models);
   }

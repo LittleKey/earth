@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 
+import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
@@ -43,11 +45,11 @@ public class ImagePresenter extends EarthPresenter {
 
   private void bindImage(SimpleDraweeView view, Model model) {
     ImageRequestBuilder requestBuilder = ImageRequestBuilder
-        .newBuilderWithSource(Uri.parse(model.getCover()));
-    if (Wire.get(model.getFlag().is_thumbnail, false)) {
+        .newBuilderWithSource(Uri.parse(model.cover));
+    if (Wire.get(model.flag.is_thumbnail, false)) {
       requestBuilder.setPostprocessor(new ThumbnailAdjustProcessor(model));
       requestBuilder.setResizeOptions(
-          new ResizeOptions(model.getCount().width, model.getCount().height));
+          new ResizeOptions(model.count.width, model.count.height));
     }
     PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
         .setOldController(view.getController());
@@ -70,15 +72,20 @@ public class ImagePresenter extends EarthPresenter {
     }
 
     @Override
+    public CacheKey getPostprocessorCacheKey() {
+      return new SimpleCacheKey(mModel.url + mModel.count.x_offset);
+    }
+
+    @Override
     public String getName() {
       return "thumbnail_processor";
     }
 
     @Override
     public CloseableReference<Bitmap> process(Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
-      int x_offset = mModel.getCount().x_offset;
-      int width = mModel.getCount().width;
-      int height = mModel.getCount().height;
+      int x_offset = mModel.count.x_offset;
+      int width = mModel.count.width;
+      int height = mModel.count.height;
       CloseableReference<Bitmap> bitmapRef = bitmapFactory.createBitmap(width, height);
       try {
         Bitmap destBitmap = bitmapRef.get();

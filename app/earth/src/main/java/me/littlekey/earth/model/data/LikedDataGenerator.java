@@ -79,10 +79,10 @@ public class LikedDataGenerator extends EarthDataGenerator<EarthResponse> {
           .type(Action.Type.LIKED)
           .bundle(bundle)
           .build());
-      CollectionUtils.add(models,
-          new Model.Builder(ModelFactory.createModelFromFav(fav, Model.Template.SELECT_FAV))
-              .actions(actions)
-              .build());
+      Model model = ModelFactory.createModelFromFav(fav, Model.Template.SELECT_FAV);
+      if (model != null) {
+        CollectionUtils.add(models, model.newBuilder().actions(actions).build());
+      }
     }
     return models;
   }

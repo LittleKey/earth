@@ -62,7 +62,7 @@ public final class Cursor extends Message<Cursor, Cursor.Builder> {
     if (other == this) return true;
     if (!(other instanceof Cursor)) return false;
     Cursor o = (Cursor) other;
-    return Internal.equals(unknownFields(), o.unknownFields())
+    return unknownFields().equals(o.unknownFields())
         && Internal.equals(cursor_id, o.cursor_id)
         && Internal.equals(has_more, o.has_more);
   }
@@ -107,7 +107,7 @@ public final class Cursor extends Message<Cursor, Cursor.Builder> {
 
     @Override
     public Cursor build() {
-      return new Cursor(cursor_id, has_more, buildUnknownFields());
+      return new Cursor(cursor_id, has_more, super.buildUnknownFields());
     }
   }
 

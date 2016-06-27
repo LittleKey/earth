@@ -46,7 +46,7 @@ public class FlagPresenter extends EarthPresenter {
   private void judgeLiked(Model model) {
     if (view() instanceof TextView) {
       Drawable drawable = EarthUtils.setDrawableBounds(ResourceUtils.getDrawable(
-          Wire.get(model.getFlag().is_liked, false) ? R.drawable.liked : R.drawable.unlike));
+          Wire.get(model.flag.is_liked, false) ? R.drawable.liked : R.drawable.unlike));
       ((TextView) view()).setCompoundDrawables(drawable, null, null, null);
     }
   }
@@ -54,15 +54,15 @@ public class FlagPresenter extends EarthPresenter {
   private void judgeShowHide(Model model) {
     if (view() instanceof FloatingActionButton) {
       ((FloatingActionButton) view()).setImageDrawable(ResourceUtils.getDrawable(
-          Wire.get(model.getFlag().is_selected, false) ?
+          Wire.get(model.flag.is_selected, false) ?
               R.drawable.arrow_up_gray : R.drawable.arrow_down_gray));
     }
   }
 
   private void judgeMask(Model model) {
     if (view() instanceof ImageView) {
-      Action action = model.getActions().get(Const.ACTION_MAIN);
-      boolean isSelected = model.getFlag() != null && Wire.get(model.getFlag().is_selected, false);
+      Action action = model.actions.get(Const.ACTION_MAIN);
+      boolean isSelected = model.flag != null && Wire.get(model.flag.is_selected, false);
       if (action != null) {
         switch (action.type) {
           case SELECT_REGION:
@@ -80,16 +80,16 @@ public class FlagPresenter extends EarthPresenter {
   }
 
   private void judgeSelected(Model model) {
-    view().setVisibility(model.getFlag().is_selected ? View.VISIBLE : View.GONE);
+    view().setVisibility(model.flag.is_selected ? View.VISIBLE : View.GONE);
   }
 
   private void judgeBlackBackgroundSelected(Model model) {
-    view().setVisibility(Wire.get(model.getFlag().is_selected, false) ? View.GONE : View.VISIBLE);
+    view().setVisibility(Wire.get(model.flag.is_selected, false) ? View.GONE : View.VISIBLE);
   }
 
   private void judgeHasMore(Model model) {
     if (view() instanceof TextView) {
-      if (CollectionUtils.isEmpty(model.getSubModels())) {
+      if (CollectionUtils.isEmpty(model.subModels)) {
         ((TextView) view()).setCompoundDrawables(null, null, null, null);
       } else {
         Drawable drawable = view().getResources().getDrawable(R.drawable.arrow_right);

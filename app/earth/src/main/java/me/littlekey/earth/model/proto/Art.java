@@ -180,7 +180,7 @@ public final class Art extends Message<Art, Art.Builder> {
     if (other == this) return true;
     if (!(other instanceof Art)) return false;
     Art o = (Art) other;
-    return Internal.equals(unknownFields(), o.unknownFields())
+    return unknownFields().equals(o.unknownFields())
         && Internal.equals(title, o.title)
         && Internal.equals(publisher_name, o.publisher_name)
         && Internal.equals(category, o.category)
@@ -191,10 +191,10 @@ public final class Art extends Message<Art, Art.Builder> {
         && Internal.equals(language, o.language)
         && Internal.equals(liked, o.liked)
         && Internal.equals(file_size, o.file_size)
-        && Internal.equals(tags, o.tags)
+        && tags.equals(o.tags)
         && Internal.equals(gid, o.gid)
         && Internal.equals(token, o.token)
-        && Internal.equals(comments, o.comments);
+        && comments.equals(o.comments);
   }
 
   @Override
@@ -212,10 +212,10 @@ public final class Art extends Message<Art, Art.Builder> {
       result = result * 37 + (language != null ? language.hashCode() : 0);
       result = result * 37 + (liked != null ? liked.hashCode() : 0);
       result = result * 37 + (file_size != null ? file_size.hashCode() : 0);
-      result = result * 37 + (tags != null ? tags.hashCode() : 1);
+      result = result * 37 + tags.hashCode();
       result = result * 37 + (gid != null ? gid.hashCode() : 0);
       result = result * 37 + (token != null ? token.hashCode() : 0);
-      result = result * 37 + (comments != null ? comments.hashCode() : 1);
+      result = result * 37 + comments.hashCode();
       super.hashCode = result;
     }
     return result;
@@ -234,10 +234,10 @@ public final class Art extends Message<Art, Art.Builder> {
     if (language != null) builder.append(", language=").append(language);
     if (liked != null) builder.append(", liked=").append(liked);
     if (file_size != null) builder.append(", file_size=").append(file_size);
-    if (tags != null) builder.append(", tags=").append(tags);
+    if (!tags.isEmpty()) builder.append(", tags=").append(tags);
     if (gid != null) builder.append(", gid=").append(gid);
     if (token != null) builder.append(", token=").append(token);
-    if (comments != null) builder.append(", comments=").append(comments);
+    if (!comments.isEmpty()) builder.append(", comments=").append(comments);
     return builder.replace(0, 2, "Art{").append('}').toString();
   }
 
@@ -349,7 +349,7 @@ public final class Art extends Message<Art, Art.Builder> {
 
     @Override
     public Art build() {
-      return new Art(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, comments, buildUnknownFields());
+      return new Art(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, comments, super.buildUnknownFields());
     }
   }
 
@@ -389,10 +389,10 @@ public final class Art extends Message<Art, Art.Builder> {
       if (value.language != null) ProtoAdapter.STRING.encodeWithTag(writer, 8, value.language);
       if (value.liked != null) ProtoAdapter.BOOL.encodeWithTag(writer, 9, value.liked);
       if (value.file_size != null) ProtoAdapter.STRING.encodeWithTag(writer, 10, value.file_size);
-      if (value.tags != null) Tag.ADAPTER.asRepeated().encodeWithTag(writer, 11, value.tags);
+      Tag.ADAPTER.asRepeated().encodeWithTag(writer, 11, value.tags);
       if (value.gid != null) ProtoAdapter.STRING.encodeWithTag(writer, 12, value.gid);
       if (value.token != null) ProtoAdapter.STRING.encodeWithTag(writer, 13, value.token);
-      if (value.comments != null) Comment.ADAPTER.asRepeated().encodeWithTag(writer, 14, value.comments);
+      Comment.ADAPTER.asRepeated().encodeWithTag(writer, 14, value.comments);
       writer.writeBytes(value.unknownFields());
     }
 

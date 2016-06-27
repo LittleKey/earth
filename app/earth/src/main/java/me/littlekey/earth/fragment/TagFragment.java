@@ -52,7 +52,7 @@ public class TagFragment extends BaseFragment {
     recyclerView.setAdapter(adapter);
     mModel = getArguments().getParcelable(Const.EXTRA_MODEL);
     if (mModel != null) {
-      adapter.setData(mModel.getSubModels());
+      adapter.setData(mModel.subModels);
     }
     EventBus.getDefault().register(this);
   }
@@ -69,9 +69,9 @@ public class TagFragment extends BaseFragment {
 
   public void onEventMainThread(OnClickTagItemEvent event) {
     int index;
-    if ((index = mModel.getSubModels().indexOf(event.getTag())) != -1) {
+    if ((index = mModel.subModels.indexOf(event.getTag())) != -1) {
 //      String url = buildUrl(mModel.getSubModels().get(index));
-      String url = mModel.getSubModels().get(index).getUrl();
+      String url = mModel.subModels.get(index).url;
       NavigationManager.navigationTo(getActivity(),
           NavigationManager.buildUri(Uri.parse(url).getEncodedPath()));
     }
@@ -83,7 +83,7 @@ public class TagFragment extends BaseFragment {
         .appendEncodedPath("/exhentai.org")
         .appendEncodedPath(NavigationManager.TAG)
         .appendPath(String.format("%s:%s",
-            mModel.getTitle(), TextUtils.join("+", model.getTitle().split(Const.STRING_SPACE))))
+            mModel.title, TextUtils.join("+", model.title.split(Const.STRING_SPACE))))
         .build()
         .toString();
   }

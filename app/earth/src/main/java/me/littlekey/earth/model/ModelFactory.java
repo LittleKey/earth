@@ -21,9 +21,7 @@ import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.model.proto.Tag;
-import me.littlekey.earth.model.proto.User;
 import me.littlekey.earth.utils.Const;
-import me.littlekey.earth.utils.EarthUtils;
 import me.littlekey.earth.utils.NavigationManager;
 
 /**
@@ -32,34 +30,6 @@ import me.littlekey.earth.utils.NavigationManager;
 
 public class ModelFactory {
   private ModelFactory() {
-  }
-
-  public static Model createModelFromUser(User user, Model.Template template) {
-    user = DataVerifier.verify(user);
-    if (user == null) {
-      return null;
-    }
-    Flag flag = new Flag.Builder()
-        .is_me(EarthApplication.getInstance().getAccountManager().isSelf(user.display_name))
-        .build();
-    Model.Builder builder = new Model.Builder()
-        .type(Model.Type.USER)
-        .template(template)
-        .identity(user.user_id)
-        .title(user.display_name)
-        .cover(EarthUtils.buildImage(user.image))
-        .description(user.bio)
-        .flag(flag)
-        .user(user);
-    Map<Integer, Action> actions = new HashMap<>();
-    Bundle bundle = new Bundle();
-    bundle.putString(Const.EXTRA_IDENTITY, user.user_id);
-    bundle.putParcelable(Const.KEY_MODEL, builder.build());
-    actions.put(Const.ACTION_MAIN, new Action.Builder()
-        .type(Action.Type.SHOW_USER_CARD)
-        .bundle(bundle)
-        .build());
-    return builder.actions(actions).build();
   }
 
   public static Model createModelFromArt(Art art, Model.Template template) {
@@ -71,7 +41,7 @@ public class ModelFactory {
     if (art.category >= 0 && art.category < Model.Category.values().length) {
       category = Model.Category.values()[art.category];
     } else {
-      throw new IllegalStateException("Category can not be null.");
+      throw new IllegalStateException("CATEGORY can not be null.");
     }
     List<Model> subModels = new ArrayList<>();
     for (Tag tag: art.tags) {

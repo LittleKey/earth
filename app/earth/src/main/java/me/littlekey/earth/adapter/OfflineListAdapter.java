@@ -2,6 +2,7 @@ package me.littlekey.earth.adapter;
 
 import android.view.ViewGroup;
 
+import com.squareup.wire.Wire;
 import com.yuanqi.mvp.presenter.ViewGroupPresenter;
 import com.yuanqi.mvp.widget.MvpRecyclerView;
 
@@ -20,13 +21,13 @@ public class OfflineListAdapter extends MvpRecyclerView.Adapter<Model> {
 
   @Override
   protected ViewGroupPresenter onCreateViewPresenter(ViewGroup parent, int viewType) {
-    Model.Template template = Model.Template.values()[viewType];
+    Model.Template template = Wire.get(Model.Template.fromValue(viewType), Model.Template.UNSUPPORTED);
     switch (template) {
       case PARENT_TAG:
         return EarthPresenterFactory.createParentTagPresenter(parent, R.layout.item_parent_tag);
       case CHILD_TAG:
         return EarthPresenterFactory.createChildTagPresenter(parent, R.layout.item_child_tag);
-      case Category:
+      case CATEGORY:
         return EarthPresenterFactory.createCategoryItemPresenter(parent, R.layout.item_category, this);
       case TITLE:
         return EarthPresenterFactory.createTitlePresenter(parent, R.layout.item_title);
@@ -39,6 +40,6 @@ public class OfflineListAdapter extends MvpRecyclerView.Adapter<Model> {
 
   @Override
   public int getItemViewType(int position) {
-    return getItem(position).getTemplate().ordinal();
+    return getItem(position).template.getValue();
   }
 }

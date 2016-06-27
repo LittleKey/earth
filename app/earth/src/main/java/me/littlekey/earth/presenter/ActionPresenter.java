@@ -134,7 +134,7 @@ public class ActionPresenter extends EarthPresenter {
   }
 
   private void liked(Model model, final String gid, String token) {
-    final boolean isUnlike = model.getIdentity().equals(Const.FAV_DEL);
+    final boolean isUnlike = model.identity.equals(Const.FAV_DEL);
     final ProgressDialog dialog = new ProgressDialog(group().context);
     dialog.show();
     Map<String, String> query = new HashMap<>();
@@ -144,8 +144,8 @@ public class ActionPresenter extends EarthPresenter {
     Map<String, String> params = new HashMap<>();
     params.put(Const.KEY_FAV_NOTE, Const.EMPTY_STRING);
     params.put(Const.KEY_UPDATE, Const.ONE);
-    params.put(Const.KEY_FAV_CAT, model.getIdentity());
-    params.put(Const.KEY_APPLY, model.getDescription());
+    params.put(Const.KEY_FAV_CAT, model.identity);
+    params.put(Const.KEY_APPLY, model.description);
     EarthRequest request = EarthApplication.getInstance().getRequestManager()
         .newEarthRequest(ApiType.LIKED, Request.Method.POST, new Response.Listener<EarthResponse>() {
           @Override
@@ -178,25 +178,25 @@ public class ActionPresenter extends EarthPresenter {
     int position = adapter.indexOf(model);
     if (position != -1) {
       Model oldItem = adapter.getItem(position);
-      Flag flag = oldItem.getFlag();
-      adapter.changeData(position, new Model.Builder(oldItem)
+      Flag flag = oldItem.flag;
+      adapter.changeData(position, oldItem.newBuilder()
           .flag(flag.newBuilder().is_selected(!flag.is_selected).build())
           .build());
       if (flag.is_selected) {
-        EarthApplication.getInstance().removeSelectCategory(model.getCategory());
+        EarthApplication.getInstance().removeSelectCategory(model.category);
       } else {
-        EarthApplication.getInstance().addSelectCategory(model.getCategory());
+        EarthApplication.getInstance().addSelectCategory(model.category);
       }
     }
   }
 
   @SuppressWarnings("unchecked")
   private void select(Model model, boolean updateParent) {
-    boolean willSelect = model.getFlag() == null || !Wire.get(model.getFlag().is_selected, false);
+    boolean willSelect = model.flag == null || !Wire.get(model.flag.is_selected, false);
     MvpRecyclerView.Adapter adapter = group().pageContext.adapter;
-    Flag flag = Wire.get(model.getFlag(), new Flag.Builder().build()).newBuilder()
+    Flag flag = Wire.get(model.flag, new Flag.Builder().build()).newBuilder()
         .is_selected(willSelect).build();
-    Model newModel = new Model.Builder(model).flag(flag).build();
+    Model newModel = model.newBuilder().flag(flag).build();
     if (updateParent) {
       updateParentSubModels(adapter, model, newModel);
     }
@@ -208,15 +208,15 @@ public class ActionPresenter extends EarthPresenter {
   private void check(Model model) {
     MvpRecyclerView.Adapter adapter = group().pageContext.adapter;
     Flag flag =
-        Wire.get(model.getFlag(), new Flag.Builder().build()).newBuilder().is_selected(true)
+        Wire.get(model.flag, new Flag.Builder().build()).newBuilder().is_selected(true)
             .build();
-    Model newModel = new Model.Builder(model).flag(flag).build();
+    Model newModel = model.newBuilder().flag(flag).build();
     for (int i = 0; i < adapter.getData().size(); i++) {
       Object item = adapter.getItem(i);
-      if (item instanceof Model && (flag = ((Model) item).getFlag()) != null
+      if (item instanceof Model && (flag = ((Model) item).flag) != null
           && Wire.get(flag.is_selected, false) && !item.equals(model)) {
         flag = flag.newBuilder().is_selected(false).build();
-        adapter.changeData(i, new Model.Builder((Model) item).flag(flag).build());
+        adapter.changeData(i, ((Model) item).newBuilder().flag(flag).build());
         break;
       }
     }
@@ -229,19 +229,19 @@ public class ActionPresenter extends EarthPresenter {
     int parentPosition = findParentModelPosition(model);
     if (parentPosition != -1) {
       Model parent = (Model) adapter.getItem(parentPosition);
-      List<Model> subModels = new ArrayList<>(parent.getSubModels());
+      List<Model> subModels = new ArrayList<>(parent.subModels);
       subModels.set(subModels.indexOf(model), newModel);
       int selectedNum = 0;
       for (Model sub : subModels) {
-        Flag flag = sub.getFlag();
-        if (!CollectionUtils.isEmpty(sub.getSubModels())) {
-          selectedNum += sub.getCount() != null ? Wire.get(sub.getCount().selected_num, 0) : 0;
+        Flag flag = sub.flag;
+        if (!CollectionUtils.isEmpty(sub.subModels)) {
+          selectedNum += sub.count != null ? Wire.get(sub.count.selected_num, 0) : 0;
         } else if (flag != null && Wire.get(flag.is_selected, false)) {
           ++selectedNum;
         }
       }
       Count count = new Count.Builder().selected_num(selectedNum).build();
-      Model newParent = new Model.Builder(parent).subModels(subModels).count(count).build();
+      Model newParent = parent.newBuilder().subModels(subModels).count(count).build();
       updateParentSubModels(adapter, parent, newParent);
       adapter.changeData(parentPosition, newParent);
     }
@@ -252,17 +252,17 @@ public class ActionPresenter extends EarthPresenter {
     MvpRecyclerView.Adapter adapter = group().pageContext.adapter;
     // int position = group().holder.getAdapterPosition();
     int position = adapter.indexOf(model);
-    if (shouldExpand != (model.getFlag() != null && Wire.get(model.getFlag().is_selected, false))) {
-      Model newModel = new Model.Builder(model).flag(
+    if (shouldExpand != (model.flag != null && Wire.get(model.flag.is_selected, false))) {
+      Model newModel = model.newBuilder().flag(
           new Flag.Builder().is_selected(shouldExpand).build()).build();
       updateParentSubModels(adapter, model, newModel);
       adapter.changeData(position, newModel);
       if (shouldExpand) {
-        adapter.insertData(position + 1, model.getSubModels());
+        adapter.insertData(position + 1, model.subModels);
       } else {
-        for (int i = 0; i < model.getSubModels().size(); ++i) {
+        for (int i = 0; i < model.subModels.size(); ++i) {
           Model item = (Model) adapter.getItem(position + 1);
-          if (!CollectionUtils.isEmpty(item.getSubModels())) {
+          if (!CollectionUtils.isEmpty(item.subModels)) {
             expand(item, false);
             // NOTE : update data after adapter item change
             item = (Model) adapter.getItem(position + 1);
@@ -279,7 +279,7 @@ public class ActionPresenter extends EarthPresenter {
     int position = adapter.indexOf(model);
     for (int i = position - 1; i >= 0; --i) {
       Model item = (Model) adapter.getItem(i);
-      if (!CollectionUtils.isEmpty(item.getSubModels()) && item.getSubModels().contains(model)) {
+      if (!CollectionUtils.isEmpty(item.subModels) && item.subModels.contains(model)) {
         return i;
       }
     }
@@ -290,11 +290,11 @@ public class ActionPresenter extends EarthPresenter {
     switch (id) {
       case 0:
 //      case R.id.mask:
-        return model.getActions().get(Const.ACTION_MAIN);
+        return model.actions.get(Const.ACTION_MAIN);
       case R.id.fab:
-        return model.getActions().get(Const.ACTION_SHOW_HIDE);
+        return model.actions.get(Const.ACTION_SHOW_HIDE);
       case R.id.likes:
-        return model.getActions().get(Const.ACTION_LIKED);
+        return model.actions.get(Const.ACTION_LIKED);
     }
     return null;
   }

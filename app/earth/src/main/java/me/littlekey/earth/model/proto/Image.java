@@ -113,7 +113,7 @@ public final class Image extends Message<Image, Image.Builder> {
     if (other == this) return true;
     if (!(other instanceof Image)) return false;
     Image o = (Image) other;
-    return Internal.equals(unknownFields(), o.unknownFields())
+    return unknownFields().equals(o.unknownFields())
         && Internal.equals(src, o.src)
         && Internal.equals(origin_url, o.origin_url)
         && Internal.equals(number, o.number)
@@ -208,7 +208,7 @@ public final class Image extends Message<Image, Image.Builder> {
 
     @Override
     public Image build() {
-      return new Image(src, origin_url, number, is_thumbnail, offset, width, height, buildUnknownFields());
+      return new Image(src, origin_url, number, is_thumbnail, offset, width, height, super.buildUnknownFields());
     }
   }
 

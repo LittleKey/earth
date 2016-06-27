@@ -26,7 +26,7 @@ public class CategoryPresenter extends EarthPresenter {
 
   @Override
   public void bind(Model model) {
-    Model.Category category = model.getCategory();
+    Model.Category category = model.category;
     if (category == null) {
       return;
     }

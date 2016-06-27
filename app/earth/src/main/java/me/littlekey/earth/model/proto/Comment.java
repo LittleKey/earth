@@ -82,7 +82,7 @@ public final class Comment extends Message<Comment, Comment.Builder> {
     if (other == this) return true;
     if (!(other instanceof Comment)) return false;
     Comment o = (Comment) other;
-    return Internal.equals(unknownFields(), o.unknownFields())
+    return unknownFields().equals(o.unknownFields())
         && Internal.equals(author, o.author)
         && Internal.equals(date, o.date)
         && Internal.equals(content, o.content)
@@ -147,7 +147,7 @@ public final class Comment extends Message<Comment, Comment.Builder> {
 
     @Override
     public Comment build() {
-      return new Comment(author, date, content, score, buildUnknownFields());
+      return new Comment(author, date, content, score, super.buildUnknownFields());
     }
   }
 

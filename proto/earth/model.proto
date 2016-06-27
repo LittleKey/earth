@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package model;
+option java_package = "me.littlekey.earth.model.proto";
+
+import "./ehentai/model.proto";
+import "./earth.proto";
+
+//message Model {
+//    string identity = 1;
+//    string token = 2;
+//    Type type = 3;
+//    Template template = 4;
+//    string title = 5;
+//    string subtitle = 6;
+//    string language = 7;
+//    string fileSize = 8;
+//    string description = 9;
+//    string url = 10;
+//    string cover = 11;
+//    string date = 12;
+//    User user = 13;
+//    Art art = 14;
+//    Tag tag = 15;
+//    Image image = 16;
+//    Fav fav  = 17;
+//    Comment comment = 18;
+//    Count count = 19;
+//    Flag flag = 20;
+//    Category category = 21;
+//    repeated Model subModels = 22;
+//
+//    enum Type {
+//        NONE = 0;
+//        LINK = 1;
+//        ART = 2;
+//        TAG = 3;
+//        IMAGE = 4;
+//        FAV = 5;
+//        TEXT = 6;
+//        COMMENT = 7;
+//    }
+//
+//    enum Template {
+//        UNSUPPORTED = 0;
+//        DATA = 1;
+//        HEADER = 2;
+//        USER = 3;
+//        ITEM_ART = 4;
+//        PARENT_TAG = 5;
+//        CHILD_TAG = 6;
+//        PREVIEW_IMAGE = 7;
+//        SELECT_FAV = 8;
+//        CATEGORY = 9;
+//        TITLE = 10;
+//        ITEM_COMMENT = 11;
+//    }
+//
+//    enum Category {
+//        UNKNOWN = 0;
+//        DOUJINSHI = 1;
+//        MANGA = 2;
+//        ARTIST_CG = 3;
+//        GAME_CG = 4;
+//        WESTERN = 5;
+//        NON__H = 6;
+//        IMAGE_SET = 7;
+//        COSPLAY = 8;
+//        ASIAN_PORN = 9;
+//        MISC = 10;
+//    }
+//}

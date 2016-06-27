@@ -71,7 +71,7 @@ public final class Fav extends Message<Fav, Fav.Builder> {
     if (other == this) return true;
     if (!(other instanceof Fav)) return false;
     Fav o = (Fav) other;
-    return Internal.equals(unknownFields(), o.unknownFields())
+    return unknownFields().equals(o.unknownFields())
         && Internal.equals(id, o.id)
         && Internal.equals(name, o.name)
         && Internal.equals(apply, o.apply);
@@ -126,7 +126,7 @@ public final class Fav extends Message<Fav, Fav.Builder> {
 
     @Override
     public Fav build() {
-      return new Fav(id, name, apply, buildUnknownFields());
+      return new Fav(id, name, apply, super.buildUnknownFields());
     }
   }
 

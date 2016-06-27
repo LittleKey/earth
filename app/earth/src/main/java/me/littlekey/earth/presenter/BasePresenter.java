@@ -43,9 +43,9 @@ public class BasePresenter extends EarthPresenter {
   }
 
   private int getTotalLeaf(Model model) {
-    if (!CollectionUtils.isEmpty(model.getSubModels())) {
+    if (!CollectionUtils.isEmpty(model.subModels)) {
       int num = 0;
-      for (Model child: model.getSubModels()) {
+      for (Model child: model.subModels) {
         num += getTotalLeaf(child);
       }
       return num;
@@ -57,7 +57,7 @@ public class BasePresenter extends EarthPresenter {
     switch (id) {
       /** Common **/
       case R.id.rating:
-        return model.getCount().rating;
+        return model.count.rating;
     }
     return null;
   }

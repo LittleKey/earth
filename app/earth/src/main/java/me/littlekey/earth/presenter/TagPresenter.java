@@ -26,12 +26,12 @@ public class TagPresenter extends EarthPresenter {
   }
 
   private void bindText(TextView view, Model model) {
-    view.setText(model.getTitle());
+    view.setText(model.title);
     if (mIsSelectable) {
-      view.setTextColor(ResourceUtils.getColor(model.getFlag().is_selected ?
+      view.setTextColor(ResourceUtils.getColor(model.flag.is_selected ?
           R.color.white : R.color.half_transparent_white));
     }
-    switch (model.getTemplate()) {
+    switch (model.template) {
       case CHILD_TAG:
         view.setBackgroundResource(R.drawable.blue_circle_background);
         break;

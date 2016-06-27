@@ -3,6 +3,7 @@ package me.littlekey.earth.adapter;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import com.squareup.wire.Wire;
 import com.yuanqi.mvp.adapter.MvpAdapter;
 import com.yuanqi.mvp.presenter.ViewGroupPresenter;
 
@@ -28,7 +29,7 @@ public class ListAdapter extends MvpAdapter<Model> {
 
   @Override
   protected ViewGroupPresenter onCreateDataViewPresenter(ViewGroup parent, int viewType) {
-    Model.Template template = Model.Template.values()[viewType];
+    Model.Template template = Wire.get(Model.Template.fromValue(viewType), Model.Template.UNSUPPORTED);
     switch (template) {
       case ITEM_ART:
         return EarthPresenterFactory.createArtItemPresenter(parent, R.layout.item_art);
@@ -43,7 +44,7 @@ public class ListAdapter extends MvpAdapter<Model> {
 
   @Override
   public int getDataItemViewType(int position) {
-    return getItem(position).getTemplate().ordinal();
+    return getItem(position).template.getValue();
   }
 
 }

@@ -105,7 +105,7 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
 
       @Override
       public CharSequence getPageTitle(int position) {
-        return mTags.get(position).getTitle();
+        return mTags.get(position).title;
       }
     };
     mViewPager.setAdapter(mPagerAdapter);
@@ -199,12 +199,12 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
   @SuppressWarnings("unused")
   public void onEventMainThread(OnLoadedPageEvent event) {
     if (!CollectionUtils.isEmpty(mPaths) && mPaths.size() >= 2
-        && TextUtils.equals(event.getModel().getIdentity(), mPaths.get(1))) {
+        && TextUtils.equals(event.getModel().identity, mPaths.get(1))) {
       Map<Integer, Action> actions = new HashMap<>();
       if (mModel != null) {
-        actions.putAll(mModel.getActions());
+        actions.putAll(mModel.actions);
       }
-      actions.putAll(event.getModel().getActions());
+      actions.putAll(event.getModel().actions);
       actions.put(Const.ACTION_SHOW_HIDE, new Action.Builder()
           .type(Action.Type.RUNNABLE)
           .runnable(new Runnable() {
@@ -213,12 +213,12 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
               showViewPager(!mViewPager.isShown());
             }
           }).build());
-      mModel = new Model.Builder(event.getModel())
-          .flag(event.getModel().getFlag().newBuilder().is_selected(false).build())
+      mModel = event.getModel().newBuilder()
+          .flag(event.getModel().flag.newBuilder().is_selected(false).build())
           .actions(actions)
           .build();
       mPresenter.bind(mModel);
-      mTags = mModel.getSubModels();
+      mTags = mModel.subModels;
       mTagAdapter.setData(mTags);
       mSelectIndex = RecyclerView.NO_POSITION;
     }
@@ -229,7 +229,7 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
     int index;
     Flag flag;
     if ((index = mTags.indexOf(event.getTag())) != -1
-        && (flag = mTagAdapter.getItem(index).getFlag()) != null
+        && (flag = mTagAdapter.getItem(index).flag) != null
         && !Wire.get(flag.is_selected, false)) {
       showViewPager(true);
       mViewPager.setCurrentItem(index);
@@ -238,18 +238,18 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
 
   @SuppressWarnings("unused")
   public void onEventMainThread(OnLikedEvent event) {
-    if (mModel != null && TextUtils.equals(mModel.getIdentity(), event.getIdentity())) {
-      mModel = new Model.Builder(mModel)
-          .flag(mModel.getFlag().newBuilder().is_liked(event.isLiked()).build())
-          .art(mModel.getArt().newBuilder().liked(event.isLiked()).build())
+    if (mModel != null && TextUtils.equals(mModel.identity, event.getIdentity())) {
+      mModel = mModel.newBuilder()
+          .flag(mModel.flag.newBuilder().is_liked(event.isLiked()).build())
+          .art(mModel.art.newBuilder().liked(event.isLiked()).build())
           .build();
       mPresenter.bind(mModel);
     }
   }
 
   private void showViewPager(boolean show) {
-    mModel = new Model.Builder(mModel)
-        .flag(mModel.getFlag().newBuilder().is_selected(show).build())
+    mModel = mModel.newBuilder()
+        .flag(mModel.flag.newBuilder().is_selected(show).build())
         .build();
     mPresenter.bind(mModel);
     mViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -274,8 +274,8 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
       return;
     }
     Model item = mTagAdapter.getItem(index);
-    mTagAdapter.changeData(index, new Model.Builder(item)
-        .flag(item.getFlag().newBuilder().is_selected(isSelect).build())
+    mTagAdapter.changeData(index, item.newBuilder()
+        .flag(item.flag.newBuilder().is_selected(isSelect).build())
         .build());
   }
 }

@@ -81,11 +81,11 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     if (other == this) return true;
     if (!(other instanceof Tag)) return false;
     Tag o = (Tag) other;
-    return Internal.equals(unknownFields(), o.unknownFields())
+    return unknownFields().equals(o.unknownFields())
         && Internal.equals(id, o.id)
         && Internal.equals(key, o.key)
         && Internal.equals(url, o.url)
-        && Internal.equals(values, o.values);
+        && values.equals(o.values);
   }
 
   @Override
@@ -96,7 +96,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
       result = result * 37 + (id != null ? id.hashCode() : 0);
       result = result * 37 + (key != null ? key.hashCode() : 0);
       result = result * 37 + (url != null ? url.hashCode() : 0);
-      result = result * 37 + (values != null ? values.hashCode() : 1);
+      result = result * 37 + values.hashCode();
       super.hashCode = result;
     }
     return result;
@@ -108,7 +108,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
     if (id != null) builder.append(", id=").append(id);
     if (key != null) builder.append(", key=").append(key);
     if (url != null) builder.append(", url=").append(url);
-    if (values != null) builder.append(", values=").append(values);
+    if (!values.isEmpty()) builder.append(", values=").append(values);
     return builder.replace(0, 2, "Tag{").append('}').toString();
   }
 
@@ -148,7 +148,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
 
     @Override
     public Tag build() {
-      return new Tag(id, key, url, values, buildUnknownFields());
+      return new Tag(id, key, url, values, super.buildUnknownFields());
     }
   }
 
@@ -171,7 +171,7 @@ public final class Tag extends Message<Tag, Tag.Builder> {
       if (value.id != null) ProtoAdapter.STRING.encodeWithTag(writer, 1, value.id);
       if (value.key != null) ProtoAdapter.STRING.encodeWithTag(writer, 2, value.key);
       if (value.url != null) ProtoAdapter.STRING.encodeWithTag(writer, 3, value.url);
-      if (value.values != null) Tag.ADAPTER.asRepeated().encodeWithTag(writer, 4, value.values);
+      Tag.ADAPTER.asRepeated().encodeWithTag(writer, 4, value.values);
       writer.writeBytes(value.unknownFields());
     }
 

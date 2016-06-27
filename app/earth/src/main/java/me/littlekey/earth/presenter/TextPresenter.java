@@ -45,36 +45,36 @@ public class TextPresenter extends EarthPresenter {
     switch (id) {
       /** Common **/
       case R.id.content:
-        return Html.fromHtml(model.getDescription());
+        return Html.fromHtml(model.description);
       case R.id.title:
-        return model.getTitle();
+        return model.title;
       case R.id.nickname:
       case R.id.user_name:
-        return model.getUser().display_name;
+        return model.user.display_name;
       case R.id.avatar:
       case R.id.subtitle:
-        return model.getSubtitle();
+        return model.subtitle;
       case R.id.date:
-        return model.getDate();
+        return model.date;
       case R.id.language:
-        if (TextUtils.isEmpty(model.getLanguage())) {
+        if (TextUtils.isEmpty(model.language)) {
           return EarthApplication.getInstance().getString(R.string.unknown);
         }
-        return model.getLanguage();
+        return model.language;
       case R.id.page_number:
-        return EarthUtils.formatString(R.string.page_count, model.getCount().pages);
+        return EarthUtils.formatString(R.string.page_count, model.count.pages);
       case R.id.size:
-        if (TextUtils.isEmpty(model.getFileSize())) {
+        if (TextUtils.isEmpty(model.fileSize)) {
           return EarthApplication.getInstance().getString(R.string.zero_file_size);
         }
-        return model.getFileSize();
+        return model.fileSize;
       case R.id.likes:
-        return String.valueOf(model.getCount().likes);
+        return String.valueOf(model.count.likes);
       case R.id.number:
-        return String.valueOf(model.getCount().number);
+        return String.valueOf(model.count.number);
       case R.id.rating_count:
         return EarthUtils.formatString(R.string.rating_count,
-            model.getCount().rating, model.getCount().rating_count);
+            model.count.rating, model.count.rating_count);
     }
     return null;
   }

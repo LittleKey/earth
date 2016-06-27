@@ -52,7 +52,7 @@ public final class NullMessage extends Message<NullMessage, NullMessage.Builder>
     if (other == this) return true;
     if (!(other instanceof NullMessage)) return false;
     NullMessage o = (NullMessage) other;
-    return Internal.equals(unknownFields(), o.unknownFields())
+    return unknownFields().equals(o.unknownFields())
         && Internal.equals(success, o.success);
   }
 
@@ -87,7 +87,7 @@ public final class NullMessage extends Message<NullMessage, NullMessage.Builder>
 
     @Override
     public NullMessage build() {
-      return new NullMessage(success, buildUnknownFields());
+      return new NullMessage(success, super.buildUnknownFields());
     }
   }
 

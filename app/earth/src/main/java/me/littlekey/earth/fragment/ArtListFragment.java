@@ -5,10 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -24,6 +28,7 @@ import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.widget.IconFontTextView;
 
 /**
  * Created by littlekey on 16/6/11.
@@ -31,10 +36,12 @@ import me.littlekey.earth.utils.Const;
 public class ArtListFragment extends BaseFragment
     implements
       View.OnClickListener,
-      TextView.OnEditorActionListener {
+      TextView.OnEditorActionListener,
+      TextWatcher {
 
   private ListFragment mContentFragment;
   private EditText mSearchView;
+  private IconFontTextView mBtnClear;
 
   public static ArtListFragment newInstance(Bundle bundle) {
     ArtListFragment fragment = new ArtListFragment();
@@ -60,14 +67,20 @@ public class ArtListFragment extends BaseFragment
           .add(R.id.fragment_container, contentFragment)
           .commit();
     }
-    view.findViewById(R.id.btn_search).setOnClickListener(this);
-    view.findViewById(R.id.fab).setOnClickListener(this);
+    mBtnClear = (IconFontTextView) view.findViewById(R.id.btn_clear);
+    mBtnClear.setOnClickListener(this);
+//    view.findViewById(R.id.fab).setOnClickListener(this);
+    view.findViewById(R.id.fab).setVisibility(View.GONE);
     mSearchView = (EditText) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
     if (!CollectionUtils.isEmpty(paths)) {
       mSearchView.setText(paths.get(paths.size() - 1));
+      mBtnClear.setText(R.string.img_cross);
+    } else {
+      mBtnClear.setText(R.string.img_heart);
     }
+    mSearchView.addTextChangedListener(this);
   }
 
   @Override
@@ -77,21 +90,43 @@ public class ArtListFragment extends BaseFragment
   }
 
   @Override
+  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+  }
+
+  @Override
+  public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+  }
+
+  @Override
+  public void afterTextChanged(Editable s) {
+    if (TextUtils.isEmpty(s.toString())) {
+      mBtnClear.setText(R.string.img_heart);
+    } else {
+      mBtnClear.setText(R.string.img_cross);
+    }
+  }
+
+  @Override
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.fab:
 //        mContentFragment.smoothScrollToPosition(0);
-        CategoryDialog.newInstance().show(getActivity());
         break;
-      case R.id.btn_search:
-        search();
+      case R.id.btn_clear:
+        if (TextUtils.isEmpty(mSearchView.getText().toString())) {
+          CategoryDialog.newInstance().show(getActivity());
+        } else {
+          mSearchView.setText(Const.EMPTY_STRING);
+        }
         break;
     }
   }
 
   @Override
   public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-    if (2 <= actionId && actionId <= 6) {
+    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
       search();
     }
     return false;

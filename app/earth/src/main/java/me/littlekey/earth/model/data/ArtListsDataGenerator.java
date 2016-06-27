@@ -62,7 +62,7 @@ public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
 
   @Override
   public ApiRequest<EarthResponse> getNextRequestFromResponse(EarthResponse response) {
-    Map<String, String> pairs = new HashMap<>();
+    Map<String, String> pairs = new HashMap<>(mBasePairs);
     // page argument was base 0, and website page was base 1. so not need modify page number.
     Count count = null;
     try {

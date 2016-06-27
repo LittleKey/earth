@@ -70,13 +70,16 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
       }
       mDivider.setBounds(left, top, right, bottom);
       mDivider.draw(c);
-      // NOTE : draw ebd line
-      if (i == childCount - 1) {
-        top =  child.getBottom() + params.bottomMargin;
-        bottom = top + size;
-        mDivider.setBounds(left, top, right, bottom);
-        mDivider.draw(c);
-      }
+    }
+    // NOTE : draw end line
+    if (childCount > 0) {
+      View child = parent.getChildAt(childCount - 1);
+      RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+      // TODO : measure left and right
+      top =  child.getBottom() + params.bottomMargin;
+      bottom = top + size;
+      mDivider.setBounds(left, top, right, bottom);
+      mDivider.draw(c);
     }
   }
 

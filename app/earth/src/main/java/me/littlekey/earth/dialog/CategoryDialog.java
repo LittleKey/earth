@@ -29,7 +29,7 @@ import me.littlekey.earth.model.ModelFactory;
  */
 public class CategoryDialog extends DialogFragment {
 
-  public static final Model.Category[] sCategorys = {
+  public static final Model.Category[] sCategories = {
       Model.Category.DOUJINSHI, Model.Category.MANGA,
       Model.Category.ARTIST_CG, Model.Category.GAME_CG,
       Model.Category.WESTERN, Model.Category.NON__H,
@@ -103,7 +103,7 @@ public class CategoryDialog extends DialogFragment {
         .template(Model.Template.TITLE)
         .title(getString(R.string.select_category))
         .build());
-    for (Model.Category category: sCategorys) {
+    for (Model.Category category: sCategories) {
       models.add(ModelFactory.createModelFromCategory(category, Model.Template.CATEGORY));
     }
     adapter.setData(models);

@@ -90,7 +90,7 @@ public class EarthApplication extends BaseApplication implements ApiContext {
       }
     } else {
       // NOTE : default select all category
-      Collections.addAll(mSelectedCategory, CategoryDialog.sCategorys);
+      Collections.addAll(mSelectedCategory, CategoryDialog.sCategories);
     }
   }
 

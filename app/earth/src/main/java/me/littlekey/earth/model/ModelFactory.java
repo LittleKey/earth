@@ -20,6 +20,7 @@ import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.Image;
+import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.NavigationManager;
@@ -47,6 +48,12 @@ public class ModelFactory {
     for (Tag tag: art.tags) {
       CollectionUtils.add(subModels, createModelFromTag(tag, Model.Template.PARENT_TAG));
     }
+    Count count = new Count.Builder()
+        .pages(art.pages)
+        .rating(art.rating)
+        .rating_count(art.rating_count)
+        .likes(art.likes)
+        .build();
     Model.Builder builder = new Model.Builder()
         .type(Model.Type.ART)
         .template(template)
@@ -61,7 +68,7 @@ public class ModelFactory {
         .flag(new Flag.Builder().is_liked(art.liked).build())
         .language(art.language)
         .fileSize(art.file_size)
-        .count(art.count)
+        .count(count)
         .cover(art.cover)
         .language(art.language)
         .subModels(subModels);
@@ -123,16 +130,28 @@ public class ModelFactory {
         .width(image.width)
         .height(image.height)
         .x_offset(image.offset)
+        .pages(image.pages)
         .build();
     Flag flag = new Flag.Builder().is_thumbnail(image.is_thumbnail).build();
+    Map<Integer, Action> actions = new HashMap<>();
+    Bundle bundle = new Bundle();
+    bundle.putInt(Const.EXTRA_PAGES, count.pages);
+    bundle.putString(Const.EXTRA_TOKEN, image.gallery_token);
+    actions.put(Const.ACTION_MAIN, new Action.Builder()
+        .type(Action.Type.JUMP)
+        .uri(NavigationManager.buildUri(Uri.parse(image.origin_url).getEncodedPath()))
+        .bundle(bundle)
+        .build());
     return new Model.Builder()
         .type(Model.Type.IMAGE)
         .template(template)
         .image(image)
+        .token(image.gallery_token)
         .count(count)
         .url(image.origin_url)
         .flag(flag)
         .cover(image.src)
+        .actions(actions)
         .build();
   }
 
@@ -203,5 +222,24 @@ public class ModelFactory {
         .description(comment.content)
         .count(count)
         .build();
+  }
+
+  public static Model createModelFromPicture(Picture picture, Model.Template template) {
+    picture = DataVerifier.verify(picture);
+    if (picture == null) {
+      return null;
+    }
+    Model model = createModelFromImage(picture.image, template);
+    if (model != null) {
+      Map<Integer, Action> actions = new HashMap<>();
+      return model.newBuilder()
+          .type(Model.Type.PICTURE)
+          .picture(picture)
+          .image(picture.image)
+          .title(picture.name)
+          .actions(actions)
+          .build();
+    }
+    return null;
   }
 }

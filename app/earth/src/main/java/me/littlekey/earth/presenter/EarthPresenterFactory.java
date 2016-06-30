@@ -64,7 +64,8 @@ public class EarthPresenterFactory {
   public static ViewGroupPresenter createThumbnailPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
         .add(R.id.image, new ImagePresenter())
-        .add(R.id.number, new TextPresenter());
+        .add(R.id.number, new TextPresenter())
+        .add(new ActionPresenter());
   }
 
   public static ViewGroupPresenter createFavSelectPresenter(ViewGroup parent, int layout) {

@@ -11,6 +11,7 @@ import com.squareup.wire.WireField;
 import com.squareup.wire.internal.Internal;
 import java.io.IOException;
 import java.lang.Boolean;
+import java.lang.Float;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
@@ -34,6 +35,8 @@ public final class Art extends Message<Art, Art.Builder> {
 
   public static final String DEFAULT_URL = "";
 
+  public static final Float DEFAULT_RATING = 0.0f;
+
   public static final String DEFAULT_COVER = "";
 
   public static final String DEFAULT_LANGUAGE = "";
@@ -45,6 +48,12 @@ public final class Art extends Message<Art, Art.Builder> {
   public static final String DEFAULT_GID = "";
 
   public static final String DEFAULT_TOKEN = "";
+
+  public static final Integer DEFAULT_PAGES = 0;
+
+  public static final Integer DEFAULT_LIKES = 0;
+
+  public static final Integer DEFAULT_RATING_COUNT = 0;
 
   @WireField(
       tag = 1,
@@ -78,9 +87,9 @@ public final class Art extends Message<Art, Art.Builder> {
 
   @WireField(
       tag = 6,
-      adapter = "me.littlekey.earth.model.proto.Count#ADAPTER"
+      adapter = "com.squareup.wire.ProtoAdapter#FLOAT"
   )
-  public final Count count;
+  public final Float rating;
 
   @WireField(
       tag = 7,
@@ -132,18 +141,36 @@ public final class Art extends Message<Art, Art.Builder> {
   )
   public final List<Comment> comments;
 
-  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, List<Comment> comments) {
-    this(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, comments, ByteString.EMPTY);
+  @WireField(
+      tag = 15,
+      adapter = "com.squareup.wire.ProtoAdapter#INT32"
+  )
+  public final Integer pages;
+
+  @WireField(
+      tag = 16,
+      adapter = "com.squareup.wire.ProtoAdapter#INT32"
+  )
+  public final Integer likes;
+
+  @WireField(
+      tag = 17,
+      adapter = "com.squareup.wire.ProtoAdapter#INT32"
+  )
+  public final Integer rating_count;
+
+  public Art(String title, String publisher_name, Integer category, String date, String url, Float rating, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, List<Comment> comments, Integer pages, Integer likes, Integer rating_count) {
+    this(title, publisher_name, category, date, url, rating, cover, language, liked, file_size, tags, gid, token, comments, pages, likes, rating_count, ByteString.EMPTY);
   }
 
-  public Art(String title, String publisher_name, Integer category, String date, String url, Count count, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, List<Comment> comments, ByteString unknownFields) {
+  public Art(String title, String publisher_name, Integer category, String date, String url, Float rating, String cover, String language, Boolean liked, String file_size, List<Tag> tags, String gid, String token, List<Comment> comments, Integer pages, Integer likes, Integer rating_count, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
     this.title = title;
     this.publisher_name = publisher_name;
     this.category = category;
     this.date = date;
     this.url = url;
-    this.count = count;
+    this.rating = rating;
     this.cover = cover;
     this.language = language;
     this.liked = liked;
@@ -152,6 +179,9 @@ public final class Art extends Message<Art, Art.Builder> {
     this.gid = gid;
     this.token = token;
     this.comments = Internal.immutableCopyOf("comments", comments);
+    this.pages = pages;
+    this.likes = likes;
+    this.rating_count = rating_count;
   }
 
   @Override
@@ -162,7 +192,7 @@ public final class Art extends Message<Art, Art.Builder> {
     builder.category = category;
     builder.date = date;
     builder.url = url;
-    builder.count = count;
+    builder.rating = rating;
     builder.cover = cover;
     builder.language = language;
     builder.liked = liked;
@@ -171,6 +201,9 @@ public final class Art extends Message<Art, Art.Builder> {
     builder.gid = gid;
     builder.token = token;
     builder.comments = Internal.copyOf("comments", comments);
+    builder.pages = pages;
+    builder.likes = likes;
+    builder.rating_count = rating_count;
     builder.addUnknownFields(unknownFields());
     return builder;
   }
@@ -186,7 +219,7 @@ public final class Art extends Message<Art, Art.Builder> {
         && Internal.equals(category, o.category)
         && Internal.equals(date, o.date)
         && Internal.equals(url, o.url)
-        && Internal.equals(count, o.count)
+        && Internal.equals(rating, o.rating)
         && Internal.equals(cover, o.cover)
         && Internal.equals(language, o.language)
         && Internal.equals(liked, o.liked)
@@ -194,7 +227,10 @@ public final class Art extends Message<Art, Art.Builder> {
         && tags.equals(o.tags)
         && Internal.equals(gid, o.gid)
         && Internal.equals(token, o.token)
-        && comments.equals(o.comments);
+        && comments.equals(o.comments)
+        && Internal.equals(pages, o.pages)
+        && Internal.equals(likes, o.likes)
+        && Internal.equals(rating_count, o.rating_count);
   }
 
   @Override
@@ -207,7 +243,7 @@ public final class Art extends Message<Art, Art.Builder> {
       result = result * 37 + (category != null ? category.hashCode() : 0);
       result = result * 37 + (date != null ? date.hashCode() : 0);
       result = result * 37 + (url != null ? url.hashCode() : 0);
-      result = result * 37 + (count != null ? count.hashCode() : 0);
+      result = result * 37 + (rating != null ? rating.hashCode() : 0);
       result = result * 37 + (cover != null ? cover.hashCode() : 0);
       result = result * 37 + (language != null ? language.hashCode() : 0);
       result = result * 37 + (liked != null ? liked.hashCode() : 0);
@@ -216,6 +252,9 @@ public final class Art extends Message<Art, Art.Builder> {
       result = result * 37 + (gid != null ? gid.hashCode() : 0);
       result = result * 37 + (token != null ? token.hashCode() : 0);
       result = result * 37 + comments.hashCode();
+      result = result * 37 + (pages != null ? pages.hashCode() : 0);
+      result = result * 37 + (likes != null ? likes.hashCode() : 0);
+      result = result * 37 + (rating_count != null ? rating_count.hashCode() : 0);
       super.hashCode = result;
     }
     return result;
@@ -229,7 +268,7 @@ public final class Art extends Message<Art, Art.Builder> {
     if (category != null) builder.append(", category=").append(category);
     if (date != null) builder.append(", date=").append(date);
     if (url != null) builder.append(", url=").append(url);
-    if (count != null) builder.append(", count=").append(count);
+    if (rating != null) builder.append(", rating=").append(rating);
     if (cover != null) builder.append(", cover=").append(cover);
     if (language != null) builder.append(", language=").append(language);
     if (liked != null) builder.append(", liked=").append(liked);
@@ -238,6 +277,9 @@ public final class Art extends Message<Art, Art.Builder> {
     if (gid != null) builder.append(", gid=").append(gid);
     if (token != null) builder.append(", token=").append(token);
     if (!comments.isEmpty()) builder.append(", comments=").append(comments);
+    if (pages != null) builder.append(", pages=").append(pages);
+    if (likes != null) builder.append(", likes=").append(likes);
+    if (rating_count != null) builder.append(", rating_count=").append(rating_count);
     return builder.replace(0, 2, "Art{").append('}').toString();
   }
 
@@ -252,7 +294,7 @@ public final class Art extends Message<Art, Art.Builder> {
 
     public String url;
 
-    public Count count;
+    public Float rating;
 
     public String cover;
 
@@ -269,6 +311,12 @@ public final class Art extends Message<Art, Art.Builder> {
     public String token;
 
     public List<Comment> comments;
+
+    public Integer pages;
+
+    public Integer likes;
+
+    public Integer rating_count;
 
     public Builder() {
       tags = Internal.newMutableList();
@@ -300,8 +348,8 @@ public final class Art extends Message<Art, Art.Builder> {
       return this;
     }
 
-    public Builder count(Count count) {
-      this.count = count;
+    public Builder rating(Float rating) {
+      this.rating = rating;
       return this;
     }
 
@@ -347,9 +395,24 @@ public final class Art extends Message<Art, Art.Builder> {
       return this;
     }
 
+    public Builder pages(Integer pages) {
+      this.pages = pages;
+      return this;
+    }
+
+    public Builder likes(Integer likes) {
+      this.likes = likes;
+      return this;
+    }
+
+    public Builder rating_count(Integer rating_count) {
+      this.rating_count = rating_count;
+      return this;
+    }
+
     @Override
     public Art build() {
-      return new Art(title, publisher_name, category, date, url, count, cover, language, liked, file_size, tags, gid, token, comments, super.buildUnknownFields());
+      return new Art(title, publisher_name, category, date, url, rating, cover, language, liked, file_size, tags, gid, token, comments, pages, likes, rating_count, super.buildUnknownFields());
     }
   }
 
@@ -365,7 +428,7 @@ public final class Art extends Message<Art, Art.Builder> {
           + (value.category != null ? ProtoAdapter.INT32.encodedSizeWithTag(3, value.category) : 0)
           + (value.date != null ? ProtoAdapter.STRING.encodedSizeWithTag(4, value.date) : 0)
           + (value.url != null ? ProtoAdapter.STRING.encodedSizeWithTag(5, value.url) : 0)
-          + (value.count != null ? Count.ADAPTER.encodedSizeWithTag(6, value.count) : 0)
+          + (value.rating != null ? ProtoAdapter.FLOAT.encodedSizeWithTag(6, value.rating) : 0)
           + (value.cover != null ? ProtoAdapter.STRING.encodedSizeWithTag(7, value.cover) : 0)
           + (value.language != null ? ProtoAdapter.STRING.encodedSizeWithTag(8, value.language) : 0)
           + (value.liked != null ? ProtoAdapter.BOOL.encodedSizeWithTag(9, value.liked) : 0)
@@ -374,6 +437,9 @@ public final class Art extends Message<Art, Art.Builder> {
           + (value.gid != null ? ProtoAdapter.STRING.encodedSizeWithTag(12, value.gid) : 0)
           + (value.token != null ? ProtoAdapter.STRING.encodedSizeWithTag(13, value.token) : 0)
           + Comment.ADAPTER.asRepeated().encodedSizeWithTag(14, value.comments)
+          + (value.pages != null ? ProtoAdapter.INT32.encodedSizeWithTag(15, value.pages) : 0)
+          + (value.likes != null ? ProtoAdapter.INT32.encodedSizeWithTag(16, value.likes) : 0)
+          + (value.rating_count != null ? ProtoAdapter.INT32.encodedSizeWithTag(17, value.rating_count) : 0)
           + value.unknownFields().size();
     }
 
@@ -384,7 +450,7 @@ public final class Art extends Message<Art, Art.Builder> {
       if (value.category != null) ProtoAdapter.INT32.encodeWithTag(writer, 3, value.category);
       if (value.date != null) ProtoAdapter.STRING.encodeWithTag(writer, 4, value.date);
       if (value.url != null) ProtoAdapter.STRING.encodeWithTag(writer, 5, value.url);
-      if (value.count != null) Count.ADAPTER.encodeWithTag(writer, 6, value.count);
+      if (value.rating != null) ProtoAdapter.FLOAT.encodeWithTag(writer, 6, value.rating);
       if (value.cover != null) ProtoAdapter.STRING.encodeWithTag(writer, 7, value.cover);
       if (value.language != null) ProtoAdapter.STRING.encodeWithTag(writer, 8, value.language);
       if (value.liked != null) ProtoAdapter.BOOL.encodeWithTag(writer, 9, value.liked);
@@ -393,6 +459,9 @@ public final class Art extends Message<Art, Art.Builder> {
       if (value.gid != null) ProtoAdapter.STRING.encodeWithTag(writer, 12, value.gid);
       if (value.token != null) ProtoAdapter.STRING.encodeWithTag(writer, 13, value.token);
       Comment.ADAPTER.asRepeated().encodeWithTag(writer, 14, value.comments);
+      if (value.pages != null) ProtoAdapter.INT32.encodeWithTag(writer, 15, value.pages);
+      if (value.likes != null) ProtoAdapter.INT32.encodeWithTag(writer, 16, value.likes);
+      if (value.rating_count != null) ProtoAdapter.INT32.encodeWithTag(writer, 17, value.rating_count);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -407,7 +476,7 @@ public final class Art extends Message<Art, Art.Builder> {
           case 3: builder.category(ProtoAdapter.INT32.decode(reader)); break;
           case 4: builder.date(ProtoAdapter.STRING.decode(reader)); break;
           case 5: builder.url(ProtoAdapter.STRING.decode(reader)); break;
-          case 6: builder.count(Count.ADAPTER.decode(reader)); break;
+          case 6: builder.rating(ProtoAdapter.FLOAT.decode(reader)); break;
           case 7: builder.cover(ProtoAdapter.STRING.decode(reader)); break;
           case 8: builder.language(ProtoAdapter.STRING.decode(reader)); break;
           case 9: builder.liked(ProtoAdapter.BOOL.decode(reader)); break;
@@ -416,6 +485,9 @@ public final class Art extends Message<Art, Art.Builder> {
           case 12: builder.gid(ProtoAdapter.STRING.decode(reader)); break;
           case 13: builder.token(ProtoAdapter.STRING.decode(reader)); break;
           case 14: builder.comments.add(Comment.ADAPTER.decode(reader)); break;
+          case 15: builder.pages(ProtoAdapter.INT32.decode(reader)); break;
+          case 16: builder.likes(ProtoAdapter.INT32.decode(reader)); break;
+          case 17: builder.rating_count(ProtoAdapter.INT32.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);
@@ -430,7 +502,6 @@ public final class Art extends Message<Art, Art.Builder> {
     @Override
     public Art redact(Art value) {
       Builder builder = value.newBuilder();
-      if (builder.count != null) builder.count = Count.ADAPTER.redact(builder.count);
       Internal.redactElements(builder.tags, Tag.ADAPTER);
       Internal.redactElements(builder.comments, Comment.ADAPTER);
       builder.clearUnknownFields();

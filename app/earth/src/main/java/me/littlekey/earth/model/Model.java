@@ -27,6 +27,7 @@ import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.model.proto.Image;
+import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.model.proto.User;
 import me.littlekey.earth.utils.EarthUtils;
@@ -59,6 +60,9 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
           case COMMENT:
             Comment comment = Comment.ADAPTER.decode(bytes);
             return ModelFactory.createModelFromComment(comment, template);
+          case PICTURE:
+            Picture picture = Picture.ADAPTER.decode(bytes);
+            return ModelFactory.createModelFromPicture(picture, template);
           default:
             throw new ParcelFormatException(String.format("can not parcel '%s'", type.name()));
         }
@@ -98,6 +102,10 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
         break;
       case COMMENT:
         dest.writeByteArray(comment.encode());
+        break;
+      case PICTURE:
+        dest.writeByteArray(picture.encode());
+        break;
       default:
         break;
     }
@@ -264,13 +272,19 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
   )
   public final List<Model> subModels;
 
+  @WireField(
+      tag = 23,
+      adapter = "me.littlekey.earth.model.proto.Picture#ADAPTER"
+  )
+  public final Picture picture;
+
   public final Map<Integer, Action> actions;
 
-  public Model(String identity, String token, Type type, Template template, String title, String subtitle, String language, String fileSize, String description, String url, String cover, String date, User user, Art art, Tag tag, Image image, Fav fav, Comment comment, Count count, Flag flag, Category category, List<Model> subModels, Map<Integer, Action> actions) {
-    this(identity, token, type, template, title, subtitle, language, fileSize, description, url, cover, date, user, art, tag, image, fav, comment, count, flag, category, subModels, actions, ByteString.EMPTY);
+  public Model(String identity, String token, Type type, Template template, String title, String subtitle, String language, String fileSize, String description, String url, String cover, String date, User user, Art art, Tag tag, Image image, Fav fav, Comment comment, Count count, Flag flag, Category category, List<Model> subModels, Picture picture, Map<Integer, Action> actions) {
+    this(identity, token, type, template, title, subtitle, language, fileSize, description, url, cover, date, user, art, tag, image, fav, comment, count, flag, category, subModels, picture, actions, ByteString.EMPTY);
   }
 
-  public Model(String identity, String token, Type type, Template template, String title, String subtitle, String language, String fileSize, String description, String url, String cover, String date, User user, Art art, Tag tag, Image image, Fav fav, Comment comment, Count count, Flag flag, Category category, List<Model> subModels, Map<Integer, Action> actions, ByteString unknownFields) {
+  public Model(String identity, String token, Type type, Template template, String title, String subtitle, String language, String fileSize, String description, String url, String cover, String date, User user, Art art, Tag tag, Image image, Fav fav, Comment comment, Count count, Flag flag, Category category, List<Model> subModels, Picture picture, Map<Integer, Action> actions, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
     this.identity = identity;
     this.token = token;
@@ -294,6 +308,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
     this.flag = flag;
     this.category = category;
     this.subModels = Internal.immutableCopyOf("subModels", subModels);
+    this.picture = picture;
     this.actions = Internal.immutableCopyOf("actions", actions);
   }
 
@@ -322,6 +337,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
     builder.flag = flag;
     builder.category = category;
     builder.subModels = Internal.copyOf("subModels", subModels);
+    builder.picture = picture;
     builder.actions = Internal.copyOf("actions", actions);
     builder.addUnknownFields(unknownFields());
     return builder;
@@ -354,7 +370,8 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
         && Internal.equals(count, o.count)
         && Internal.equals(flag, o.flag)
         && Internal.equals(category, o.category)
-        && subModels.equals(o.subModels);
+        && subModels.equals(o.subModels)
+        && Internal.equals(picture, o.picture);
   }
 
   @Override
@@ -384,6 +401,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
       result = result * 37 + (flag != null ? flag.hashCode() : 0);
       result = result * 37 + (category != null ? category.hashCode() : 0);
       result = result * 37 + subModels.hashCode();
+      result = result * 37 + (picture != null ? picture.hashCode() : 0);
       super.hashCode = result;
     }
     return result;
@@ -414,6 +432,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
     if (flag != null) builder.append(", flag=").append(flag);
     if (category != null) builder.append(", category=").append(category);
     if (!subModels.isEmpty()) builder.append(", subModels=").append(subModels);
+    if (picture != null) builder.append(", picture=").append(picture);
     if (!actions.isEmpty()) builder.append(", actions=").append(actions);
     return builder.replace(0, 2, "Model{").append('}').toString();
   }
@@ -462,6 +481,8 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
     public Category category;
 
     public List<Model> subModels;
+
+    public Picture picture;
 
     public Map<Integer, Action> actions;
 
@@ -581,6 +602,11 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
       return this;
     }
 
+    public Builder picture(Picture picture) {
+      this.picture = picture;
+      return this;
+    }
+
     public Builder actions(Map<Integer, Action> actions) {
       Internal.checkElementsNotNull(actions);
       this.actions = actions;
@@ -589,7 +615,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
 
     @Override
     public Model build() {
-      return new Model(identity, token, type, template, title, subtitle, language, fileSize, description, url, cover, date, user, art, tag, image, fav, comment, count, flag, category, subModels, actions, super.buildUnknownFields());
+      return new Model(identity, token, type, template, title, subtitle, language, fileSize, description, url, cover, date, user, art, tag, image, fav, comment, count, flag, category, subModels, picture, actions, super.buildUnknownFields());
     }
   }
 
@@ -608,7 +634,9 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
 
     TEXT(6),
 
-    COMMENT(7);
+    COMMENT(7),
+
+    PICTURE(8);
 
     public static final ProtoAdapter<Type> ADAPTER = ProtoAdapter.newEnumAdapter(Type.class);
 
@@ -631,6 +659,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
         case 5: return FAV;
         case 6: return TEXT;
         case 7: return COMMENT;
+        case 8: return PICTURE;
         default: return null;
       }
     }
@@ -664,7 +693,9 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
 
     TITLE(10),
 
-    ITEM_COMMENT(11);
+    ITEM_COMMENT(11),
+
+    PAGE_PICTURE(12);
 
     public static final ProtoAdapter<Template> ADAPTER = ProtoAdapter.newEnumAdapter(Template.class);
 
@@ -691,6 +722,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
         case 9: return CATEGORY;
         case 10: return TITLE;
         case 11: return ITEM_COMMENT;
+        case 12: return PAGE_PICTURE;
         default: return null;
       }
     }
@@ -811,6 +843,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
           + (value.flag != null ? Flag.ADAPTER.encodedSizeWithTag(20, value.flag) : 0)
           + (value.category != null ? Category.ADAPTER.encodedSizeWithTag(21, value.category) : 0)
           + Model.ADAPTER.asRepeated().encodedSizeWithTag(22, value.subModels)
+          + (value.picture != null ? Picture.ADAPTER.encodedSizeWithTag(23, value.picture) : 0)
           + value.unknownFields().size();
     }
 
@@ -838,6 +871,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
       if (value.flag != null) Flag.ADAPTER.encodeWithTag(writer, 20, value.flag);
       if (value.category != null) Category.ADAPTER.encodeWithTag(writer, 21, value.category);
       Model.ADAPTER.asRepeated().encodeWithTag(writer, 22, value.subModels);
+      if (value.picture != null) Picture.ADAPTER.encodeWithTag(writer, 23, value.picture);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -890,6 +924,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
             break;
           }
           case 22: builder.subModels.add(Model.ADAPTER.decode(reader)); break;
+          case 23: builder.picture(Picture.ADAPTER.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);
@@ -913,6 +948,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
       if (builder.count != null) builder.count = Count.ADAPTER.redact(builder.count);
       if (builder.flag != null) builder.flag = Flag.ADAPTER.redact(builder.flag);
       Internal.redactElements(builder.subModels, Model.ADAPTER);
+      if (builder.picture != null) builder.picture = Picture.ADAPTER.redact(builder.picture);
       builder.clearUnknownFields();
       return builder.build();
     }

@@ -31,7 +31,7 @@ public class ArtDetailActivity extends SingleFragmentActivity {
 
   @Override
   public void onBackPressed() {
-    if (!mFragment.onBackPressed()) {
+    if (mFragment == null || !mFragment.onBackPressed()) {
       super.onBackPressed();
     }
   }

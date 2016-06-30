@@ -17,6 +17,7 @@ import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Image;
+import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.utils.EarthUtils;
 
@@ -58,7 +59,7 @@ public class EarthCrawler {
       ratingNum = 5 - Integer.valueOf(ratingMatcher.group(1)) / 16;
       ratingOffset = Integer.valueOf(ratingMatcher.group(2)) == 1 ? 0.0f : 0.5f;
     }
-    Count count = new Count.Builder().rating(ratingNum - ratingOffset).build();
+    float rating = ratingNum - ratingOffset;
     // NOTE : find publisher
     Element publisherEle = children.get(3);
     Elements nameAndUrlElements = publisherEle.select("div > a");
@@ -71,7 +72,7 @@ public class EarthCrawler {
         .token(token)
         .publisher_name(publisherName)
         .category(category.getValue())
-        .count(count)
+        .rating(rating)
         .cover(cover)
         .date(date)
         .url(artUrl)
@@ -132,12 +133,6 @@ public class EarthCrawler {
           .values(values)
           .build());
     }
-    Count count = new Count.Builder()
-        .pages(pages)
-        .likes(likes)
-        .rating(rating)
-        .rating_count(rating_count)
-        .build();
     return new Art.Builder()
         .title(title)
         .gid(gid)
@@ -148,14 +143,17 @@ public class EarthCrawler {
         .language(language)
         .category(category.getValue())
         .publisher_name(publisherName)
-        .count(count)
+        .pages(pages)
+        .likes(likes)
+        .rating_count(rating_count)
+        .rating(rating)
         .tags(tags)
         .liked(liked)
         .build();
   }
 
-  public static Image createImageFromElement(Element element) throws Exception {
-    Image.Builder builder = new Image.Builder();
+  public static Image createImageFromElement(Element element, int pages, String gToken) throws Exception {
+    Image.Builder builder = new Image.Builder().pages(pages).gallery_token(gToken);
     Pattern pattern = Pattern.compile("^(.*?):(.*?)$");
     if (element.select(".gdtl").size() != 0) {
       builder.is_thumbnail(false);
@@ -255,6 +253,35 @@ public class EarthCrawler {
         .date(date)
         .author(author)
         .content(content)
+        .build();
+  }
+
+  public static Picture createPictureFromElements(Elements elements) throws Exception {
+    String src = elements.select("#img").attr("src");
+    Elements countElements = elements.select("#i2 > div.sn > div > span");
+    int current_page = Integer.valueOf(countElements.get(0).text());
+    int total_page = Integer.valueOf(countElements.get(1).text());
+    String name = elements.select("#i1 > h1").text();
+    // TODO : add image detail
+    String[] imgDetails = elements.select("#i2 > div:nth-child(2)").text().split(" :: ");
+    @SuppressWarnings("unused")
+    String filename = imgDetails[0];
+    String[] resolution = imgDetails[1].split(" x ");
+    @SuppressWarnings("unused")
+    String size = imgDetails[2];
+    int width = Integer.valueOf(resolution[0]);
+    int height = Integer.valueOf(resolution[1]);
+    Image image = new Image.Builder()
+        .number(current_page)
+        .pages(total_page)
+        .width(width)
+        .height(height)
+        .is_thumbnail(false)
+        .src(src)
+        .build();
+    return new Picture.Builder()
+        .image(image)
+        .name(name)
         .build();
   }
 }

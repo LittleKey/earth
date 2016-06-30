@@ -42,8 +42,11 @@ public class NavigationManager {
     navigationTo(context, uri, null);
   }
 
-  public static void navigationTo(Context context, String url) {
+  public static void navigationTo(Context context, String url, Bundle bundle) {
     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    if (bundle != null) {
+      intent.putExtras(bundle);
+    }
     context.startActivity(intent);
   }
 

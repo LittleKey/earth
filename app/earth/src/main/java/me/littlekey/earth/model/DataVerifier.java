@@ -13,6 +13,7 @@ import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Image;
+import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.model.proto.Tag;
 import me.littlekey.earth.model.proto.User;
 import me.littlekey.earth.utils.Const;
@@ -46,15 +47,10 @@ public class DataVerifier {
         || TextUtils.isEmpty(art.title)) {
       return null;
     }
-    Count count = verify(Wire.get(art.count, new Count.Builder().build()));
-    if (count == null) {
-      return null;
-    }
     List<Tag> tags = Wire.get(art.tags, new ArrayList<Tag>());
     return art.newBuilder()
         .publisher_name(Wire.get(art.publisher_name, Const.EMPTY_STRING))
         .cover(Wire.get(art.cover, Const.EMPTY_STRING))
-        .count(count)
         .category(Wire.get(art.category, Model.Category.UNKNOWN.getValue()))
         .date(Wire.get(art.date, Const.EMPTY_STRING))
         .url(Wire.get(art.url, Const.EMPTY_STRING))
@@ -125,5 +121,18 @@ public class DataVerifier {
       return null;
     }
     return comment.newBuilder().build();
+  }
+
+  public static Picture verify(Picture picture) {
+    if (picture == null) {
+      return null;
+    }
+    Image image = verify(picture.image);
+    if (image == null) {
+      return null;
+    }
+    return picture.newBuilder()
+        .image(image)
+        .build();
   }
 }

@@ -74,7 +74,7 @@ public class ActionPresenter extends EarthPresenter {
                 NavigationManager.navigationTo(view().getContext(), action.uri, action.bundle);
               }
             } else if (null != action.url) {
-              NavigationManager.navigationTo(view().getContext(), action.url);
+              NavigationManager.navigationTo(view().getContext(), action.url, action.bundle);
             }
             break;
           case LOGOUT:

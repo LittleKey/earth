@@ -24,6 +24,7 @@ public class Const {
   public static final String UCONFIG = "uconfig";
   public static final String UCONFIG_VALUE = "uh_y-xr_a-rx_0-ry_0-tl_r-ar_0-dm_l-prn_y-cats_6-fs_f-xns_0-xl_null-rc_0-lt_m-ts_l-tr_2-cs_a-sc_0-to_a-pn_1-hp_-hk_-tf_n-oi_n-qb_n-ms_n-mt_n";
   public static final int SEARCH_HISTORY_RECORD_COUNT = 20;
+  public static final int IMAGE_ITEM_COUNT_PER_PAGE = 20;
   /*********************************** Action **********************************/
   public static final Integer ACTION_MAIN = 0;
   public static final Integer ACTION_SHOW_HIDE = 1;
@@ -71,9 +72,11 @@ public class Const {
   public static final String KEY_TOKEN = "token";
   public static final String KEY_F_SEARCH = "f_search";
   public static final String KEY_HC = "hc";
+  public static final String KEY_POSITION = " position";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
+  public static final String EXTRA_POSITION = KEY_EXTRA + "position";
   public static final String EXTRA_UPLOAD_IMAGE = KEY_EXTRA + "upload_image";
   public static final String EXTRA_SELECT_IMAGE = KEY_EXTRA + "select_image";
   public static final String EXTRA_IMAGE_TYPE = KEY_EXTRA + "image_type";
@@ -85,6 +88,8 @@ public class Const {
   public static final String EXTRA_MODEL_LIST = KEY_EXTRA + "model_list";
   public static final String EXTRA_IDENTITY_LIST = KEY_EXTRA + "identity_list";
   public static final String EXTRA_URL = KEY_EXTRA + "url";
+  public static final String EXTRA_PAGES = KEY_EXTRA + "pages";
+  public static final String EXTRA_TOKEN = KEY_EXTRA + "token";
   /*********************************** API ***********************************/
   private static final String API_EX_HOST_URL = "http://exhentai.org";
   private static final String API_LOGIN_HOST_URL = "http://forums.e-hentai.org";

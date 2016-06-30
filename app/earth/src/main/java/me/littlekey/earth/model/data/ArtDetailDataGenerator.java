@@ -118,7 +118,9 @@ public class ArtDetailDataGenerator extends EarthDataGenerator<EarthResponse> {
     for (Element imageEle: imageElements) {
       Image image = null;
       try {
-            image = EarthCrawler.createImageFromElement(imageEle);
+        image = EarthCrawler.createImageFromElement(imageEle,
+            artDetail != null ? artDetail.pages : 0,
+            artDetail != null ? artDetail.token : Const.EMPTY_STRING);
       } catch (Exception e) {
         Timber.e(EarthUtils.formatString(R.string.parse_error, Const.IMAGE));
       }

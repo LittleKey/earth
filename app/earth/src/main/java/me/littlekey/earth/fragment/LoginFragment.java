@@ -181,6 +181,7 @@ public class LoginFragment extends BaseFragment
     params.put(Const.KEY_COOKIE_DATE, Const.ONE);
     params.put(Const.KEY_USER_NAME, username);
     params.put(Const.KEY_PASSWORD, password);
+    request.setShouldCache(false);
     request.setParams(params);
     request.setTag(this);
     request.submit();

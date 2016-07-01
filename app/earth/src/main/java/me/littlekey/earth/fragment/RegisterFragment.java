@@ -100,11 +100,14 @@ public class RegisterFragment extends BaseFragment
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.btn_register:
-        if (mValidated == 0b1111) {
+        if (mValidated == (VALIDATED_REG_CODE_ID
+            | VALIDATE_EMAIL_ADDRESS
+            | VALIDATED_DISPLAY_NAME
+            | VALIDATED_USER_NAME)) {
           String password = mPassWordView.getText().toString();
           String regCode = mRegCodeView.getText().toString();
-          if ((TextUtils.isEmpty(password) || password.length() < 8)
-              || (TextUtils.isEmpty(regCode) || regCode.length() != 6)) {
+          if ((TextUtils.isEmpty(password) || password.length() < Const.MIN_PASSWORD_LENGTH)
+              || (TextUtils.isEmpty(regCode) || regCode.length() != Const.REGISTER_CODE_LENGTH)) {
             ToastUtils.toast(R.string.register_info_error);
             return;
           }
@@ -156,7 +159,7 @@ public class RegisterFragment extends BaseFragment
     public void afterTextChanged(Editable s) {
       String username = s.toString();
       removeFlag(VALIDATED_USER_NAME);
-      if (!TextUtils.isEmpty(username) && username.length() >= 3) {
+      if (!TextUtils.isEmpty(username) && username.length() >= Const.MIN_USERNAME_LENGTH) {
         callCheckApi(Const.CHECK_USER_NAME, username);
       }
     }
@@ -177,7 +180,8 @@ public class RegisterFragment extends BaseFragment
     public void afterTextChanged(Editable s) {
       String displayName = s.toString();
       removeFlag(VALIDATED_DISPLAY_NAME);
-      if (!TextUtils.isEmpty(displayName) && !TextUtils.isDigitsOnly(displayName) && displayName.length() >= 3) {
+      if (!TextUtils.isEmpty(displayName) && !TextUtils.isDigitsOnly(displayName)
+          && displayName.length() >= Const.MIN_DISPLAY_NAME_LENGTH) {
         callCheckApi(Const.CHECK_DISPLAY_NAME, displayName);
       }
     }

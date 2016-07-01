@@ -166,7 +166,10 @@ public class Const {
   public static final String CHECK_DISPLAY_NAME = "check-display-name";
   public static final String CHECK_EMAIL_ADDRESS = "check-email-address";
   public static final int ART_LIST_TOP_PADDING = FormatUtils.dipsToPix(60);
-  public static final int MIN_PASSWORD_LENGTH = 6;
+  public static final int MIN_USERNAME_LENGTH = 3;
+  public static final int MIN_DISPLAY_NAME_LENGTH = 3;
+  public static final int REGISTER_CODE_LENGTH = 6;
+  public static final int MIN_PASSWORD_LENGTH = 8;
   public static final int MAX_PASSWORD_LENGTH = 30;
   public static final int MIN_NICKNAME_LENGTH = 1;
   public static final int MAX_NICKNAME_LENGTH = 12;

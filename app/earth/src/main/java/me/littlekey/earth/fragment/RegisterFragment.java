@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,16 +42,20 @@ public class RegisterFragment extends BaseFragment
 
   private final static int VALIDATED_NONE =         0;
   private final static int VALIDATED_REG_CODE_ID =  1;
+  private final static int VALIDATED_USER_NAME =    1 << 1;
+  private final static int VALIDATED_DISPLAY_NAME = 1 << 2;
+  private final static int VALIDATE_EMAIL_ADDRESS = 1 << 3;
 
+  private ProgressDialog mProgressDialog;
   private SimpleDraweeView mRegCodeImgView;
   private EditText mUserNameView;
   private EditText mDisplayNameView;
-  private EditText mEmailView;
+  private EditText mEmailAddressView;
   private EditText mPassWordView;
   private EditText mRegCodeView;
-  private String mRegCodeID;
 
-  private ProgressDialog mProgressDialog;
+  private String mRegCodeID;
+  private String mRegSession;
 
   private int mValidated = VALIDATED_NONE;
 
@@ -69,8 +75,11 @@ public class RegisterFragment extends BaseFragment
     mProgressDialog = new ProgressDialog(getActivity());
     mRegCodeImgView = (SimpleDraweeView) view.findViewById(R.id.reg_code_img);
     mUserNameView = (EditText) view.findViewById(R.id.username);
+    mUserNameView.addTextChangedListener(mUserNameWatch);
     mDisplayNameView = (EditText) view.findViewById(R.id.display_name);
-    mEmailView = (EditText) view.findViewById(R.id.email);
+    mDisplayNameView.addTextChangedListener(mDisplayNameWatch);
+    mEmailAddressView = (EditText) view.findViewById(R.id.email);
+    mEmailAddressView.addTextChangedListener(mEmailAddressWatch);
     mPassWordView = (EditText) view.findViewById(R.id.password);
     mRegCodeView = (EditText) view.findViewById(R.id.reg_code);
     EarthRequest step1Request = EarthApplication.getInstance().getRequestManager()
@@ -91,22 +100,17 @@ public class RegisterFragment extends BaseFragment
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.btn_register:
-        if (mValidated == 0b1) {
-          String username = mUserNameView.getText().toString();
-          String displayName = mDisplayNameView.getText().toString();
-          String email = mEmailView.getText().toString();
+        if (mValidated == 0b1111) {
           String password = mPassWordView.getText().toString();
           String regCode = mRegCodeView.getText().toString();
-          if ((TextUtils.isEmpty(username) || username.length() < 3)
-              || (TextUtils.isEmpty(displayName) || TextUtils.isDigitsOnly(displayName) || displayName.length() < 3)
-              || TextUtils.isEmpty(email)
-              || (TextUtils.isEmpty(password) || password.length() < 8)
+          if ((TextUtils.isEmpty(password) || password.length() < 8)
               || (TextUtils.isEmpty(regCode) || regCode.length() != 6)) {
-            // TODO : validate register information in TextWatcher
-            // TODO : validate username, display_name, email by api
             ToastUtils.toast(R.string.register_info_error);
             return;
           }
+          String username = mUserNameView.getText().toString();
+          String displayName = mDisplayNameView.getText().toString();
+          String email = mEmailAddressView.getText().toString();
           EarthRequest step3Request = EarthApplication.getInstance().getRequestManager()
               .newEarthRequest(Const.API_REGISTER, Request.Method.POST, mStepThreeListener, RegisterFragment.this);
           Map<String, String> params = new HashMap<>();
@@ -130,15 +134,81 @@ public class RegisterFragment extends BaseFragment
           step3Request.setTag(this);
           step3Request.submit();
           mProgressDialog.show();
+        } else {
+          ToastUtils.toast(R.string.register_info_error);
         }
         break;
     }
   }
 
+  private final TextWatcher mUserNameWatch = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      String username = s.toString();
+      removeFlag(VALIDATED_USER_NAME);
+      if (!TextUtils.isEmpty(username) && username.length() >= 3) {
+        callCheckApi(Const.CHECK_USER_NAME, username);
+      }
+    }
+  };
+
+  private final TextWatcher mDisplayNameWatch = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      String displayName = s.toString();
+      removeFlag(VALIDATED_DISPLAY_NAME);
+      if (!TextUtils.isEmpty(displayName) && !TextUtils.isDigitsOnly(displayName) && displayName.length() >= 3) {
+        callCheckApi(Const.CHECK_DISPLAY_NAME, displayName);
+      }
+    }
+  };
+
+  private final TextWatcher mEmailAddressWatch = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      String emailAddress = s.toString();
+      removeFlag(VALIDATE_EMAIL_ADDRESS);
+      if (!TextUtils.isEmpty(emailAddress)) {
+        callCheckApi(Const.CHECK_EMAIL_ADDRESS, emailAddress);
+      }
+    }
+  };
+
   private final Response.Listener<EarthResponse> mStepOneListener = new Response.Listener<EarthResponse>() {
     @Override
     public void onResponse(EarthResponse response) {
       String step2Url = response.document.select("div.page > div > form").attr("action");
+      mRegSession = Uri.parse(step2Url).getQueryParameter(Const.KEY_S);
       EarthRequest step2Request = EarthApplication.getInstance().getRequestManager()
           .newEarthRequest(step2Url, Request.Method.POST, mStepTwoListener, RegisterFragment.this);
       Map<String, String> params = new HashMap<>();
@@ -147,6 +217,7 @@ public class RegisterFragment extends BaseFragment
       step2Request.setTag(RegisterFragment.this);
       step2Request.setShouldCache(false);
       step2Request.submit();
+      removeFlag(VALIDATED_REG_CODE_ID);
     }
   };
 
@@ -165,7 +236,7 @@ public class RegisterFragment extends BaseFragment
           .setOldController(mRegCodeImgView.getController());
       mRegCodeImgView.setController(controllerBuilder.build());
       mRegCodeID = uri.getQueryParameter(Const.KEY_RC);
-      mValidated |= VALIDATED_REG_CODE_ID;
+      addFlag(VALIDATED_REG_CODE_ID);
     }
   };
 
@@ -184,5 +255,55 @@ public class RegisterFragment extends BaseFragment
   public void onErrorResponse(VolleyError error) {
     mProgressDialog.dismiss();
     ToastUtils.toast(R.string.register_error);
+  }
+
+  private void callCheckApi(final String checkOp, String name) {
+    if (TextUtils.isEmpty(mRegSession) || TextUtils.isEmpty(name)) {
+      return;
+    }
+    long nowMicroSecond = System.nanoTime() / 1000;
+    EarthRequest request = EarthApplication.getInstance().getRequestManager()
+        .newEarthRequest(ApiType.CHECK, Request.Method.GET,
+            new Response.Listener<EarthResponse>() {
+              @Override
+              public void onResponse(EarthResponse response) {
+                String result = response.document.body().text();
+                if (!TextUtils.isEmpty(result) && TextUtils.equals(result, Const.NOT_FOUND)) {
+                  int flag;
+                  switch (checkOp) {
+                    case Const.CHECK_USER_NAME:
+                      flag = VALIDATED_USER_NAME;
+                      break;
+                    case Const.CHECK_DISPLAY_NAME:
+                      flag = VALIDATED_DISPLAY_NAME;
+                      break;
+                    case Const.CHECK_EMAIL_ADDRESS:
+                      flag = VALIDATE_EMAIL_ADDRESS;
+                      break;
+                    default:
+                      return;
+                  }
+                  addFlag(flag);
+                }
+              }
+            }, RegisterFragment.this);
+    Map<String, String> queries = new HashMap<>();
+    queries.put(Const.KEY_S, mRegSession);
+    queries.put(Const.KEY_ACT, Const.XML_OUT);
+    queries.put(Const.KEY_DO, checkOp);
+    queries.put(Const.KEY_NAME, name);
+    queries.put(Const.KEY__, String.valueOf(nowMicroSecond));
+    request.setQuery(queries);
+    request.setShouldCache(false);
+    request.setTag(RegisterFragment.this);
+    request.submit();
+  }
+
+  private synchronized void addFlag(int flag) {
+    mValidated |= flag;
+  }
+
+  private synchronized void removeFlag(int flag) {
+    mValidated &= ~flag;
   }
 }

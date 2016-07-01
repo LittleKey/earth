@@ -61,6 +61,7 @@ public class Const {
   public static final String KEY_PAGE = "page";
   public static final String KEY_P = "p";
   public static final String KEY_T = "t";
+  public static final String KEY_S = "s";
   public static final String KEY_ACT = "act";
   public static final String KEY_CODE = "CODE";
   public static final String KEY_ENABLE_SWIPE_REFRESH = "enable_swipe_refresh";
@@ -86,6 +87,9 @@ public class Const {
   public static final String KEY_TIME_OFFSET = "time_offset";
   public static final String KEY_REG_ID = "regid";
   public static final String KEY_REG_CODE = "reg_code";
+  public static final String KEY_DO = "do";
+  public static final String KEY_NAME = "name";
+  public static final String KEY__ = "_";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -112,6 +116,7 @@ public class Const {
   // business_account
   public static final String API_LOGIN = API_FORUM_HOST_URL + "/index.php";
   public static final String API_REGISTER = API_FORUM_HOST_URL + "/index.php";
+  public static final String API_CHECK = API_FORUM_HOST_URL + "/index.php";
   // like art
   public static final String API_LIKED = API_EX_HOST_URL + "/gallerypopups.php";
   /******************************** Network Related ********************************/
@@ -142,6 +147,7 @@ public class Const {
   public static final String ZERO_TWO = "02";
   public static final String LOGIN = "Login";
   public static final String REG = "Reg";
+  public static final String NOT_FOUND = "notfound";
   public static final String ADD_FAV = "addfav";
   public static final String FAV_DEL = "favdel";
   public static final String PAGE_NUMBER = "page number";
@@ -153,8 +159,12 @@ public class Const {
   public static final String APPLY_CHANGES = "apply_changes";
   public static final String ADD_TO_FAVOURITES = "add_to_favourites";
   public static final String APPLY_AND_FILTER = "Apply+Filter";
+  public static final String XML_OUT = "xmlout";
   public static final String ROOT = "/";
   public static final String TAG = "tag";
+  public static final String CHECK_USER_NAME = "check-user-name";
+  public static final String CHECK_DISPLAY_NAME = "check-display-name";
+  public static final String CHECK_EMAIL_ADDRESS = "check-email-address";
   public static final int ART_LIST_TOP_PADDING = FormatUtils.dipsToPix(60);
   public static final int MIN_PASSWORD_LENGTH = 6;
   public static final int MAX_PASSWORD_LENGTH = 30;

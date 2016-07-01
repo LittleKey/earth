@@ -90,6 +90,8 @@ public class EarthRequestManager extends RequestManager {
         registerPairs.put(Const.KEY_ACT, Const.REG);
         registerPairs.put(Const.KEY_CODE, Const.ZERO_ZERO);
         return RequestManager.parseUrl(Const.API_REGISTER, registerPairs);
+      case CHECK:
+        return Const.API_CHECK;
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }

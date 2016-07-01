@@ -147,3 +147,27 @@ data-form
 
 access {reg_code} and {reg_code_id}
 `div.tablepad > table > tbody > tr:nth-child(2) > td > fieldset.row3 > table > tbody > tr > td > img`
+
+##### validate
+
+**GET** '/index.php'
+
+query params
+
+- **s** `{session}`
+
+- **act** `xmlout`
+
+- **do** `{check_sth}` [check-user-name|check-display-name|check-email-address]
+
+- **name** `{name}`
+
+- **_** `{current timestamp}` (microsecond)
+
+response
+
+- **notfound** that's ok
+
+- **found** it's not ok
+
+access {session} from `step1 form`

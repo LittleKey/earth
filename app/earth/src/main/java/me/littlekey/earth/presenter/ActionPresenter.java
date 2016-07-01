@@ -17,8 +17,11 @@ import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.mvp.widget.MvpRecyclerView;
 
+import org.apache.commons.collections4.list.FixedSizeList;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,14 +146,15 @@ public class ActionPresenter extends EarthPresenter {
   @SuppressWarnings("unchecked")
   private ArrayList<String> getTokenList() {
     MvpRecyclerView.Adapter<Model> adapter = group().pageContext.adapter;
-    ArrayList<String> tokens = new ArrayList<>();
+    FixedSizeList<String> tokens = FixedSizeList.fixedSizeList(Arrays.asList(new String[adapter.size()]));
     for (Model model: adapter.getData()) {
       List<String> paths = Uri.parse(model.url).getPathSegments();
-      if (!CollectionUtils.isEmpty(paths)) {
-        tokens.add(paths.get(1));
+      int pos = Wire.get(model.count.number, 0) - 1;
+      if (!CollectionUtils.isEmpty(paths) && pos >= 0 && pos < adapter.size()) {
+        tokens.set(pos, paths.get(1));
       }
     }
-    return tokens;
+    return new ArrayList<>(tokens);
   }
 
   private void logout() {

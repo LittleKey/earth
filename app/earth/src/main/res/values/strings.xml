@@ -8,6 +8,13 @@
     <string name="loading_hint">加载中</string>
     <string name="parse_error">parse %s error</string>
 
+    <!-- register -->
+    <string name="register">注册</string>
+    <string name="register_error">注册失败</string>
+    <string name="input_reg_code">请输入验证码</string>
+    <string name="input_user_name">请输入用户名(用于登陆)</string>
+    <string name="input_display_name">请输入昵称名称</string>
+
     <!-- rating -->
     <string name="rating_count" formatted="false">%.2f (%d人)</string>
 
@@ -37,6 +44,8 @@
     <string name="input_account">请输入账号</string>
     <string name="input_password">请输入密码</string>
     <string name="login_error">登陆失败</string>
+    <string name="input_email">请输入邮箱地址</string>
+    <string name="register_info_error">注册信息错误</string>
 
     <!-- Detail -->
     <string name="page_count">%s页</string>

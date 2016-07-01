@@ -11,5 +11,7 @@ public interface TokenSupplier {
 
   @Nullable String get(String gid, int position);
 
-  void insertAll(String gid, List<String> tokens, int page);
+  void insertPage(String gid, int page, List<String> tokens);
+
+  void insertPosition(String gid, int position, String... tokens);
 }

@@ -33,6 +33,11 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
         btnLogin.setOnClickListener(this);
         btnLogin.setVisibility(View.VISIBLE);
       }
+      TextView btnRegister = (TextView) findViewById(R.id.btn_register);
+      if (btnRegister != null) {
+        btnRegister.setOnClickListener(this);
+        btnRegister.setVisibility(View.VISIBLE);
+      }
     }
   }
 
@@ -42,9 +47,9 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
       case R.id.btn_login:
         NavigationManager.navigationTo(WelcomeActivity.this, LoginActivity.class);
         break;
-//      case R.id.btn_register:
-//        NavigationManager.navigationTo(WelcomeActivity.this, RegisterActivity.class);
-//        break;
+      case R.id.btn_register:
+        NavigationManager.navigationTo(WelcomeActivity.this, RegisterActivity.class);
+        break;
     }
   }
 }

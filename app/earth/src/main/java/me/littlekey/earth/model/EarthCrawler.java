@@ -262,7 +262,6 @@ public class EarthCrawler {
     int current_page = Integer.valueOf(countElements.get(0).text());
     int total_page = Integer.valueOf(countElements.get(1).text());
     String name = elements.select("#i1 > h1").text();
-    // TODO : add image detail
     String[] imgDetails = elements.select("#i2 > div:nth-child(2)").text().split(" :: ");
     @SuppressWarnings("unused")
     String filename = imgDetails[0];

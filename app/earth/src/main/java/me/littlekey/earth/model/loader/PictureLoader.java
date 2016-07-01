@@ -131,6 +131,7 @@ public class PictureLoader extends AsyncTaskLoader<Picture> {
     if (response != null) {
       try {
         Elements pictureElements = response.document.select("#i1");
+        // TODO : insert picture token
         picture = EarthCrawler.createPictureFromElements(pictureElements);
       } catch (Exception e) {
         e.printStackTrace();

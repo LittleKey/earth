@@ -4,15 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/btn_login"
-        style="@style/TextStyle.Large.Blue"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/white"
-        android:gravity="center"
-        android:text="@string/btn_login"
-        android:visibility="gone"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/btn_register"
+            style="@style/TextStyle.Large.Blue"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/register"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/btn_login"
+            style="@style/TextStyle.Large.Blue"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/btn_login"
+            android:visibility="gone"/>
+    </LinearLayout>
 
 </FrameLayout>

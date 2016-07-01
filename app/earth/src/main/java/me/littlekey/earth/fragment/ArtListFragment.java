@@ -149,7 +149,6 @@ public class ArtListFragment extends BaseFragment
   protected Fragment createContentFragment() {
     Bundle bundle = getArguments();
     ArrayList<String> paths = bundle.getStringArrayList(Const.KEY_API_PATH);
-    // TODO : add to Const
     switch (CollectionUtils.isEmpty(paths) ? Const.API_ROOT : paths.get(0)) {
       case Const.TAG:
         bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());

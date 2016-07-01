@@ -115,7 +115,7 @@ public class PictureTokenFuture implements Future<List<String>> {
     }
     TokenSupplier tokenSupplier = mWeakTokenSupplier.get();
     if (tokenSupplier != null) {
-      tokenSupplier.insertAll(gid, tokens, page);
+      tokenSupplier.insertPage(gid, page, tokens);
     }
     return Collections.unmodifiableList(mResultTokens = tokens);
   }

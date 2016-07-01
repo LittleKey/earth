@@ -200,4 +200,17 @@
         <item name="android:textSize">@dimen/icon_font_size</item>
     </style>
 
+    <style name="DeepBlueButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
+        <item name="android:layout_marginLeft">@dimen/space_medium</item>
+        <item name="android:layout_marginRight">@dimen/space_medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/bg_primary_rounded_corners</item>
+        <item name="android:layout_marginTop">25dp</item>
+        <item name="android:layout_marginBottom">25dp</item>
+    </style>
+
 </resources>

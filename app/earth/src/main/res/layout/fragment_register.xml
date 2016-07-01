@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/reg_code_img"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        app:actualImageScaleType="fitCenter"
+        app:placeholderImageScaleType="fitCenter"/>
+
+    <EditText
+        android:id="@+id/username"
+        style="@style/EditTextStyle"
+        android:layout_height="@dimen/item_height"
+        android:background="@color/white"
+        android:hint="@string/input_user_name"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:maxLength="20"
+        android:nextFocusDown="@+id/display_name"
+        android:paddingLeft="@dimen/space_normal"
+        android:paddingRight="@dimen/space_normal">
+
+        <requestFocus/>
+    </EditText>
+
+    <EditText
+        android:id="@+id/display_name"
+        style="@style/EditTextStyle"
+        android:layout_marginTop="@dimen/divider_line_height"
+        android:background="@color/white"
+        android:hint="@string/input_display_name"
+        android:imeOptions="actionNext"
+        android:maxLength="20"
+        android:nextFocusDown="@+id/email"
+        android:paddingLeft="@dimen/space_normal"
+        android:paddingRight="@dimen/space_normal"/>
+
+    <EditText
+        android:id="@+id/email"
+        style="@style/EditTextStyle"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginTop="@dimen/divider_line_height"
+        android:background="@color/white"
+        android:hint="@string/input_email"
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"
+        android:nextFocusDown="@+id/password"
+        android:paddingLeft="@dimen/space_normal"
+        android:paddingRight="@dimen/space_normal"/>
+
+    <EditText
+        android:id="@+id/password"
+        style="@style/EditTextStyle"
+        android:layout_marginTop="@dimen/divider_line_height"
+        android:background="@color/white"
+        android:hint="@string/input_password"
+        android:imeOptions="actionNext"
+        android:inputType="textPassword"
+        android:nextFocusDown="@+id/reg_code"
+        android:paddingLeft="@dimen/space_normal"
+        android:paddingRight="@dimen/space_normal"/>
+
+    <EditText
+        android:id="@+id/reg_code"
+        style="@style/EditTextStyle"
+        android:layout_marginTop="@dimen/divider_line_height"
+        android:background="@color/white"
+        android:hint="@string/input_reg_code"
+        android:inputType="number"
+        android:maxLength="6"
+        android:paddingLeft="@dimen/space_normal"
+        android:paddingRight="@dimen/space_normal"/>
+
+    <TextView
+        android:id="@+id/btn_register"
+        style="@style/DeepBlueButtonStyle"
+        android:text="@string/register"/>
+
+</LinearLayout>

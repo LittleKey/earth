@@ -42,6 +42,7 @@ public class Const {
   public static final String KEY_VERIFICATION_CODE = "verification_code";
   public static final String KEY_USER_NAME = "UserName";
   public static final String KEY_PASSWORD = "PassWord";
+  public static final String KEY_PASSWORD_CHECK = "PassWord_Check";
   public static final String KEY_QUERY = "query";
   public static final String KEY_IDENTITY = "identity";
   public static final String KEY_AVATAR = "avatar";
@@ -51,6 +52,7 @@ public class Const {
   public static final String KEY_TYPE = "type";
   public static final String KEY_GROUP_COUNT = "group_count";
   public static final String KEY_DISPLAY_NAME = "display_name";
+  public static final String KEY_MEMBERS_DISPLAY_NAME = "members_display_name";
   public static final String KEY_BIO = "bio";
   public static final String KEY_HEIGHT = "height";
   public static final String KEY_COOKIE = "cookie";
@@ -74,6 +76,16 @@ public class Const {
   public static final String KEY_HC = "hc";
   public static final String KEY_POSITION = " position";
   public static final String KEY_TOKEN_LIST = "token_list";
+  public static final String KEY_AGREE_TO_TERMS = "agree_to_terms";
+  public static final String KEY_RC = "rc";
+  public static final String KEY_TEMPORARY_HTTPS = "temporary_https";
+  public static final String KEY_TERMSREAD = "termsread";
+  public static final String KEY_COPPA_USER = "coppa_user";
+  public static final String KEY_EMAIL_ADDRESS = "EmailAddress";
+  public static final String KEY_EMAIL_ADDRESS_TWO = "EmailAddress_two";
+  public static final String KEY_TIME_OFFSET = "time_offset";
+  public static final String KEY_REG_ID = "regid";
+  public static final String KEY_REG_CODE = "reg_code";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -93,12 +105,13 @@ public class Const {
   public static final String EXTRA_TOKEN = KEY_EXTRA + "token";
   /*********************************** API ***********************************/
   private static final String API_EX_HOST_URL = "http://exhentai.org";
-  private static final String API_LOGIN_HOST_URL = "http://forums.e-hentai.org";
+  private static final String API_FORUM_HOST_URL = "http://forums.e-hentai.org";
   // earth
   public static final String API_ROOT = API_EX_HOST_URL + "/";
   public static final String API_HOME_LIST = API_EX_HOST_URL + "/";
   // business_account
-  public static final String API_LOGIN = API_LOGIN_HOST_URL + "/index.php";
+  public static final String API_LOGIN = API_FORUM_HOST_URL + "/index.php";
+  public static final String API_REGISTER = API_FORUM_HOST_URL + "/index.php";
   // like art
   public static final String API_LIKED = API_EX_HOST_URL + "/gallerypopups.php";
   /******************************** Network Related ********************************/
@@ -123,8 +136,12 @@ public class Const {
   /************************************ ConstValues ***********************************/
   public static final String ZERO = "0";
   public static final String ONE = "1";
+  public static final String EIGHT = "8";
   public static final String ZERO_ONE = "01";
+  public static final String ZERO_ZERO = "00";
+  public static final String ZERO_TWO = "02";
   public static final String LOGIN = "Login";
+  public static final String REG = "Reg";
   public static final String ADD_FAV = "addfav";
   public static final String FAV_DEL = "favdel";
   public static final String PAGE_NUMBER = "page number";

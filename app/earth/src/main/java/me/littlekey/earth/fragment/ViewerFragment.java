@@ -72,11 +72,12 @@ public class ViewerFragment extends BaseFragment
     if (paths != null && paths.size() == 3) {
       String[] subPaths = paths.get(2).split("-");
       mGid = subPaths[0];
-      insertAll(mGid, getArguments().getStringArrayList(Const.KEY_TOKEN_LIST), 0);
+      insertPage(mGid, 0, getArguments().getStringArrayList(Const.KEY_TOKEN_LIST));
       int position = Integer.valueOf(subPaths[1]) - 1;
       mTokenList.set(position, paths.get(1));
       viewPager.setCurrentItem(position);
     }
+    // TODO : add dynamic adjust pre-load page number
     viewPager.setOffscreenPageLimit(5);
   }
 
@@ -117,13 +118,25 @@ public class ViewerFragment extends BaseFragment
 
   @Override
   @SuppressWarnings("SynchronizeOnNonFinalField")
-  public void insertAll(String gid, List<String> tokens, int page) {
+  public void insertPage(String gid, int page, List<String> tokens) {
     if (mTokenList != null && mGid != null && TextUtils.equals(mGid, gid)
         && !CollectionUtils.isEmpty(tokens)) {
       synchronized (mTokenList) {
         // TODO : optimize
         for (int i = 0; i < tokens.size(); ++i) {
           mTokenList.set(page * Const.IMAGE_ITEM_COUNT_PER_PAGE + i, tokens.get(i));
+        }
+      }
+    }
+  }
+
+  @Override
+  @SuppressWarnings("SynchronizeOnNonFinalField")
+  public void insertPosition(String gid, int position, String... tokens) {
+    if (mTokenList != null && mGid != null && TextUtils.equals(mGid, gid) && tokens != null) {
+      synchronized (mTokenList) {
+        for (int i = 0; i < tokens.length; ++i) {
+          mTokenList.set(position + i, tokens[i]);
         }
       }
     }

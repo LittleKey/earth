@@ -84,3 +84,66 @@ query params
 
 - **f_apply** `Apply+Filter`
 
+#### register
+
+##### step 1
+
+**GET** '/index.php'
+
+query params
+
+- **act** `Reg`
+
+- **CODE** `00`
+
+access register page form
+`div.page > div > form`
+
+##### step 2
+
+**POST** register page form from `step1`
+
+data-form
+
+- **agree_to_terms** `1`
+
+access register page
+
+##### step 3
+
+**POST** '/index.php'
+
+data-form
+
+- **temporary_https** `1`
+
+- **act** `Reg`
+
+- **termsread** `1`
+
+- **agree_to_terms** `1`
+
+- **CODE** `02`
+
+- **coppa_user** `0`
+
+- **UserName** `{user_name}`
+
+- **members_display_name** `{display_name}`
+
+- **PassWord** `{password}`
+
+- **PassWord_Check** `{password_again}`
+
+- **EmailAddress** `{email}`
+
+- **EmailAddress_two** `{email_again}`
+
+- **time_offset** `{time_zone}` [0-23 default: 8]
+
+- **regid** `{reg_code_id}`
+
+- **reg_code** `{reg_code}`
+
+access {reg_code} and {reg_code_id}
+`div.tablepad > table > tbody > tr:nth-child(2) > td > fieldset.row3 > table > tbody > tr > td > img`

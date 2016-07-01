@@ -85,6 +85,11 @@ public class EarthRequestManager extends RequestManager {
         loginPairs.put(Const.KEY_ACT, Const.LOGIN);
         loginPairs.put(Const.KEY_CODE, Const.ZERO_ONE);
         return RequestManager.parseUrl(Const.API_LOGIN, loginPairs);
+      case REGISTER:
+        Map<String, String> registerPairs = new HashMap<>();
+        registerPairs.put(Const.KEY_ACT, Const.REG);
+        registerPairs.put(Const.KEY_CODE, Const.ZERO_ZERO);
+        return RequestManager.parseUrl(Const.API_REGISTER, registerPairs);
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }

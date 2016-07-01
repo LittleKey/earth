@@ -138,7 +138,7 @@ public class ModelFactory {
     bundle.putInt(Const.EXTRA_PAGES, count.pages);
     bundle.putString(Const.EXTRA_TOKEN, image.gallery_token);
     actions.put(Const.ACTION_MAIN, new Action.Builder()
-        .type(Action.Type.JUMP)
+        .type(Action.Type.JUMP_IMAGE)
         .uri(NavigationManager.buildUri(Uri.parse(image.origin_url).getEncodedPath()))
         .bundle(bundle)
         .build());

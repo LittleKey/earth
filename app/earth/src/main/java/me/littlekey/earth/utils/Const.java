@@ -73,6 +73,7 @@ public class Const {
   public static final String KEY_F_SEARCH = "f_search";
   public static final String KEY_HC = "hc";
   public static final String KEY_POSITION = " position";
+  public static final String KEY_TOKEN_LIST = "token_list";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";

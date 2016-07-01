@@ -64,7 +64,6 @@ public class ViewerFragment extends BaseFragment
     mGalleryToken = getArguments().getString(Const.EXTRA_TOKEN);
     mTokenList = FixedSizeList.fixedSizeList(
         Arrays.asList(new String[getArguments().getInt(Const.EXTRA_PAGES, 0)]));
-//    insertAll(mGid, getArguments().getStringArrayList(Const.KEY_TOKEN), 0);
     mFutureList = FixedSizeList.fixedSizeList(
         Arrays.asList(new PictureTokenFuture[
             getArguments().getInt(Const.EXTRA_PAGES, 0) / Const.IMAGE_ITEM_COUNT_PER_PAGE + 1]));
@@ -73,6 +72,7 @@ public class ViewerFragment extends BaseFragment
     if (paths != null && paths.size() == 3) {
       String[] subPaths = paths.get(2).split("-");
       mGid = subPaths[0];
+      insertAll(mGid, getArguments().getStringArrayList(Const.KEY_TOKEN_LIST), 0);
       int position = Integer.valueOf(subPaths[1]) - 1;
       mTokenList.set(position, paths.get(1));
       viewPager.setCurrentItem(position);

@@ -34,7 +34,7 @@ public class ListAdapter extends MvpAdapter<Model> {
       case ITEM_ART:
         return EarthPresenterFactory.createArtItemPresenter(parent, R.layout.item_art);
       case PREVIEW_IMAGE:
-        return EarthPresenterFactory.createThumbnailPresenter(parent, R.layout.item_preview_image);
+        return EarthPresenterFactory.createThumbnailPresenter(parent, R.layout.item_preview_image, this);
       case SELECT_FAV:
         return EarthPresenterFactory.createFavSelectPresenter(parent, R.layout.item_select_fav);
       default:

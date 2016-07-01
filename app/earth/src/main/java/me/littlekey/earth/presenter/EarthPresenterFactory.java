@@ -61,8 +61,9 @@ public class EarthPresenterFactory {
         .add(new ActionPresenter());
   }
 
-  public static ViewGroupPresenter createThumbnailPresenter(ViewGroup parent, int layout) {
-    return new ViewGroupPresenter(parent, layout)
+  public static ViewGroupPresenter createThumbnailPresenter(ViewGroup parent, int layout,
+      MvpRecyclerView.Adapter adapter) {
+    return new ViewGroupPresenter(parent, layout, adapter)
         .add(R.id.image, new ImagePresenter())
         .add(R.id.number, new TextPresenter())
         .add(new ActionPresenter());

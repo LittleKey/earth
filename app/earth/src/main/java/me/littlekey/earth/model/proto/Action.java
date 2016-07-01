@@ -140,7 +140,8 @@ public final class Action {
     EVENT(13),
     LIKED(14),
     SELECT_FAV(15),
-    SELECT_CATEGORY(16);
+    SELECT_CATEGORY(16),
+    JUMP_IMAGE(17);
 
     private final int value;
 

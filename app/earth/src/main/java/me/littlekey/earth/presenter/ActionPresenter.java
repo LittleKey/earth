@@ -2,7 +2,9 @@ package me.littlekey.earth.presenter;
 
 import android.app.ActivityOptions;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -77,6 +79,16 @@ public class ActionPresenter extends EarthPresenter {
               NavigationManager.navigationTo(view().getContext(), action.url, action.bundle);
             }
             break;
+          case JUMP_IMAGE:
+            if (action.uri != null) {
+              Bundle bundle = action.bundle;
+              if (bundle == null) {
+                bundle = new Bundle();
+              }
+              bundle.putStringArrayList(Const.KEY_TOKEN_LIST, getTokenList());
+              NavigationManager.navigationTo(view().getContext(), action.uri, bundle);
+            }
+            break;
           case LOGOUT:
             logout();
             break;
@@ -128,6 +140,18 @@ public class ActionPresenter extends EarthPresenter {
     });
   }
 
+  @SuppressWarnings("unchecked")
+  private ArrayList<String> getTokenList() {
+    MvpRecyclerView.Adapter<Model> adapter = group().pageContext.adapter;
+    ArrayList<String> tokens = new ArrayList<>();
+    for (Model model: adapter.getData()) {
+      List<String> paths = Uri.parse(model.url).getPathSegments();
+      if (!CollectionUtils.isEmpty(paths)) {
+        tokens.add(paths.get(1));
+      }
+    }
+    return tokens;
+  }
 
   private void logout() {
     EarthApplication.getInstance().getAccountManager().logout();

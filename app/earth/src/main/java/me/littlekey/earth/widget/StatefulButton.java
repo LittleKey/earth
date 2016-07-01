@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.littlekey.earth.R;
+import me.littlekey.earth.utils.ResourceUtils;
 
 /**
  * Created by littlekey on 16/6/13.
@@ -84,10 +85,10 @@ public class StatefulButton extends FrameLayout {
           setSingleLine(appearance.getBoolean(attr, true));
           break;
         case R.styleable.StatefulButton_android_background:
-          setBackgroundDrawable(appearance.getDrawable(attr));
+          ResourceUtils.setBackground(this, appearance.getDrawable(attr));
           break;
         case R.styleable.StatefulButton_android_drawable:
-          mTextView.setBackgroundDrawable(appearance.getDrawable(attr));
+          ResourceUtils.setBackground(mTextView, appearance.getDrawable(attr));
           break;
         case R.styleable.StatefulButton_android_alpha:
           setAlpha(appearance.getFloat(attr, 1));

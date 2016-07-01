@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -50,6 +51,7 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     mPictureView = (SimpleDraweeView) view.findViewById(R.id.picture);
     mPictureView.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
+        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
         .setProgressBarImage(new ProgressBarDrawable()).build());
     // TODO : determine picture whether exist in download location
     if (savedInstanceState != null

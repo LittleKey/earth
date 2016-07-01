@@ -92,7 +92,7 @@ public class FlagPresenter extends EarthPresenter {
       if (CollectionUtils.isEmpty(model.subModels)) {
         ((TextView) view()).setCompoundDrawables(null, null, null, null);
       } else {
-        Drawable drawable = view().getResources().getDrawable(R.drawable.arrow_right);
+        Drawable drawable = ResourceUtils.getDrawable(R.drawable.arrow_right);
         if (drawable != null) {
           ((TextView) view()).setCompoundDrawables(null, null,
               EarthUtils.setDrawableBounds(drawable), null);

@@ -22,6 +22,7 @@ import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.FutureSupplier;
 import me.littlekey.earth.utils.PictureTokenFuture;
 import me.littlekey.earth.utils.TokenSupplier;
+import me.littlekey.earth.widget.PictureController;
 
 /**
  * Created by littlekey on 16/6/28.
@@ -29,6 +30,7 @@ import me.littlekey.earth.utils.TokenSupplier;
 public class ViewerFragment extends BaseFragment
     implements TokenSupplier, FutureSupplier<PictureTokenFuture> {
 
+  private PictureController mController;
   private String mGalleryToken;
   private String mGid;
   private FixedSizeList<String> mTokenList;
@@ -48,6 +50,7 @@ public class ViewerFragment extends BaseFragment
 
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
+    mController = (PictureController) view.findViewById(R.id.picture_controller);
     ViewPager viewPager = (ViewPager) view.findViewById(R.id.picture_viewpager);
     FragmentStatePagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
 

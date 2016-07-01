@@ -10,3 +10,6 @@
 [submodule "framework/network"]
 	path = framework/network
 	url = git@github.com:littlekey/android-framework-network.git
+[submodule "model"]
+	path = model
+	url = git@github.com:littlekey/android-model.git

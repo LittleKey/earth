@@ -1,6 +1,5 @@
 package me.littlekey.earth.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -9,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import me.littlekey.earth.R;
@@ -46,6 +49,8 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     mPictureView = (SimpleDraweeView) view.findViewById(R.id.picture);
+    mPictureView.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
+        .setProgressBarImage(new ProgressBarDrawable()).build());
     // TODO : determine picture whether exist in download location
     if (savedInstanceState != null
         && (mPictureSrc = savedInstanceState.getString(Const.EXTRA_URL)) != null) {
@@ -69,7 +74,11 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
   }
 
   private void setPictureSrc(String src) {
-    mPictureView.setImageURI(Uri.parse(src));
+    PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
+        .setUri(src)
+        .setTapToRetryEnabled(true)
+        .setOldController(mPictureView.getController());
+    mPictureView.setController(controllerBuilder.build());
     mPictureSrc = src;
     Timber.d(EarthUtils.formatString("Position: %d, url: %s", getArguments().getInt(Const.KEY_POSITION), src));
   }

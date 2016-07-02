@@ -42,13 +42,13 @@ public class ViewerControlBar extends RelativeLayout {
   }
 
   public void setTotalPage(int totalPage) {
-    mSeekBar.setMax(totalPage);
+    mSeekBar.setMax(totalPage - 1);
     mTotalPageView.setText(String.valueOf(totalPage));
   }
 
   public void setCurrentPage(int currentPage) {
     mSeekBar.setProgress(currentPage);
-    mCurrentPageView.setText(String.valueOf(currentPage));
+    mCurrentPageView.setText(String.valueOf(currentPage + 1));
   }
 
   public void show() {

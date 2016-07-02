@@ -157,13 +157,16 @@ public class ViewerControllerView extends FrameLayout
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    mCurrentPage = position;
+    if (positionOffset == 0) {
+      mCurrentPage = position;
+    }
   }
 
   @Override
   public void onPageSelected(int position) {
-    // NOTE : may no use
-    mCurrentPage = position;
+    if (position != mCurrentPage) {
+      mControlBar.setCurrentPage(mCurrentPage = position);
+    }
   }
 
   @Override

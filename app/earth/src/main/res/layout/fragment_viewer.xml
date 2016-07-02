@@ -1,17 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<me.littlekey.earth.widget.ViewerControllerView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewer_controller_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:ignore="RtlHardcoded">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/picture_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    <me.littlekey.earth.widget.PictureController
-        android:id="@+id/picture_controller"
+    
+    <FrameLayout
+        android:id="@+id/viewer_controller_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-</FrameLayout>
+        <me.littlekey.earth.widget.ViewerTitleBar
+            android:id="@+id/viewer_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="top"
+            android:background="@color/half_transparent_black"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:src="@drawable/back"/>
+        </me.littlekey.earth.widget.ViewerTitleBar>
+
+        <me.littlekey.earth.widget.ViewerControlBar
+            android:id="@+id/viewer_control_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:background="@color/half_transparent_black"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/current_page"
+                style="@style/TextStyle.Small.White"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:id="@+id/total_page"
+                style="@style/TextStyle.Small.White"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
+
+            <SeekBar
+                android:id="@+id/seek_bar"
+                style="@style/MediaController_SeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/current_page"
+                android:layout_toLeftOf="@id/total_page"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusable="true" />
+        </me.littlekey.earth.widget.ViewerControlBar>
+    </FrameLayout>
+    
+</me.littlekey.earth.widget.ViewerControllerView>

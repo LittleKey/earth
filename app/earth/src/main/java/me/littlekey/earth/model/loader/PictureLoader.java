@@ -120,6 +120,7 @@ public class PictureLoader extends AsyncTaskLoader<Picture> {
     request.appendPath("s");
     request.appendPath(token);
     request.appendPath(EarthUtils.formatString("%s-%d", mGid, mPosition + 1));
+    request.setTag(this);
     request.submit();
     EarthResponse response = null;
     try {
@@ -143,5 +144,6 @@ public class PictureLoader extends AsyncTaskLoader<Picture> {
   @Override
   public void cancelLoadInBackground() {
     super.cancelLoadInBackground();
+    EarthApplication.getInstance().getRequestManager().cancel(this);
   }
 }

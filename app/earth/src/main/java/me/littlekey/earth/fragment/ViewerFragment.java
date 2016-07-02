@@ -22,7 +22,7 @@ import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.FutureSupplier;
 import me.littlekey.earth.utils.PictureTokenFuture;
 import me.littlekey.earth.utils.TokenSupplier;
-import me.littlekey.earth.widget.PictureController;
+import me.littlekey.earth.widget.ViewerControllerView;
 
 /**
  * Created by littlekey on 16/6/28.
@@ -30,7 +30,7 @@ import me.littlekey.earth.widget.PictureController;
 public class ViewerFragment extends BaseFragment
     implements TokenSupplier, FutureSupplier<PictureTokenFuture> {
 
-  private PictureController mController;
+  private ViewerControllerView mController;
   private String mGalleryToken;
   private String mGid;
   private FixedSizeList<String> mTokenList;
@@ -50,8 +50,9 @@ public class ViewerFragment extends BaseFragment
 
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
-    mController = (PictureController) view.findViewById(R.id.picture_controller);
+    mController = (ViewerControllerView) view.findViewById(R.id.viewer_controller_view);
     ViewPager viewPager = (ViewPager) view.findViewById(R.id.picture_viewpager);
+    mController.setViewPager(viewPager);
     FragmentStatePagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
 
       @Override
@@ -82,6 +83,15 @@ public class ViewerFragment extends BaseFragment
     }
     // TODO : add dynamic adjust pre-load page number
     viewPager.setOffscreenPageLimit(5);
+    mController.show();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (mController != null) {
+      mController.setFitsSystemWindows(false);
+    }
   }
 
   @Override

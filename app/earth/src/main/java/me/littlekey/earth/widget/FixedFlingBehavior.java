@@ -24,6 +24,15 @@ public class FixedFlingBehavior extends AppBarLayout.Behavior {
   }
 
   @Override
+  public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY) {
+    if (velocityY > 0 && !isPositive || velocityY < 0 && isPositive) {
+      velocityY = velocityY * -1;
+    }
+    return velocityY > 0 && child.getBottom() > 0
+        && onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, false);
+  }
+
+  @Override
   public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY, boolean consumed) {
     if (velocityY > 0 && !isPositive || velocityY < 0 && isPositive) {
       velocityY = velocityY * -1;

@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import me.littlekey.earth.model.Model;
@@ -66,6 +65,9 @@ public class DownloadAgent {
         for (Listener listener: mListeners) {
           listener.onConnect();
         }
+        if (mModel != null) {
+          start();
+        }
       }
 
       @Override
@@ -83,13 +85,13 @@ public class DownloadAgent {
       return;
     }
     try {
-      Message msg = Message.obtain(null, DownloadService.MSG_DOWNLOAD);
+      Message msg_to_service = Message.obtain(null, DownloadService.MSG_DOWNLOAD);
       Bundle bundle = new Bundle();
       bundle.putParcelable(Const.EXTRA_MODEL, mModel);
       bundle.putString(Const.KEY_COOKIE, mCookie);
-      msg.setData(bundle);
-      msg.replyTo = mClientMessenger;
-      mServiceMessenger.send(msg);
+      msg_to_service.setData(bundle);
+      msg_to_service.replyTo = mClientMessenger;
+      mServiceMessenger.send(msg_to_service);
     } catch (RemoteException e) {
       e.printStackTrace();
     }
@@ -132,12 +134,12 @@ public class DownloadAgent {
     }
   }
 
-  private void onList(@Nullable List<Parcelable> list) {
-    if (list == null) {
+  private void onList(@Nullable Parcelable[] parcelables) {
+    if (parcelables == null) {
       return;
     }
     List<Model> models = new ArrayList<>();
-    for (Parcelable p: list) {
+    for (Parcelable p: parcelables) {
       models.add((Model) p);
     }
     for (Listener listener: mListeners) {
@@ -186,7 +188,7 @@ public class DownloadAgent {
             Bundle bundle = msg.getData();
             if (bundle != null) {
               bundle.setClassLoader(Model.class.getClassLoader());
-              agent.onList(Arrays.asList(bundle.getParcelableArray(Const.EXTRA_MODEL_LIST)));
+              agent.onList(bundle.getParcelableArray(Const.EXTRA_MODEL_LIST));
             }
             break;
           default:

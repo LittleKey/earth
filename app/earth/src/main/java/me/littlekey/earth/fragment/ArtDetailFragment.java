@@ -38,9 +38,7 @@ import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.presenter.EarthPresenterFactory;
 import me.littlekey.earth.utils.Const;
-import me.littlekey.earth.utils.DownloadAgent;
 import me.littlekey.earth.widget.TagLayoutManager;
-import timber.log.Timber;
 
 /**
  * Created by littlekey on 16/6/16.
@@ -227,53 +225,9 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
           .runnable(new Runnable() {
             @Override
             public void run() {
-              final DownloadAgent agent = EarthApplication.getInstance()
-                  .newDownload(ModelFactory.createDLCModelFromArt(mModel.art, Model.Template.ITEM_DLC));
-              agent.addListener(new DownloadAgent.Listener() {
-
-                @Override
-                public void onConnect() {
-                  Timber.d("onConnect");
-                  agent.start();
-                }
-
-                @Override
-                public void onDisconnect() {
-
-                }
-
-                @Override
-                public void onStart() {
-                  Timber.d("onStart");
-                }
-
-                @Override
-                public void onComplete(boolean succeed) {
-                  Timber.d("onComplete: " + succeed);
-                }
-
-                @Override
-                public void onProgress(float progress) {
-                  Timber.d("onProgress: " + progress);
-                  agent.checkDownloadList();
-                }
-
-                @Override
-                public void onBadNetwork() {
-                  Timber.d("onBadNetwork");
-                }
-
-                @Override
-                public void onList(@Nullable List<Model> list) {
-                  if (list == null) {
-                    return;
-                  }
-                  for (Model model: list) {
-                    Timber.d(model.toString());
-                  }
-                }
-              });
-              agent.connect();
+              EarthApplication.getInstance()
+                  .newDownload(ModelFactory.createDLCModelFromArt(mModel.art, Model.Template.ITEM_DLC))
+                  .connect();
             }
           }).build());
       mModel = event.getModel().newBuilder()

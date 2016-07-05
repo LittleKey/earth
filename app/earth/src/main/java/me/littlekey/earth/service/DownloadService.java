@@ -89,12 +89,12 @@ public class DownloadService extends Service {
           sNotificationManager.notify(nid, builder.build());
           Messenger client;
           if ((client = sClients.get(pair.model)) != null) {
-            Message msg = Message.obtain(null, MSG_STATUS, DOWNLOAD_STATUS_DOWNLOADING, 0);
+            Message msg_to_client = Message.obtain(null, MSG_STATUS, DOWNLOAD_STATUS_DOWNLOADING, 0);
             Bundle bundle = new Bundle();
             bundle.putFloat(Const.EXTRA_PROGRESS, progress);
-            msg.setData(bundle);
+            msg_to_client.setData(bundle);
             try {
-              client.send(msg);
+              client.send(msg_to_client);
             } catch (RemoteException ignore) {
               ignore.printStackTrace();
             }
@@ -115,11 +115,11 @@ public class DownloadService extends Service {
             Bundle data = new Bundle();
             data.putParcelable(Const.EXTRA_MODEL, model);
             // TODO : handle download complete
-            Message msg = Message.obtain(null, MSG_COMPLETE, DOWNLOAD_STATUS_SUCCESS, nid);
-            msg.setData(data);
+            Message msg_to_client = Message.obtain(null, MSG_COMPLETE, DOWNLOAD_STATUS_SUCCESS, nid);
+            msg_to_client.setData(data);
             try {
               if (sClients.get(model) != null) {
-                sClients.get(model).send(msg);
+                sClients.get(model).send(msg_to_client);
               }
             } catch (RemoteException e) {
               e.printStackTrace();

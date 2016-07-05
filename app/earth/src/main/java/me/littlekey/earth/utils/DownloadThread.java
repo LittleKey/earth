@@ -25,8 +25,15 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.EarthCrawler;
@@ -41,7 +48,7 @@ public class DownloadThread extends Thread {
 
   private final static int MAX_REPEAT_COUNT = 3;
 
-  private static final long WAIT_FOR_REPEAT = 8 * 1000;
+  private static final long WAIT_FOR_REPEAT = 3 * 1000;
 
   private WeakReference<DownloadService> mWeakService;
   private Context mContext;
@@ -50,12 +57,14 @@ public class DownloadThread extends Thread {
   private int mNotificationId;
   private Listener mListener;
 
-  private int repeatCount;
   private boolean isSdCard;
   private File dir;
-  private FixedSizeList<File> mFileList;
-  private FixedSizeList<String> mImageTokens;
-  private FixedSizeList<String> mImageSrcUrls;
+  private final FixedSizeList<File> mFileList;
+  private final FixedSizeList<String> mImageTokens;
+  private final FixedSizeList<String> mImageSrcUrls;
+
+  private ExecutorService mExecutor;
+  private AtomicInteger mProgress;
 
   public DownloadThread(DownloadService service, Model model, String cookie, int nid, Listener listener) {
     super();
@@ -64,7 +73,6 @@ public class DownloadThread extends Thread {
     mModel = model;
     mCookie = cookie;
     mNotificationId = nid;
-    repeatCount = 0;
     mListener = listener;
     boolean[] SdCard = new boolean[1];
     dir = DownloadTool.getDownloadDir(mContext, SdCard);
@@ -90,6 +98,8 @@ public class DownloadThread extends Thread {
     }
     mImageTokens = FixedSizeList.fixedSizeList(Arrays.asList(new String[pages]));
     mImageSrcUrls = FixedSizeList.fixedSizeList(Arrays.asList(new String[pages]));
+    mExecutor = Executors.newFixedThreadPool(Math.max(2, Math.min(pages / 10, 10)));
+    mProgress = new AtomicInteger(0);
   }
 
   public void run() {
@@ -131,41 +141,70 @@ public class DownloadThread extends Thread {
 
   private boolean saveArt() {
     boolean SUCCEED = true;
+    List<Future<Boolean>> futures = new ArrayList<>();
     for (int i = 0; i < mModel.addition.count.pages; ++i) {
-      repeatCount = 0;
-      SUCCEED &= savePicture(i);
+      futures.add(callback(i));
+    }
+    for (Future<Boolean> future: futures) {
+      try {
+        SUCCEED &= future.get();
+      } catch (InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+        SUCCEED = false;
+      }
     }
     return SUCCEED;
   }
 
-  private void turnPage(int page) {
-    Uri uri = Uri.parse(Const.API_ROOT).buildUpon()
-        .appendEncodedPath("g")
-        .appendEncodedPath(mModel.addition.identity)
-        .appendEncodedPath(mModel.addition.token)
-        .appendQueryParameter(Const.KEY_P, String.valueOf(page))
-        .build();
-    try {
-      URL u = new URL(uri.toString());
-      HttpURLConnection conn = (HttpURLConnection) u.openConnection();
-      conn.setRequestMethod("GET");
-      conn.addRequestProperty(Const.KEY_COOKIE, mCookie);
-      conn.setConnectTimeout(5000);
-      conn.setReadTimeout(10000);
-      conn.connect();
-      InputStream inputStream = conn.getInputStream();
-      Document document = Jsoup.parse(inputStream, "utf8", uri.toString());
-      int i = 0;
-      for (Element element: document.select("#gdt > div > a")) {
-        List<String> paths = Uri.parse(element.attr("href")).getPathSegments();
-        if (!CollectionUtils.isEmpty(paths)) {
-          mImageTokens.set(page * Const.IMAGE_ITEM_COUNT_PER_PAGE + i++, paths.get(1));
+  private Future<Boolean> callback(final int position) {
+    return mExecutor.submit(new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        boolean rlt = savePicture(position, 0);
+        if (mListener != null) {
+          int total = mModel.addition.count.pages;
+          mListener.onProgress(mNotificationId,
+              Math.min(100, mProgress.incrementAndGet() * 100 / total));
         }
+        return rlt;
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-      if (mListener != null) {
-        mListener.onError(mNotificationId, e);
+    });
+  }
+
+  private void turnPage(int position) {
+    int page = position / Const.IMAGE_ITEM_COUNT_PER_PAGE;
+    synchronized (mImageTokens) {
+      if (mImageTokens.get(position) != null) {
+        return;
+      }
+      Uri uri = Uri.parse(Const.API_ROOT).buildUpon()
+          .appendEncodedPath("g")
+          .appendEncodedPath(mModel.addition.identity)
+          .appendEncodedPath(mModel.addition.token)
+          .appendQueryParameter(Const.KEY_P, String.valueOf(page))
+          .build();
+      try {
+        URL u = new URL(uri.toString());
+        HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+        conn.setRequestMethod("GET");
+        conn.addRequestProperty(Const.KEY_COOKIE, mCookie);
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(10000);
+        conn.connect();
+        InputStream inputStream = conn.getInputStream();
+        Document document = Jsoup.parse(inputStream, "utf8", uri.toString());
+        int i = 0;
+        for (Element element : document.select("#gdt > div > a")) {
+          List<String> paths = Uri.parse(element.attr("href")).getPathSegments();
+          if (!CollectionUtils.isEmpty(paths)) {
+            mImageTokens.set(page * Const.IMAGE_ITEM_COUNT_PER_PAGE + i++, paths.get(1));
+          }
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+        if (mListener != null) {
+          mListener.onError(mNotificationId, e);
+        }
       }
     }
   }
@@ -209,7 +248,7 @@ public class DownloadThread extends Thread {
 
   @SuppressWarnings("deprecation")
   @SuppressLint({"WorldReadableFiles", "WorldWriteableFiles"})
-  private boolean savePicture(int position) {
+  private boolean savePicture(int position, int repeatCount) {
     File file = mFileList.get(position);
     if (file == null) {
       file = new File(dir, EarthUtils.formatString("%d.jpg.tmp", position));
@@ -237,7 +276,7 @@ public class DownloadThread extends Thread {
       if (url == null) {
         String token = mImageTokens.get(position);
         if (token == null) {
-          turnPage(position / Const.IMAGE_ITEM_COUNT_PER_PAGE);
+          turnPage(position);
           token = mImageTokens.get(position);
           if (token == null) {
             return false;
@@ -249,7 +288,9 @@ public class DownloadThread extends Thread {
       HttpURLConnection conn = initConnection(u, file);
       conn.connect();
       inputStream = conn.getInputStream();
+      @SuppressWarnings("unused")
       long accLen = file.length();
+      @SuppressWarnings("unused")
       long totalLen = conn.getContentLength();
 
       byte[] buffer = new byte[4096];
@@ -265,15 +306,15 @@ public class DownloadThread extends Thread {
             SUCCEED = false;
             break;
           }
-          float progress = (float) accLen / (float) totalLen;
-          if (progress > 1) {
-            progress = 0.99f;
-          }
-          if (mListener != null) {
-            int total = mModel.addition.count.pages;
-            // NOTE : only valid on single thread
-            mListener.onProgress(mNotificationId, (position + progress) * 100 / total);
-          }
+//          float progress = (float) accLen / (float) totalLen;
+//          if (progress > 1) {
+//            progress = 0.99f;
+//          }
+//          if (mListener != null) {
+//            int total = mModel.addition.count.pages;
+//            // NOTE : only valid on single thread
+//            mListener.onProgress(mNotificationId, (position + progress) * 100 / total);
+//          }
         }
       }
       inputStream.close();
@@ -287,7 +328,7 @@ public class DownloadThread extends Thread {
       if (++repeatCount > MAX_REPEAT_COUNT) {
         mListener.onError(mNotificationId, e);
       } else {
-        return repeatConnect(position);
+        return repeatConnect(position, repeatCount);
       }
     } finally {
       try {
@@ -309,10 +350,10 @@ public class DownloadThread extends Thread {
     return false;
   }
 
-  private boolean repeatConnect(int position) {
+  private boolean repeatConnect(int position, int repeatCount) {
     try {
       Thread.sleep(WAIT_FOR_REPEAT);
-      return savePicture(position);
+      return savePicture(position, repeatCount);
     } catch (InterruptedException e) {
       if (mListener != null) {
         mListener.onError(mNotificationId, e);

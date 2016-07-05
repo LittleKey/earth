@@ -88,7 +88,7 @@ public class ActionPresenter extends EarthPresenter {
               if (bundle == null) {
                 bundle = new Bundle();
               }
-              bundle.putStringArrayList(Const.KEY_TOKEN_LIST, getTokenList());
+              bundle.putStringArrayList(Const.KEY_TOKEN_LIST, getTokenList(model));
               NavigationManager.navigationTo(view().getContext(), action.uri, bundle);
             }
             break;
@@ -144,12 +144,12 @@ public class ActionPresenter extends EarthPresenter {
   }
 
   @SuppressWarnings("unchecked")
-  private ArrayList<String> getTokenList() {
+  private ArrayList<String> getTokenList(Model model) {
     MvpRecyclerView.Adapter<Model> adapter = group().pageContext.adapter;
-    FixedSizeList<String> tokens = FixedSizeList.fixedSizeList(Arrays.asList(new String[adapter.size()]));
-    for (Model model: adapter.getData()) {
-      List<String> paths = Uri.parse(model.url).getPathSegments();
-      int pos = Wire.get(model.count.number, 0) - 1;
+    FixedSizeList<String> tokens = FixedSizeList.fixedSizeList(Arrays.asList(new String[model.count.pages]));
+    for (Model item: adapter.getData()) {
+      List<String> paths = Uri.parse(item.url).getPathSegments();
+      int pos = Wire.get(item.count.number, 0) - 1;
       if (!CollectionUtils.isEmpty(paths) && pos >= 0 && pos < adapter.size()) {
         tokens.set(pos, paths.get(1));
       }

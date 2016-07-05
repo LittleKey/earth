@@ -48,9 +48,6 @@ public class DownloadService extends Service {
   public static final int DOWNLOAD_STATUS_DOWNLOADING = 2;
   public static final int DOWNLOAD_STATUS_NO_NETWORK = 3;
 
-  private static final int MAX_REPEAT_COUNT = 3;
-  private static final long WAIT_FOR_REPEAT = 8 * 1000;
-
   private static NotificationManager sNotificationManager;
   private static Map<Model, Messenger> sClients = new HashMap<>();
   private static SparseArray<DownloadTool.Pair> sPairCache = new SparseArray<>();
@@ -161,7 +158,7 @@ public class DownloadService extends Service {
   }
 
   private void startDownload(Model model, String cookie) {
-    Timber.d("startDownload([" + " title:" + model.title + " url:" + model.url + "])");
+    Timber.d("startDownload([" + " title:" + model.addition.title + "])");
 
     int nId = DownloadTool.buildNotificationID(model);
     DownloadThread thread =

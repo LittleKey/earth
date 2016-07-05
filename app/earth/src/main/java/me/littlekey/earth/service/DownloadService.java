@@ -1,6 +1,8 @@
 package me.littlekey.earth.service;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,11 +34,13 @@ public class DownloadService extends Service {
 
   // service handler message
   public static final int MSG_DOWNLOAD = 1;
+  public static final int MSG_CHECK_LIST = 2;
 
   // client handler message
   public static final int MSG_START = 10;
   public static final int MSG_COMPLETE = 11;
   public static final int MSG_STATUS = 12;
+  public static final int MSG_CHECKED_LIST = 13;
 
   // download status
   public static final int DOWNLOAD_STATUS_FAIL = 0;
@@ -47,6 +51,7 @@ public class DownloadService extends Service {
   private static final int MAX_REPEAT_COUNT = 3;
   private static final long WAIT_FOR_REPEAT = 8 * 1000;
 
+  private static NotificationManager sNotificationManager;
   private static Map<Model, Messenger> sClients = new HashMap<>();
   private static SparseArray<DownloadTool.Pair> sPairCache = new SparseArray<>();
 
@@ -61,6 +66,7 @@ public class DownloadService extends Service {
   @Override
   public void onCreate() {
     super.onCreate();
+    sNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     mDownloadThreadListener = new DownloadThread.Listener() {
       @Override
       public void onStart(int nid) {
@@ -69,7 +75,7 @@ public class DownloadService extends Service {
           NotificationCompat.Builder builder = DownloadTool.getNotification(
               DownloadService.this, pair.model, 0);
           pair.currentNotificationBuilder = builder;
-          startForeground(nid, builder.build());
+          sNotificationManager.notify(nid, builder.build());
         }
       }
 
@@ -80,10 +86,13 @@ public class DownloadService extends Service {
           NotificationCompat.Builder builder = pair.currentNotificationBuilder;
           builder.setProgress(1000, (int) (progress * 10), false)
               .setContentText(EarthUtils.formatString("%.2f%%", progress));
-          startForeground(nid, builder.build());
+          sNotificationManager.notify(nid, builder.build());
           Messenger client;
           if ((client = sClients.get(pair.model)) != null) {
-            Message msg = Message.obtain(null, MSG_STATUS, DOWNLOAD_STATUS_DOWNLOADING, 0, progress);
+            Message msg = Message.obtain(null, MSG_STATUS, DOWNLOAD_STATUS_DOWNLOADING, 0);
+            Bundle bundle = new Bundle();
+            bundle.putFloat(Const.EXTRA_PROGRESS, progress);
+            msg.setData(bundle);
             try {
               client.send(msg);
             } catch (RemoteException ignore) {
@@ -102,7 +111,7 @@ public class DownloadService extends Service {
             NotificationCompat.Builder builder = pair.currentNotificationBuilder;
             builder.setProgress(100, 100, false)
                 .setContentText("100%");
-            startForeground(nid, builder.build());
+            sNotificationManager.notify(nid, builder.build());
             Bundle data = new Bundle();
             data.putParcelable(Const.EXTRA_MODEL, model);
             // TODO : handle download complete
@@ -115,8 +124,7 @@ public class DownloadService extends Service {
             } catch (RemoteException e) {
               e.printStackTrace();
             } finally {
-              stopForeground(true);
-              DownloadTool.clearCache(sPairCache, sClients, nid);
+              DownloadTool.clearCache(sNotificationManager, sPairCache, sClients, nid);
             }
           }
         }
@@ -225,6 +233,19 @@ public class DownloadService extends Service {
                 e.printStackTrace();
               }
             }
+          }
+          break;
+        case MSG_CHECK_LIST:
+          // check list
+          Message msg_to_client = Message.obtain(null, MSG_CHECKED_LIST);
+          Bundle bundle = new Bundle();
+          bundle.putParcelableArray(Const.EXTRA_MODEL_LIST,
+              sClients.keySet().toArray(new Model[sClients.size()]));
+          msg_to_client.setData(bundle);
+          try {
+            msg.replyTo.send(msg_to_client);
+          } catch (RemoteException e) {
+            e.printStackTrace();
           }
           break;
         default:

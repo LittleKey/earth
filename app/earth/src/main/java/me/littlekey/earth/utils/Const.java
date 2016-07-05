@@ -108,6 +108,7 @@ public class Const {
   public static final String EXTRA_URL = KEY_EXTRA + "url";
   public static final String EXTRA_PAGES = KEY_EXTRA + "pages";
   public static final String EXTRA_TOKEN = KEY_EXTRA + "token";
+  public static final String EXTRA_PROGRESS = KEY_EXTRA + "progress";
   /*********************************** API ***********************************/
   private static final String API_EX_HOST_URL = "http://exhentai.org";
   private static final String API_FORUM_HOST_URL = "http://forums.e-hentai.org";

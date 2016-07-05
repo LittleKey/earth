@@ -227,11 +227,21 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
           .runnable(new Runnable() {
             @Override
             public void run() {
-              DownloadAgent agent = new DownloadAgent(getActivity(),
-                  ModelFactory.createDLCModelFromArt(mModel.art, Model.Template.ITEM_DLC),
-                  EarthApplication.getInstance().getRequestManager().convertCookies(
-                      EarthApplication.getInstance().getRequestManager().buildCookie()));
+              final DownloadAgent agent = EarthApplication.getInstance()
+                  .newDownload(ModelFactory.createDLCModelFromArt(mModel.art, Model.Template.ITEM_DLC));
               agent.addListener(new DownloadAgent.Listener() {
+
+                @Override
+                public void onConnect() {
+                  Timber.d("onConnect");
+                  agent.start();
+                }
+
+                @Override
+                public void onDisconnect() {
+
+                }
+
                 @Override
                 public void onStart() {
                   Timber.d("onStart");
@@ -245,14 +255,25 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
                 @Override
                 public void onProgress(float progress) {
                   Timber.d("onProgress: " + progress);
+                  agent.checkDownloadList();
                 }
 
                 @Override
                 public void onBadNetwork() {
                   Timber.d("onBadNetwork");
                 }
+
+                @Override
+                public void onList(@Nullable List<Model> list) {
+                  if (list == null) {
+                    return;
+                  }
+                  for (Model model: list) {
+                    Timber.d(model.toString());
+                  }
+                }
               });
-              agent.start();
+              agent.connect();
             }
           }).build());
       mModel = event.getModel().newBuilder()

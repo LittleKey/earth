@@ -24,6 +24,7 @@ import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.EarthRequestManager;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.DownloadAgent;
 import me.littlekey.earth.utils.PreferenceUtils;
 
 /**
@@ -160,6 +161,11 @@ public class EarthApplication extends BaseApplication implements ApiContext {
       }
     }
     return ImmutableList.copyOf(mSearchHistories);
+  }
+
+  public DownloadAgent newDownload(Model model) {
+    return new DownloadAgent(this, model,
+        getRequestManager().convertCookies(getRequestManager().buildCookie()));
   }
 }
 

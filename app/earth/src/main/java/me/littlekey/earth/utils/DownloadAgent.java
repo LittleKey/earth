@@ -9,10 +9,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.Parcelable;
 import android.os.RemoteException;
+import android.support.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.littlekey.earth.model.Model;
@@ -30,29 +33,6 @@ public class DownloadAgent {
   private String mCookie;
   private boolean mIsDownloading = false;
   private List<Listener> mListeners;
-
-  private final ServiceConnection mConnection = new ServiceConnection() {
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-      mServiceMessenger = new Messenger(service);
-      try {
-        Message msg = Message.obtain(null, DownloadService.MSG_DOWNLOAD);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Const.EXTRA_MODEL, mModel);
-        bundle.putString(Const.KEY_COOKIE, mCookie);
-        msg.setData(bundle);
-        msg.replyTo = mClientMessenger;
-        mServiceMessenger.send(msg);
-      } catch (RemoteException e) {
-        e.printStackTrace();
-      }
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-      mServiceMessenger = null;
-    }
-  };
 
   public DownloadAgent(Context context, Model model, String cookie) {
     mContext = context;
@@ -77,9 +57,55 @@ public class DownloadAgent {
     }
   }
 
-  public void start() {
+  public void connect() {
     Intent intent = new Intent(mContext, DownloadService.class);
-    mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    mContext.bindService(intent, new ServiceConnection() {
+      @Override
+      public void onServiceConnected(ComponentName name, IBinder service) {
+        mServiceMessenger = new Messenger(service);
+        for (Listener listener: mListeners) {
+          listener.onConnect();
+        }
+      }
+
+      @Override
+      public void onServiceDisconnected(ComponentName name) {
+        mServiceMessenger = null;
+        for (Listener listener: mListeners) {
+          listener.onDisconnect();
+        }
+      }
+    }, Context.BIND_AUTO_CREATE);
+  }
+
+  public void start() {
+    if (mServiceMessenger == null) {
+      return;
+    }
+    try {
+      Message msg = Message.obtain(null, DownloadService.MSG_DOWNLOAD);
+      Bundle bundle = new Bundle();
+      bundle.putParcelable(Const.EXTRA_MODEL, mModel);
+      bundle.putString(Const.KEY_COOKIE, mCookie);
+      msg.setData(bundle);
+      msg.replyTo = mClientMessenger;
+      mServiceMessenger.send(msg);
+    } catch (RemoteException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void checkDownloadList() {
+    if (mServiceMessenger == null) {
+      return;
+    }
+    try {
+      Message msg = Message.obtain(null, DownloadService.MSG_CHECK_LIST);
+      msg.replyTo = mClientMessenger;
+      mServiceMessenger.send(msg);
+    } catch (RemoteException e) {
+      e.printStackTrace();
+    }
   }
 
   private void onStart() {
@@ -103,6 +129,19 @@ public class DownloadAgent {
   private void onBadNetwork() {
     for (Listener listener: mListeners) {
       listener.onBadNetwork();
+    }
+  }
+
+  private void onList(@Nullable List<Parcelable> list) {
+    if (list == null) {
+      return;
+    }
+    List<Model> models = new ArrayList<>();
+    for (Parcelable p: list) {
+      models.add((Model) p);
+    }
+    for (Listener listener: mListeners) {
+      listener.onList(models);
     }
   }
 
@@ -134,12 +173,20 @@ public class DownloadAgent {
           case DownloadService.MSG_STATUS:
             if (msg.arg1 == DownloadService.DOWNLOAD_STATUS_DOWNLOADING) {
               agent.mIsDownloading = true;
-              if (msg.obj != null && msg.obj instanceof Float) {
-                agent.onProgress((float) msg.obj);
+              Bundle bundle = msg.getData();
+              if (bundle != null) {
+                agent.onProgress(bundle.getFloat(Const.EXTRA_PROGRESS, 0));
               }
             }
             if (msg.arg1 == DownloadService.DOWNLOAD_STATUS_NO_NETWORK) {
               agent.onBadNetwork();
+            }
+            break;
+          case DownloadService.MSG_CHECKED_LIST:
+            Bundle bundle = msg.getData();
+            if (bundle != null) {
+              bundle.setClassLoader(Model.class.getClassLoader());
+              agent.onList(Arrays.asList(bundle.getParcelableArray(Const.EXTRA_MODEL_LIST)));
             }
             break;
           default:
@@ -153,6 +200,10 @@ public class DownloadAgent {
 
   public interface Listener {
 
+    void onConnect();
+
+    void onDisconnect();
+
     void onStart();
 
     void onComplete(boolean succeed);
@@ -160,5 +211,7 @@ public class DownloadAgent {
     void onProgress(float progress);
 
     void onBadNetwork();
+
+    void onList(@Nullable  List<Model> list);
   }
 }

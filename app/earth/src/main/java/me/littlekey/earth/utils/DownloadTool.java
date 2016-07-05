@@ -1,5 +1,6 @@
 package me.littlekey.earth.utils;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -117,10 +118,11 @@ public class DownloadTool {
     return builder;
   }
 
-  public static void clearCache(SparseArray<Pair> pairCache,
+  public static void clearCache(NotificationManager notificationManager, SparseArray<Pair> pairCache,
       Map<Model, Messenger> clients, int nid) {
     Pair pair = pairCache.get(nid);
     if (pair != null) {
+      notificationManager.cancel(nid);
       if (clients.containsKey(pair.model)) {
         clients.remove(pair.model);
       }

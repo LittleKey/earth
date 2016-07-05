@@ -1,6 +1,7 @@
 package me.littlekey.earth.utils;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Message;
@@ -55,7 +56,6 @@ public class DownloadThread extends Thread {
   private FixedSizeList<File> mFileList;
   private FixedSizeList<String> mImageTokens;
   private FixedSizeList<String> mImageSrcUrls;
-  private int mCurrentPosition;
 
   public DownloadThread(DownloadService service, Model model, String cookie, int nid, Listener listener) {
     super();
@@ -65,7 +65,6 @@ public class DownloadThread extends Thread {
     mCookie = cookie;
     mNotificationId = nid;
     repeatCount = 0;
-    mCurrentPosition = 0;
     mListener = listener;
     boolean[] SdCard = new boolean[1];
     dir = DownloadTool.getDownloadDir(mContext, SdCard);
@@ -110,11 +109,8 @@ public class DownloadThread extends Thread {
             client.send(Message.obtain(null, DownloadService.MSG_COMPLETE, DownloadService.DOWNLOAD_STATUS_SUCCESS, 0));
           }
         } else {
-          DownloadService downloadService = mWeakService.get();
-          if (downloadService != null) {
-            downloadService.stopForeground(true);
-          }
-          DownloadTool.clearCache(DownloadService.getPairCache(), DownloadService.getClients(), mNotificationId);
+          DownloadTool.clearCache((NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE),
+              DownloadService.getPairCache(), DownloadService.getClients(), mNotificationId);
           if ((client = DownloadService.getClients().get(mModel)) != null) {
             client.send(Message.obtain(null, DownloadService.MSG_COMPLETE, DownloadService.DOWNLOAD_STATUS_FAIL, 0));
           }
@@ -135,7 +131,8 @@ public class DownloadThread extends Thread {
 
   private boolean saveArt() {
     boolean SUCCEED = true;
-    for (int i = mCurrentPosition; i < mModel.addition.count.pages; ++i) {
+    for (int i = 0; i < mModel.addition.count.pages; ++i) {
+      repeatCount = 0;
       SUCCEED &= savePicture(i);
     }
     return SUCCEED;
@@ -213,8 +210,6 @@ public class DownloadThread extends Thread {
   @SuppressWarnings("deprecation")
   @SuppressLint({"WorldReadableFiles", "WorldWriteableFiles"})
   private boolean savePicture(int position) {
-    repeatCount = 0;
-    mCurrentPosition = position;
     File file = mFileList.get(position);
     if (file == null) {
       file = new File(dir, EarthUtils.formatString("%d.jpg.tmp", position));
@@ -292,7 +287,7 @@ public class DownloadThread extends Thread {
       if (++repeatCount > MAX_REPEAT_COUNT) {
         mListener.onError(mNotificationId, e);
       } else {
-        return repeatConnect();
+        return repeatConnect(position);
       }
     } finally {
       try {
@@ -314,10 +309,10 @@ public class DownloadThread extends Thread {
     return false;
   }
 
-  private boolean repeatConnect() {
+  private boolean repeatConnect(int position) {
     try {
       Thread.sleep(WAIT_FOR_REPEAT);
-      return saveArt();
+      return savePicture(position);
     } catch (InterruptedException e) {
       if (mListener != null) {
         mListener.onError(mNotificationId, e);

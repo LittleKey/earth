@@ -33,6 +33,20 @@ public class ModelFactory {
   private ModelFactory() {
   }
 
+  public static Model createDLCModelFromArt(Art art, Model.Template template) {
+    art = DataVerifier.verify(art);
+    if (art == null) {
+      return null;
+    }
+    return new Model.Builder()
+        .type(Model.Type.DLC)
+        .template(template)
+        .identity(art.gid)
+        .token(art.token)
+        .addition(createModelFromArt(art, Model.Template.ITEM_ART))
+        .build();
+  }
+
   public static Model createModelFromArt(Art art, Model.Template template) {
     art = DataVerifier.verify(art);
     if (art == null) {

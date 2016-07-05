@@ -100,7 +100,7 @@ public class EarthRequestManager extends RequestManager {
   /**
    * Converts Map<String, String> to String.
    */
-  private String convertCookies(Map<String, String> cookies) {
+  public String convertCookies(Map<String, String> cookies) {
     List<String> result = new ArrayList<>();
     for (Map.Entry<String, String> cookieField: cookies.entrySet()) {
       CollectionUtils.add(result,
@@ -109,7 +109,7 @@ public class EarthRequestManager extends RequestManager {
     return TextUtils.join(";", result);
   }
 
-  private Map<String, String> buildCookie() {
+  public Map<String, String> buildCookie() {
     Map<String, String> cookies = new HashMap<>(mAdditionHeaders);
     cookies.put(Const.IPB_MEMBER_ID,
         EarthApplication.getInstance().getAccountManager().getUserId());

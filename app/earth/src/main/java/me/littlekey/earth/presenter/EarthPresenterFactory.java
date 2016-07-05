@@ -33,6 +33,7 @@ public class EarthPresenterFactory {
   public static ViewGroupPresenter createArtDetailPresenter(ViewGroup parent, int layout) {
     return new ViewGroupPresenter(parent, layout)
         .add(R.id.cover, new ImagePresenter(true))
+        .add(R.id.cover, new ActionPresenter())
         .add(R.id.title, new TextPresenter())
         .add(R.id.subtitle, new TextPresenter())
         .add(R.id.category, new CategoryPresenter(true))

@@ -8,6 +8,13 @@
     <string name="loading_hint">加载中</string>
     <string name="parse_error">parse %s error</string>
 
+    <!-- download -->
+    <string name="start_download_notification">正在下载Art</string>
+    <string name="download_notification_prefix">正在下载:</string>
+    <string name="download_failed" formatted="false">下载失败%s</string>
+    <string name="art_file_name" formatted="false">%s-%s</string>
+    <string name="download_title">下载</string>
+
     <!-- register -->
     <string name="register">注册</string>
     <string name="register_error">注册失败</string>

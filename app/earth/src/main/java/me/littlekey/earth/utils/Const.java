@@ -29,6 +29,7 @@ public class Const {
   public static final Integer ACTION_MAIN = 0;
   public static final Integer ACTION_SHOW_HIDE = 1;
   public static final Integer ACTION_LIKED = 2;
+  public static final Integer ACTION_DOWNLOAD = 3;
   /************************************ Key ***********************************/
   public static final String KEY_EXTRA = "extra";
   public static final String KEY_API_TYPE = "api_url";

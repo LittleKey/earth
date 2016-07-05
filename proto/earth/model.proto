@@ -30,6 +30,7 @@ message Model {
     Category category = 21;
     repeated Model subModels = 22;
     Picture picture = 23;
+    Model addition = 24;
 
     enum Type {
         NONE = 0;
@@ -41,6 +42,7 @@ message Model {
         TEXT = 6;
         COMMENT = 7;
         PICTURE = 8;
+        DLC = 9;
     }
 
     enum Template {
@@ -57,6 +59,7 @@ message Model {
         TITLE = 10;
         ITEM_COMMENT = 11;
         PAGE_PICTURE = 12;
+        ITEM_DLC = 13;
     }
 
     enum Category {

@@ -122,6 +122,7 @@ public class ViewerFragment extends BaseFragment
   public @Nullable String get(String gid, int position) {
     if (mTokenList != null && mGid != null && TextUtils.equals(mGid, gid)
         && mTokenList.maxSize()  > position) {
+      // TODO : read operate maybe needn't synchronized
       synchronized (mTokenList) {
         return mTokenList.get(position);
       }

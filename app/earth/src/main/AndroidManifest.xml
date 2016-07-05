@@ -40,7 +40,7 @@
                 <data android:host="exhentai.org" android:path="/" />
             </intent-filter>
         </activity>
-        
+
         <activity android:name=".activity.ArtDetailActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/BaseAppTheme.DetailPage">
@@ -67,6 +67,13 @@
 
         <activity android:name=".activity.RegisterActivity"
                   android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.DownloadActivity"
+                  android:screenOrientation="portrait"/>
+
+        <service android:name="me.littlekey.earth.service.DownloadService"
+                 android:process=":me.littlekey.earth.service.DownloadService"
+                 android:exported="false"/>
 
     </application>
 

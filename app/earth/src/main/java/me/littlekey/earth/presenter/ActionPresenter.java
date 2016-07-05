@@ -323,6 +323,8 @@ public class ActionPresenter extends EarthPresenter {
         return model.actions.get(Const.ACTION_SHOW_HIDE);
       case R.id.likes:
         return model.actions.get(Const.ACTION_LIKED);
+      case R.id.cover:
+        return model.actions.get(Const.ACTION_DOWNLOAD);
     }
     return null;
   }

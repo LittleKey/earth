@@ -1,8 +1,6 @@
 package me.littlekey.earth.service;
 
-import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,7 +49,6 @@ public class DownloadService extends Service {
 
   private static Map<Model, Messenger> sClients = new HashMap<>();
   private static SparseArray<DownloadTool.Pair> sPairCache = new SparseArray<>();
-  private static NotificationManager sNotificationManager;
 
   private Messenger mMessenger = new Messenger(new ServiceHandler(this));
 
@@ -64,7 +61,6 @@ public class DownloadService extends Service {
   @Override
   public void onCreate() {
     super.onCreate();
-    sNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     mDownloadThreadListener = new DownloadThread.Listener() {
       @Override
       public void onStart(int nid) {
@@ -85,6 +81,15 @@ public class DownloadService extends Service {
           builder.setProgress(1000, (int) (progress * 10), false)
               .setContentText(EarthUtils.formatString("%.2f%%", progress));
           startForeground(nid, builder.build());
+          Messenger client;
+          if ((client = sClients.get(pair.model)) != null) {
+            Message msg = Message.obtain(null, MSG_STATUS, DOWNLOAD_STATUS_DOWNLOADING, 0, progress);
+            try {
+              client.send(msg);
+            } catch (RemoteException ignore) {
+              ignore.printStackTrace();
+            }
+          }
         }
       }
 

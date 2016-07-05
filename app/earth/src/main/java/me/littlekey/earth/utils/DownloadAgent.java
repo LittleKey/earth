@@ -12,6 +12,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.service.DownloadService;
@@ -27,6 +29,7 @@ public class DownloadAgent {
   private Model mModel;
   private String mCookie;
   private boolean mIsDownloading = false;
+  private List<Listener> mListeners;
 
   private final ServiceConnection mConnection = new ServiceConnection() {
     @Override
@@ -55,15 +58,52 @@ public class DownloadAgent {
     mContext = context;
     mModel = model;
     mCookie = cookie;
+    mListeners = new ArrayList<>();
   }
 
   public boolean isDownloading() {
     return mIsDownloading;
   }
 
+  public void addListener(Listener listener) {
+    if (listener != null) {
+      mListeners.add(listener);
+    }
+  }
+
+  public void removeListener(Listener listener) {
+    if (listener != null) {
+      mListeners.remove(listener);
+    }
+  }
+
   public void start() {
     Intent intent = new Intent(mContext, DownloadService.class);
     mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+  }
+
+  private void onStart() {
+    for (Listener listener: mListeners) {
+      listener.onStart();
+    }
+  }
+
+  private void onComplete(boolean succeed) {
+    for (Listener listener: mListeners) {
+      listener.onComplete(succeed);
+    }
+  }
+
+  private void onProgress(float progress) {
+    for (Listener listener: mListeners) {
+      listener.onProgress(progress);
+    }
+  }
+
+  private void onBadNetwork() {
+    for (Listener listener: mListeners) {
+      listener.onBadNetwork();
+    }
   }
 
   private static class ClientHandler extends Handler {
@@ -85,13 +125,21 @@ public class DownloadAgent {
         switch (msg.what) {
           case DownloadService.MSG_START:
             agent.mIsDownloading = true;
+            agent.onStart();
             break;
           case DownloadService.MSG_COMPLETE:
             agent.mIsDownloading = false;
+            agent.onComplete(msg.arg1 == DownloadService.DOWNLOAD_STATUS_SUCCESS);
             break;
           case DownloadService.MSG_STATUS:
             if (msg.arg1 == DownloadService.DOWNLOAD_STATUS_DOWNLOADING) {
               agent.mIsDownloading = true;
+              if (msg.obj != null && msg.obj instanceof Float) {
+                agent.onProgress((float) msg.obj);
+              }
+            }
+            if (msg.arg1 == DownloadService.DOWNLOAD_STATUS_NO_NETWORK) {
+              agent.onBadNetwork();
             }
             break;
           default:
@@ -101,5 +149,16 @@ public class DownloadAgent {
         e.printStackTrace();
       }
     }
+  }
+
+  public interface Listener {
+
+    void onStart();
+
+    void onComplete(boolean succeed);
+
+    void onProgress(float progress);
+
+    void onBadNetwork();
   }
 }

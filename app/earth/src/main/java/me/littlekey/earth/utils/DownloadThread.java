@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Message;
+import android.os.Messenger;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
@@ -100,20 +101,23 @@ public class DownloadThread extends Thread {
       }
       boolean SUCCEED = saveArt();
       try {
+        Messenger client;
         if (SUCCEED) {
           if (mListener != null) {
             mListener.onEnd(mNotificationId, dir.getName());
           }
-          DownloadService.getClients().get(mModel)
-              .send(Message.obtain(null, DownloadService.MSG_COMPLETE, DownloadService.DOWNLOAD_STATUS_SUCCESS, 0));
+          if ((client = DownloadService.getClients().get(mModel)) != null) {
+            client.send(Message.obtain(null, DownloadService.MSG_COMPLETE, DownloadService.DOWNLOAD_STATUS_SUCCESS, 0));
+          }
         } else {
           DownloadService downloadService = mWeakService.get();
           if (downloadService != null) {
             downloadService.stopForeground(true);
           }
           DownloadTool.clearCache(DownloadService.getPairCache(), DownloadService.getClients(), mNotificationId);
-          DownloadService.getClients().get(mModel)
-              .send(Message.obtain(null, DownloadService.MSG_COMPLETE, DownloadService.DOWNLOAD_STATUS_FAIL, 0));
+          if ((client = DownloadService.getClients().get(mModel)) != null) {
+            client.send(Message.obtain(null, DownloadService.MSG_COMPLETE, DownloadService.DOWNLOAD_STATUS_FAIL, 0));
+          }
         }
       } catch (RemoteException e) {
         e.printStackTrace();

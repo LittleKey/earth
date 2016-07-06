@@ -216,4 +216,42 @@ public class DownloadAgent {
 
     void onList(@Nullable  List<Model> list);
   }
+
+  public static class ListenerAdapter implements Listener {
+
+    @Override
+    public void onConnect() {
+
+    }
+
+    @Override
+    public void onDisconnect() {
+
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onComplete(boolean succeed) {
+
+    }
+
+    @Override
+    public void onProgress(float progress) {
+
+    }
+
+    @Override
+    public void onBadNetwork() {
+
+    }
+
+    @Override
+    public void onList(@Nullable List<Model> list) {
+
+    }
+  }
 }

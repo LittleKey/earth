@@ -24,10 +24,12 @@ import java.util.List;
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.activity.BaseActivity;
+import me.littlekey.earth.activity.DownloadActivity;
 import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.NavigationManager;
 import me.littlekey.earth.widget.IconFontTextView;
 import me.littlekey.earth.widget.SearchCompleteView;
 
@@ -70,7 +72,7 @@ public class ArtListFragment extends BaseFragment
     }
     mBtnClear = (IconFontTextView) view.findViewById(R.id.btn_clear);
     mBtnClear.setOnClickListener(this);
-//    view.findViewById(R.id.fab).setOnClickListener(this);
+    view.findViewById(R.id.fab).setOnClickListener(this);
     mSearchView = (SearchCompleteView) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
@@ -111,9 +113,9 @@ public class ArtListFragment extends BaseFragment
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
-//      case R.id.fab:
-//        mContentFragment.smoothScrollToPosition(0);
-//        break;
+      case R.id.fab:
+        NavigationManager.navigationTo(getActivity(), DownloadActivity.class);
+        break;
       case R.id.btn_clear:
         if (TextUtils.isEmpty(mSearchView.getText().toString())) {
           CategoryDialog.newInstance().show(getActivity());

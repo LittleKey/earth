@@ -25,14 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
-import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.adapter.OfflineListAdapter;
 import me.littlekey.earth.event.OnClickTagItemEvent;
 import me.littlekey.earth.event.OnLikedEvent;
 import me.littlekey.earth.event.OnLoadedPageEvent;
 import me.littlekey.earth.model.Model;
-import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Flag;
 import me.littlekey.earth.network.ApiType;
@@ -221,15 +219,8 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
             }
           }).build());
       actions.put(Const.ACTION_DOWNLOAD, new Action.Builder()
-          .type(Action.Type.RUNNABLE)
-          .runnable(new Runnable() {
-            @Override
-            public void run() {
-              EarthApplication.getInstance()
-                  .newDownload(ModelFactory.createDLCModelFromArt(mModel.art, Model.Template.ITEM_DLC))
-                  .connect();
-            }
-          }).build());
+          .type(Action.Type.DOWNLOAD)
+          .build());
       mModel = event.getModel().newBuilder()
           .flag(event.getModel().flag.newBuilder().is_selected(false).build())
           .actions(actions)

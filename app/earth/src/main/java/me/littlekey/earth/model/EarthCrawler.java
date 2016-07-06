@@ -19,6 +19,7 @@ import me.littlekey.earth.model.proto.Fav;
 import me.littlekey.earth.model.proto.Image;
 import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.model.proto.Tag;
+import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.EarthUtils;
 
 /**
@@ -149,6 +150,11 @@ public class EarthCrawler {
         .rating(rating)
         .tags(tags)
         .liked(liked)
+        .url(Uri.parse(Const.API_ROOT).buildUpon()
+            .appendEncodedPath("g")
+            .appendEncodedPath(gid)
+            .appendEncodedPath(token)
+            .build().toString())
         .build();
   }
 

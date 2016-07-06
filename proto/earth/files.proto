@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package model;
+option java_package = "me.littlekey.earth.model.proto";
+
+import "./ehentai/model.proto";
+
+message GetDownloadFileRequest {
+     int64 timestamp = 1;
+     int32 limit = 2;
+}
+
+message GetDownloadFileResponse {
+    int64 last_timestamp = 1;
+    repeated Art arts = 2;
+}

@@ -14,6 +14,7 @@
     <string name="download_failed" formatted="false">下载失败%s</string>
     <string name="art_file_name" formatted="false">%s-%s</string>
     <string name="download_title">下载</string>
+    <string name="re_download">重新下载</string>
 
     <!-- register -->
     <string name="register">注册</string>

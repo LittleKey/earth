@@ -724,7 +724,9 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
 
     PAGE_PICTURE(12),
 
-    ITEM_DLC(13);
+    ITEM_DLC(13),
+
+    ITEM_DLC_DOWNLOADING(14);
 
     public static final ProtoAdapter<Template> ADAPTER = ProtoAdapter.newEnumAdapter(Template.class);
 
@@ -753,6 +755,7 @@ public final class Model extends Message<Model, Model.Builder> implements Parcel
         case 11: return ITEM_COMMENT;
         case 12: return PAGE_PICTURE;
         case 13: return ITEM_DLC;
+        case 14: return ITEM_DLC_DOWNLOADING;
         default: return null;
       }
     }

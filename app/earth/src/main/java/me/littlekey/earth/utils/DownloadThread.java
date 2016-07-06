@@ -39,6 +39,7 @@ import me.littlekey.earth.R;
 import me.littlekey.earth.model.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Picture;
+import me.littlekey.earth.model.proto.SaveData;
 import me.littlekey.earth.service.DownloadService;
 
 /**
@@ -144,6 +145,23 @@ public class DownloadThread extends Thread {
     List<Future<Boolean>> futures = new ArrayList<>();
     for (int i = 0; i < mModel.addition.count.pages; ++i) {
       futures.add(callback(i));
+    }
+    File saveData = new File(dir, Const.SAVE_DATA);
+    FileOutputStream fileOutputStream = null;
+    try {
+      fileOutputStream = new FileOutputStream(saveData);
+      byte[] content = mModel.addition.art.encode();
+      SaveData.ADAPTER.encode(fileOutputStream, EncryptUtils.getInstance().toSaveData(content));
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (fileOutputStream != null) {
+          fileOutputStream.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     for (Future<Boolean> future: futures) {
       try {

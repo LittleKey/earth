@@ -95,4 +95,27 @@ public class EarthPresenterFactory {
         .add(R.id.content, new TextPresenter())
         .add(R.id.date, new TextPresenter());
   }
+
+  public static ViewGroupPresenter createDLCItemPresenter(ViewGroup parent, int layout,
+      MvpRecyclerView.Adapter adapter) {
+    return new ViewGroupPresenter(parent, layout, adapter)
+        .add(R.id.cover, new ImagePresenter())
+        .add(R.id.title, new TextPresenter())
+        .add(R.id.subtitle, new TextPresenter())
+        .add(R.id.rating, new BasePresenter())
+        .add(R.id.category, new CategoryPresenter())
+        .add(R.id.date, new TextPresenter())
+        .add(R.id.re_download, new ActionPresenter())
+        .add(new ActionPresenter());
+  }
+
+  public static ViewGroupPresenter createDownloadingDLCItemPresenter(ViewGroup parent, int layout,
+      MvpRecyclerView.Adapter adapter) {
+    return new ViewGroupPresenter(parent, layout, adapter)
+        .add(R.id.cover, new ImagePresenter())
+        .add(R.id.title, new TextPresenter())
+        .add(R.id.subtitle, new TextPresenter())
+        .add(R.id.progress, new ProgressPresenter())
+        .add(new ActionPresenter());
+  }
 }

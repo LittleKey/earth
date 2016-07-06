@@ -4,7 +4,9 @@ import com.yuanqi.mvp.PageList;
 import com.yuanqi.network.ApiRequest;
 import com.yuanqi.network.NameValuePair;
 
+import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.model.data.EarthDataGenerator;
+import me.littlekey.earth.model.data.FilesDataGenerator;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -25,5 +27,13 @@ public class EarthApiList<T> extends PageList<T, Model> {
 
   public void refresh(NameValuePair... pairs) {
     mDataGenerator.resetPairs(pairs);
+  }
+
+  @Override
+  public boolean hasMore() {
+    if (mDataGenerator instanceof FilesDataGenerator) {
+      return  getItems().size() < EarthApplication.getInstance().getFileManager().size();
+    }
+    return super.hasMore();
   }
 }

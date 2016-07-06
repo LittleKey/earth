@@ -16,6 +16,7 @@ message Count {
   uint32 height = 8;
   int32 x_offset = 9;
   int32 score = 10;
+  float progress = 11;
 }
 
 message Flag {
@@ -30,6 +31,7 @@ message Flag {
   bool is_matching = 9;
   bool is_liked = 10;
   bool is_thumbnail = 11;
+  bool is_completed = 12;
 }
 
 message Notice {

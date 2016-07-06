@@ -4,7 +4,9 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
+import com.squareup.wire.Message;
 import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.network.ImageManager;
 import com.yuanqi.network.NameValuePair;
@@ -16,7 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.model.proto.RPCRequest;
 import me.littlekey.earth.utils.Const;
+import okio.ByteString;
 
 /**
  * Created by littlekey on 16/6/10.
@@ -67,6 +71,21 @@ public class EarthRequestManager extends RequestManager {
       }
     };
     request.setShouldCache(true);
+    return request;
+  }
+
+  public <T extends Message> LocalRequest<T> newLocalRequest(String url, Class<T> clazz,
+      final ByteString body, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    LocalRequest<T> request = new LocalRequest<T>(EarthApplication.getInstance(),
+        Request.Method.POST, url,
+        clazz, listener, errorListener, mCacheConfig) {
+
+      @Override
+      public byte[] getBody() {
+        return new RPCRequest.Builder().content(body).build().encode();
+      }
+    };
+    request.setShouldCache(false);
     return request;
   }
 

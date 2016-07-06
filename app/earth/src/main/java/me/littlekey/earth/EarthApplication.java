@@ -25,6 +25,8 @@ import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.EarthRequestManager;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.DownloadAgent;
+import me.littlekey.earth.utils.DownloadTool;
+import me.littlekey.earth.utils.FileManager;
 import me.littlekey.earth.utils.PreferenceUtils;
 
 /**
@@ -39,6 +41,7 @@ public class EarthApplication extends BaseApplication implements ApiContext {
   private HashSet<Model.Category> mSelectedCategory;
   private Gson mGson;
   private LinkedHashTreeSet<String> mSearchHistories;
+  private FileManager mFileManager;
 
   public EarthApplication() {
     sBaseApplicationInstance = this;
@@ -58,6 +61,7 @@ public class EarthApplication extends BaseApplication implements ApiContext {
     initializeIconTypeface();
     initializeSelectedCategory();
     initializeSearchHistory();
+    initializeFileManager();
   }
 
   @Override
@@ -85,6 +89,11 @@ public class EarthApplication extends BaseApplication implements ApiContext {
     mGson = new Gson();
     mSearchHistories = new LinkedHashTreeSet<>();
     getSearchHistories();
+  }
+
+  private void initializeFileManager() {
+    mFileManager = new FileManager();
+    mFileManager.open(DownloadTool.getDownloadDir(this, new boolean[1]));
   }
 
   private void initializeIconTypeface() {
@@ -166,6 +175,10 @@ public class EarthApplication extends BaseApplication implements ApiContext {
   public DownloadAgent newDownload(Model model) {
     return new DownloadAgent(this, model,
         getRequestManager().convertCookies(getRequestManager().buildCookie()));
+  }
+
+  public FileManager getFileManager() {
+    return mFileManager;
   }
 }
 

@@ -38,7 +38,7 @@ public class DownloadTool {
   public static final int S_IWOTH = 00002;
   public static final int S_IXOTH = 00001;
 
-  public static final String DOWNLOAD_PATH = "download";
+  public static final String DOWNLOAD_PATH = "/download";
 
   public static boolean isInDownloadList(Model item, Map<Model, Messenger> clients, Messenger replyTo) {
     if (clients != null && clients.containsKey(item)) {
@@ -54,24 +54,24 @@ public class DownloadTool {
 
   public static File getDownloadDir(Context context, boolean[] isSdCard) {
     File file;
-    String mRoot;
+    String root;
     if (DeviceConfig.isSdCardWritable() && context.getExternalCacheDir() != null) {
-      mRoot = context.getExternalCacheDir().getAbsolutePath();
-      mRoot += DOWNLOAD_PATH;
-      file = new File(mRoot);
+      root = context.getExternalCacheDir().getAbsolutePath();
+      root += DOWNLOAD_PATH;
+      file = new File(root);
       file.mkdirs();
       if (file.exists()) {
         isSdCard[0] = true;
         return file;
       }
     }
-    mRoot = context.getCacheDir().getAbsolutePath();
-    new File(mRoot).mkdir();
-    setPermissions(mRoot, S_IRWXU | S_IRWXG | S_IXOTH, -1, -1);
-    mRoot += DOWNLOAD_PATH;
-    new File(mRoot).mkdir();
-    setPermissions(mRoot, S_IRWXU | S_IRWXG | S_IXOTH, -1, -1);
-    file = new File(mRoot);
+    root = context.getCacheDir().getAbsolutePath();
+    new File(root).mkdir();
+    setPermissions(root, S_IRWXU | S_IRWXG | S_IXOTH, -1, -1);
+    root += DOWNLOAD_PATH;
+    new File(root).mkdir();
+    setPermissions(root, S_IRWXU | S_IRWXG | S_IXOTH, -1, -1);
+    file = new File(root);
     isSdCard[0] = false;
     return file;
   }

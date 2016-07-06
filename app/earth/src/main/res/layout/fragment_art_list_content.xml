@@ -60,16 +60,16 @@
         </android.support.v7.widget.CardView>
     </android.support.design.widget.AppBarLayout>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--app:layout_anchor="@id/fragment_container"-->
-        <!--app:layout_anchorGravity="bottom|end|right"-->
-        <!--android:layout_margin="16dp"-->
-        <!--app:layout_behavior="@string/hide_fab_on_scroll_behavior"-->
-        <!--android:src="@drawable/arrow_up_gray"-->
-        <!--app:backgroundTint="@color/colorPrimary"-->
-        <!--app:backgroundTintMode="src_atop"-->
-        <!--app:fabSize="mini"/>-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:layout_anchor="@id/fragment_container"
+        app:layout_anchorGravity="bottom|end|right"
+        android:layout_margin="16dp"
+        app:layout_behavior="@string/hide_fab_on_scroll_behavior"
+        android:src="@drawable/arrow_up_gray"
+        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTintMode="src_atop"
+        app:fabSize="mini"/>
 </android.support.design.widget.CoordinatorLayout>

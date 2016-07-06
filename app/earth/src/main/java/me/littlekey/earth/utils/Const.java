@@ -86,11 +86,13 @@ public class Const {
   public static final String KEY_EMAIL_ADDRESS = "EmailAddress";
   public static final String KEY_EMAIL_ADDRESS_TWO = "EmailAddress_two";
   public static final String KEY_TIME_OFFSET = "time_offset";
+  public static final String KEY_TIME_STAMP = "timestamp";
   public static final String KEY_REG_ID = "regid";
   public static final String KEY_REG_CODE = "reg_code";
   public static final String KEY_DO = "do";
   public static final String KEY_NAME = "name";
   public static final String KEY__ = "_";
+  public static final String KEY_HAS_MORE = "has_more";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -112,6 +114,7 @@ public class Const {
   /*********************************** API ***********************************/
   private static final String API_EX_HOST_URL = "http://exhentai.org";
   private static final String API_FORUM_HOST_URL = "http://forums.e-hentai.org";
+  private static final String API_LOCAL_HOST_URL = "http://localhost:%s";
   // earth
   public static final String API_ROOT = API_EX_HOST_URL + "/";
   public static final String API_HOME_LIST = API_EX_HOST_URL + "/";
@@ -121,6 +124,8 @@ public class Const {
   public static final String API_CHECK = API_FORUM_HOST_URL + "/index.php";
   // like art
   public static final String API_LIKED = API_EX_HOST_URL + "/gallerypopups.php";
+  // local
+  public static final String API_LOCAL_FILES = API_LOCAL_HOST_URL + "/arts";
   /******************************** Network Related ********************************/
   public static final String NETWORK_HEADER_SSID = "SSID";
   /*********************************** UM Social ***********************************/
@@ -167,6 +172,7 @@ public class Const {
   public static final String CHECK_USER_NAME = "check-user-name";
   public static final String CHECK_DISPLAY_NAME = "check-display-name";
   public static final String CHECK_EMAIL_ADDRESS = "check-email-address";
+  public static final String SAVE_DATA = "SaveData";
   public static final int ART_LIST_TOP_PADDING = FormatUtils.dipsToPix(60);
   public static final int MIN_USERNAME_LENGTH = 3;
   public static final int MIN_DISPLAY_NAME_LENGTH = 3;

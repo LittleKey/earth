@@ -34,6 +34,7 @@ import me.littlekey.earth.dialog.ProgressDialog;
 import me.littlekey.earth.event.OnLikedEvent;
 import me.littlekey.earth.event.OnSelectEvent;
 import me.littlekey.earth.model.Model;
+import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.model.proto.Count;
 import me.littlekey.earth.model.proto.Flag;
@@ -41,6 +42,7 @@ import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.DownloadAgent;
 import me.littlekey.earth.utils.NavigationManager;
 import me.littlekey.earth.utils.ToastUtils;
 import timber.log.Timber;
@@ -138,9 +140,39 @@ public class ActionPresenter extends EarthPresenter {
           case SELECT_CATEGORY:
             selectCategory(model);
             break;
+          case DOWNLOAD:
+            download(model);
+            break;
         }
       }
     });
+  }
+
+  @SuppressWarnings("unchecked")
+  private void download(final Model model) {
+    DownloadAgent agent = EarthApplication.getInstance()
+        .newDownload(ModelFactory.createDLCModelFromArt(model.art, Model.Template.ITEM_DLC));
+    if (model.template == Model.Template.ITEM_DLC) {
+      final MvpRecyclerView.Adapter<Model> adapter = group().pageContext.adapter;
+      final int index = adapter.indexOf(model);
+      agent.addListener(new DownloadAgent.ListenerAdapter() {
+        @Override
+        public void onProgress(float progress) {
+          adapter.changeData(index, model.newBuilder()
+              .template(Model.Template.ITEM_DLC_DOWNLOADING)
+              .count(model.count.newBuilder().progress(progress).build())
+              .build());
+        }
+
+        @Override
+        public void onComplete(boolean succeed) {
+          adapter.changeData(index, model.newBuilder()
+              .template(Model.Template.ITEM_DLC)
+              .build());
+        }
+      });
+    }
+    agent.connect();
   }
 
   @SuppressWarnings("unchecked")
@@ -324,6 +356,7 @@ public class ActionPresenter extends EarthPresenter {
       case R.id.likes:
         return model.actions.get(Const.ACTION_LIKED);
       case R.id.cover:
+      case R.id.re_download:
         return model.actions.get(Const.ACTION_DOWNLOAD);
     }
     return null;

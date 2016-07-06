@@ -11,3 +11,10 @@ message Cursor {
 message NullMessage {
   bool success = 1;
 }
+
+message SaveData {
+    bytes content = 1;
+    int32 cycle = 2;
+    bytes key = 3;
+    bytes salt = 4;
+}

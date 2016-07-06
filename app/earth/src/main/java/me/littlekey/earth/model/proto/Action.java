@@ -141,7 +141,8 @@ public final class Action {
     LIKED(14),
     SELECT_FAV(15),
     SELECT_CATEGORY(16),
-    JUMP_IMAGE(17);
+    JUMP_IMAGE(17),
+    DOWNLOAD(18);
 
     private final int value;
 

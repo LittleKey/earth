@@ -43,6 +43,8 @@ public final class Count extends Message<Count, Count.Builder> {
 
   public static final Integer DEFAULT_SCORE = 0;
 
+  public static final Float DEFAULT_PROGRESS = 0.0f;
+
   @WireField(
       tag = 1,
       adapter = "com.squareup.wire.ProtoAdapter#FLOAT"
@@ -103,11 +105,17 @@ public final class Count extends Message<Count, Count.Builder> {
   )
   public final Integer score;
 
-  public Count(Float rating, Integer selected_num, Integer likes, Integer pages, Integer rating_count, Integer number, Integer width, Integer height, Integer x_offset, Integer score) {
-    this(rating, selected_num, likes, pages, rating_count, number, width, height, x_offset, score, ByteString.EMPTY);
+  @WireField(
+      tag = 11,
+      adapter = "com.squareup.wire.ProtoAdapter#FLOAT"
+  )
+  public final Float progress;
+
+  public Count(Float rating, Integer selected_num, Integer likes, Integer pages, Integer rating_count, Integer number, Integer width, Integer height, Integer x_offset, Integer score, Float progress) {
+    this(rating, selected_num, likes, pages, rating_count, number, width, height, x_offset, score, progress, ByteString.EMPTY);
   }
 
-  public Count(Float rating, Integer selected_num, Integer likes, Integer pages, Integer rating_count, Integer number, Integer width, Integer height, Integer x_offset, Integer score, ByteString unknownFields) {
+  public Count(Float rating, Integer selected_num, Integer likes, Integer pages, Integer rating_count, Integer number, Integer width, Integer height, Integer x_offset, Integer score, Float progress, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
     this.rating = rating;
     this.selected_num = selected_num;
@@ -119,6 +127,7 @@ public final class Count extends Message<Count, Count.Builder> {
     this.height = height;
     this.x_offset = x_offset;
     this.score = score;
+    this.progress = progress;
   }
 
   @Override
@@ -134,6 +143,7 @@ public final class Count extends Message<Count, Count.Builder> {
     builder.height = height;
     builder.x_offset = x_offset;
     builder.score = score;
+    builder.progress = progress;
     builder.addUnknownFields(unknownFields());
     return builder;
   }
@@ -153,7 +163,8 @@ public final class Count extends Message<Count, Count.Builder> {
         && Internal.equals(width, o.width)
         && Internal.equals(height, o.height)
         && Internal.equals(x_offset, o.x_offset)
-        && Internal.equals(score, o.score);
+        && Internal.equals(score, o.score)
+        && Internal.equals(progress, o.progress);
   }
 
   @Override
@@ -171,6 +182,7 @@ public final class Count extends Message<Count, Count.Builder> {
       result = result * 37 + (height != null ? height.hashCode() : 0);
       result = result * 37 + (x_offset != null ? x_offset.hashCode() : 0);
       result = result * 37 + (score != null ? score.hashCode() : 0);
+      result = result * 37 + (progress != null ? progress.hashCode() : 0);
       super.hashCode = result;
     }
     return result;
@@ -189,6 +201,7 @@ public final class Count extends Message<Count, Count.Builder> {
     if (height != null) builder.append(", height=").append(height);
     if (x_offset != null) builder.append(", x_offset=").append(x_offset);
     if (score != null) builder.append(", score=").append(score);
+    if (progress != null) builder.append(", progress=").append(progress);
     return builder.replace(0, 2, "Count{").append('}').toString();
   }
 
@@ -212,6 +225,8 @@ public final class Count extends Message<Count, Count.Builder> {
     public Integer x_offset;
 
     public Integer score;
+
+    public Float progress;
 
     public Builder() {
     }
@@ -266,9 +281,14 @@ public final class Count extends Message<Count, Count.Builder> {
       return this;
     }
 
+    public Builder progress(Float progress) {
+      this.progress = progress;
+      return this;
+    }
+
     @Override
     public Count build() {
-      return new Count(rating, selected_num, likes, pages, rating_count, number, width, height, x_offset, score, super.buildUnknownFields());
+      return new Count(rating, selected_num, likes, pages, rating_count, number, width, height, x_offset, score, progress, super.buildUnknownFields());
     }
   }
 
@@ -289,6 +309,7 @@ public final class Count extends Message<Count, Count.Builder> {
           + (value.height != null ? ProtoAdapter.UINT32.encodedSizeWithTag(8, value.height) : 0)
           + (value.x_offset != null ? ProtoAdapter.INT32.encodedSizeWithTag(9, value.x_offset) : 0)
           + (value.score != null ? ProtoAdapter.INT32.encodedSizeWithTag(10, value.score) : 0)
+          + (value.progress != null ? ProtoAdapter.FLOAT.encodedSizeWithTag(11, value.progress) : 0)
           + value.unknownFields().size();
     }
 
@@ -304,6 +325,7 @@ public final class Count extends Message<Count, Count.Builder> {
       if (value.height != null) ProtoAdapter.UINT32.encodeWithTag(writer, 8, value.height);
       if (value.x_offset != null) ProtoAdapter.INT32.encodeWithTag(writer, 9, value.x_offset);
       if (value.score != null) ProtoAdapter.INT32.encodeWithTag(writer, 10, value.score);
+      if (value.progress != null) ProtoAdapter.FLOAT.encodeWithTag(writer, 11, value.progress);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -323,6 +345,7 @@ public final class Count extends Message<Count, Count.Builder> {
           case 8: builder.height(ProtoAdapter.UINT32.decode(reader)); break;
           case 9: builder.x_offset(ProtoAdapter.INT32.decode(reader)); break;
           case 10: builder.score(ProtoAdapter.INT32.decode(reader)); break;
+          case 11: builder.progress(ProtoAdapter.FLOAT.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);

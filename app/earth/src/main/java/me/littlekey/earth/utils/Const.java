@@ -7,6 +7,7 @@ import com.yuanqi.base.utils.FormatUtils;
  */
 public class Const {
   public static final String LAST_ACTION = "last_action";
+  public static final String LAST_COOKIE = "last_cookie";
   public static final String LAST_SESSION_ID = "last_session_id";
   public static final String LAST_USER_ID = "last_user_id";
   public static final String LAST_PASS_HASH = "last_pass_hash";
@@ -65,6 +66,8 @@ public class Const {
   public static final String KEY_P = "p";
   public static final String KEY_T = "t";
   public static final String KEY_S = "s";
+  public static final String KEY_LV = "lv";
+  public static final String KEY_IGNEOUS = "igneous";
   public static final String KEY_ACT = "act";
   public static final String KEY_CODE = "CODE";
   public static final String KEY_ENABLE_SWIPE_REFRESH = "enable_swipe_refresh";

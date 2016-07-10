@@ -79,6 +79,13 @@ public class EarthApplication extends BaseApplication implements ApiContext {
 
   private void initializeVolley() {
     mRequestManager = new EarthRequestManager(this);
+    for (String key: new String[]{Const.KEY_S, Const.KEY_LV, Const.KEY_IGNEOUS}) {
+      String value;
+      if (!TextUtils.isEmpty(value = PreferenceUtils
+          .getString(Const.LAST_COOKIE, key, Const.EMPTY_STRING))) {
+        mRequestManager.addCookie(key, value);
+      }
+    }
   }
 
 //  private void initializeUpdate() {

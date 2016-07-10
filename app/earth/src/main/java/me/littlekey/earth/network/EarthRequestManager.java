@@ -20,6 +20,7 @@ import java.util.Map;
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.model.proto.RPCRequest;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.PreferenceUtils;
 import okio.ByteString;
 
 /**
@@ -49,6 +50,13 @@ public class EarthRequestManager extends RequestManager {
 
   public void addCookie(String key, String value) {
     if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+      switch (key) {
+        case Const.KEY_S:
+        case Const.KEY_LV:
+        case Const.KEY_IGNEOUS:
+          PreferenceUtils.setString(Const.LAST_COOKIE, key, value);
+          break;
+      }
       mAdditionHeaders.put(key, value);
     }
   }
@@ -67,6 +75,7 @@ public class EarthRequestManager extends RequestManager {
       public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> headers = new HashMap<>();
         headers.put(Const.KEY_COOKIE, convertCookies(buildCookie()));
+        headers.put(Const.USER_AGENT, Const.USER_AGENT_VALUE);
         return headers;
       }
     };
@@ -136,7 +145,6 @@ public class EarthRequestManager extends RequestManager {
         EarthApplication.getInstance().getAccountManager().getUserId());
     cookies.put(Const.IPB_PASS_HASH,
         EarthApplication.getInstance().getAccountManager().getPassHash());
-    cookies.put(Const.USER_AGENT, Const.USER_AGENT_VALUE);
     cookies.put(Const.UCONFIG, Const.UCONFIG_VALUE);
     return cookies;
   }

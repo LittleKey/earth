@@ -202,6 +202,10 @@ public class ArtListFragment extends BaseFragment
     mDrawerLayout.closeDrawers();
   }
 
+  public boolean checkDrawerLocked(int gravity) {
+    return mDrawerLayout.getDrawerLockMode(gravity) != DrawerLayout.LOCK_MODE_UNLOCKED;
+  }
+
   private static class NavigationAdapter extends BaseAdapter {
 
     private WeakReference<ArtListFragment> mWeakArtListFragment;

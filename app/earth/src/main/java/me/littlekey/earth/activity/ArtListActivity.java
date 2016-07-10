@@ -28,12 +28,18 @@ public class ArtListActivity extends SingleFragmentActivity {
             if (getFragment() instanceof ArtListFragment
                 && Math.abs(velocityY) < Math.abs(velocityX)) {
               if (velocityX > 0) {
+                if (((ArtListFragment) getFragment()).checkDrawerLocked(Gravity.LEFT)) {
+                  return false;
+                }
                 if (((ArtListFragment) getFragment()).isDrawerOpen(Gravity.RIGHT)) {
                   ((ArtListFragment) getFragment()).closeDrawer(Gravity.RIGHT);
                 } else {
                   ((ArtListFragment) getFragment()).openDrawer(Gravity.LEFT);
                 }
               } else {
+                if (((ArtListFragment) getFragment()).checkDrawerLocked(Gravity.RIGHT)) {
+                  return false;
+                }
                 if (((ArtListFragment) getFragment()).isDrawerOpen(Gravity.LEFT)) {
                   ((ArtListFragment) getFragment()).closeDrawer(Gravity.LEFT);
                 } else {

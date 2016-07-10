@@ -3,6 +3,7 @@ package me.littlekey.earth.fragment;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -260,7 +261,15 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
         .flag(mModel.flag.newBuilder().is_selected(show).build())
         .build();
     mPresenter.bind(mModel);
-    mViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
+    final AppBarLayout.LayoutParams lp = (AppBarLayout.LayoutParams) mViewPager.getLayoutParams();
+    if (show) {
+      mViewPager.setVisibility(View.VISIBLE);
+      lp.setScrollFlags(lp.getScrollFlags() | AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+    } else {
+      mViewPager.setVisibility(View.GONE);
+      lp.setScrollFlags(lp.getScrollFlags() & ~AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+    }
+    mViewPager.setLayoutParams(lp);
     mPagerAdapter.notifyDataSetChanged();
   }
 

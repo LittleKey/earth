@@ -85,7 +85,7 @@ public class SearchScrollBehavior extends AppBarLayout.ScrollingViewBehavior {
           (CoordinatorLayout.LayoutParams) child.getLayoutParams();
       final Rect available = mTempRect1;
       available.set(parent.getPaddingLeft() + lp.leftMargin,
-          lp.topMargin,
+          parent.getPaddingTop() + lp.topMargin,
           parent.getWidth() - parent.getPaddingRight() - lp.rightMargin,
           parent.getHeight() - parent.getPaddingBottom() - lp.bottomMargin);
 

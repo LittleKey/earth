@@ -1,5 +1,7 @@
 package me.littlekey.earth.fragment;
 
+import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,26 +10,34 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.network.NameValuePair;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
+import me.littlekey.earth.activity.ArtListActivity;
 import me.littlekey.earth.activity.BaseActivity;
+import me.littlekey.earth.activity.DownloadActivity;
 import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
+import me.littlekey.earth.utils.EarthUtils;
 import me.littlekey.earth.utils.NavigationManager;
 import me.littlekey.earth.widget.IconFontTextView;
 import me.littlekey.earth.widget.SearchCompleteView;
@@ -41,6 +51,7 @@ public class ArtListFragment extends BaseFragment
       TextView.OnEditorActionListener,
       TextWatcher {
 
+  private DrawerLayout mDrawerLayout;
   private ListFragment mContentFragment;
   private SearchCompleteView mSearchView;
   private IconFontTextView mBtnClear;
@@ -58,9 +69,15 @@ public class ArtListFragment extends BaseFragment
   }
 
   @Override
+  @SuppressWarnings("RtlHardcoded")
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    DrawerLayout drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-//    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
+    SimpleDraweeView cover = (SimpleDraweeView) view.findViewById(R.id.cover);
+    cover.setImageURI(Uri.parse(EarthUtils.buildImage(R.mipmap.kiseki)));
+    cover.getHierarchy().setActualImageFocusPoint(new PointF(0, 0));
+    ListView navigationListView = (ListView) view.findViewById(R.id.list_view);
+    navigationListView.setAdapter(new NavigationAdapter(this));
     FragmentManager fm = getChildFragmentManager();
     Fragment contentFragment = fm.findFragmentById(R.id.fragment_container);
     if (contentFragment == null) {
@@ -118,10 +135,6 @@ public class ArtListFragment extends BaseFragment
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.fab:
-//        NavigationManager.navigationTo(getActivity(), DownloadActivity.class);
-        NavigationManager.navigationTo(getActivity(),
-            NavigationManager.buildUri(NavigationManager.FAVOURITES,
-                new NameValuePair(Const.KEY_FAV_CAT, Const.ZERO)));
         break;
       case R.id.btn_clear:
         if (TextUtils.isEmpty(mSearchView.getText().toString())) {
@@ -171,5 +184,86 @@ public class ArtListFragment extends BaseFragment
         break;
     }
     return mContentFragment = ListFragment.newInstance(bundle);
+  }
+
+  public boolean isDrawerOpen(int gravity) {
+    return mDrawerLayout.isDrawerOpen(gravity);
+  }
+
+  public void openDrawer(int gravity) {
+    mDrawerLayout.openDrawer(gravity);
+  }
+
+  public void closeDrawer(int gravity) {
+    mDrawerLayout.closeDrawer(gravity);
+  }
+
+  public void closeDrawers() {
+    mDrawerLayout.closeDrawers();
+  }
+
+  private static class NavigationAdapter extends BaseAdapter {
+
+    private WeakReference<ArtListFragment> mWeakArtListFragment;
+
+    public NavigationAdapter(ArtListFragment fragment) {
+      super();
+      mWeakArtListFragment = new WeakReference<>(fragment);
+    }
+
+    @Override
+    public int getCount() {
+      return 3;
+    }
+
+    @Override
+    public CharSequence getItem(int position) {
+      switch (position) {
+        case 0:
+          return "主页";
+        case 1:
+          return "收藏";
+        case 2:
+          return "下载";
+      }
+      return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+      final ArtListFragment fragment = mWeakArtListFragment.get();
+      if (convertView == null && fragment != null) {
+        convertView = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.item_navigation, parent, false);
+        TextView title = (TextView) convertView.findViewById(R.id.title);
+        title.setText(getItem(position));
+        convertView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            fragment.closeDrawers();
+            switch (position) {
+              case 0:
+                NavigationManager.navigationTo(fragment.getActivity(), ArtListActivity.class);
+                break;
+              case 1:
+                NavigationManager.navigationTo(fragment.getActivity(),
+                    NavigationManager.buildUri(NavigationManager.FAVOURITES,
+                        new NameValuePair(Const.KEY_FAV_CAT, Const.ZERO)));
+                break;
+              case 2:
+                NavigationManager.navigationTo(fragment.getActivity(), DownloadActivity.class);
+                return;
+            }
+            fragment.getActivity().finish();
+          }
+        });
+      }
+      return convertView;
+    }
   }
 }

@@ -44,7 +44,7 @@
     <string name="art_detail_transition_name">art_detail</string>
 
     <!-- behavior -->
-    <string name="fixed_fling_behavior">me.littlekey.earth.widget.FixedFlingBehavior</string>
+    <string name="fixed_fling_behavior">android.support.design.widget.FixedFlingBehavior</string>
     <string name="hide_fab_on_scroll_behavior">me.littlekey.earth.widget.HideFabOnScrollBehavior</string>
     <string name="search_scroll_behavior">android.support.design.widget.SearchScrollBehavior</string>
     <string name="search_app_bar_behavior">android.support.design.widget.SearchAppBarBehavior</string>

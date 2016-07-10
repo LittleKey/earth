@@ -19,6 +19,7 @@ import me.littlekey.earth.fragment.BaseFragment;
 public abstract class SingleFragmentActivity extends BaseActivity {
 
   private TextView mTitleView;
+  private BaseFragment mFragment;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public abstract class SingleFragmentActivity extends BaseActivity {
     Fragment fragment = fm.findFragmentById(R.id.fragment_container);
     if (fragment == null) {
       fm.beginTransaction()
-          .add(R.id.fragment_container, createFragment())
+          .add(R.id.fragment_container, mFragment = createFragment())
           .commit();
     }
   }
@@ -72,4 +73,8 @@ public abstract class SingleFragmentActivity extends BaseActivity {
   }
 
   protected abstract BaseFragment createFragment();
+
+  protected BaseFragment getFragment() {
+    return mFragment;
+  }
 }

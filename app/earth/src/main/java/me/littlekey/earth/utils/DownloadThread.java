@@ -99,7 +99,7 @@ public class DownloadThread extends Thread {
     }
     mImageTokens = FixedSizeList.fixedSizeList(Arrays.asList(new String[pages]));
     mImageSrcUrls = FixedSizeList.fixedSizeList(Arrays.asList(new String[pages]));
-    mExecutor = Executors.newFixedThreadPool(Math.max(2, Math.min(pages / 10, 10)));
+    mExecutor = Executors.newFixedThreadPool(Math.max(2, Math.min(pages / 5, 10)));
     mProgress = new AtomicInteger(0);
   }
 

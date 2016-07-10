@@ -22,7 +22,8 @@ import java.util.Set;
 public class NavigationManager {
   public static final String SCHEME = "earth";
   public static final String HOST = "/exhentai.org";
-  public static final String TAG = "tag";
+  public static final String TAG = "/tag";
+  public static final String FAVOURITES = "/favorites.php";
 
   private NavigationManager() {}
 

@@ -22,6 +22,8 @@ public class Const {
   public static final String IPB_MEMBER_ID = "ipb_member_id";
   public static final String IPB_PASS_HASH = "ipb_pass_hash";
   public static final String UCONFIG = "uconfig";
+  public static final String USER_AGENT = "User-Agent";
+  public static final String USER_AGENT_VALUE = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36";
   public static final String UCONFIG_VALUE = "uh_y-xr_a-rx_0-ry_0-tl_r-ar_0-dm_l-prn_y-cats_6-fs_f-xns_0-xl_null-rc_0-lt_m-ts_l-tr_2-cs_a-sc_0-to_a-pn_1-hp_-hk_-tf_n-oi_n-qb_n-ms_n-mt_n";
   public static final int SEARCH_HISTORY_RECORD_COUNT = 20;
   public static final int IMAGE_ITEM_COUNT_PER_PAGE = 20;
@@ -124,6 +126,7 @@ public class Const {
   public static final String API_CHECK = API_FORUM_HOST_URL + "/index.php";
   // like art
   public static final String API_LIKED = API_EX_HOST_URL + "/gallerypopups.php";
+  public static final String API_FAV_LIST = API_EX_HOST_URL + "/favorites.php";
   // local
   public static final String API_LOCAL_FILES = API_LOCAL_HOST_URL + "/arts";
   /******************************** Network Related ********************************/
@@ -173,6 +176,7 @@ public class Const {
   public static final String CHECK_DISPLAY_NAME = "check-display-name";
   public static final String CHECK_EMAIL_ADDRESS = "check-email-address";
   public static final String SAVE_DATA = "SaveData";
+  public static final String FAV_LIST = "favorites.php";
   public static final int ART_LIST_TOP_PADDING = FormatUtils.dipsToPix(60);
   public static final int MIN_USERNAME_LENGTH = 3;
   public static final int MIN_DISPLAY_NAME_LENGTH = 3;

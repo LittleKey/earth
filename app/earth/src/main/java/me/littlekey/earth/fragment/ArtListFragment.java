@@ -24,7 +24,6 @@ import java.util.List;
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.activity.BaseActivity;
-import me.littlekey.earth.activity.DownloadActivity;
 import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.network.ApiType;
@@ -61,7 +60,7 @@ public class ArtListFragment extends BaseFragment
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     DrawerLayout drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     FragmentManager fm = getChildFragmentManager();
     Fragment contentFragment = fm.findFragmentById(R.id.fragment_container);
     if (contentFragment == null) {
@@ -77,8 +76,13 @@ public class ArtListFragment extends BaseFragment
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
     if (!CollectionUtils.isEmpty(paths)) {
-      mSearchView.setText(paths.get(paths.size() - 1));
-      mBtnClear.setText(R.string.img_cross);
+      if (TextUtils.equals(paths.get(0), Const.FAV_LIST)) {
+        mSearchView.setHint(R.string.fav_list);
+        mBtnClear.setText(R.string.img_search);
+      } else {
+        mSearchView.setText(paths.get(paths.size() - 1));
+        mBtnClear.setText(R.string.img_cross);
+      }
     } else {
       mBtnClear.setText(R.string.img_search);
     }
@@ -114,7 +118,10 @@ public class ArtListFragment extends BaseFragment
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.fab:
-        NavigationManager.navigationTo(getActivity(), DownloadActivity.class);
+//        NavigationManager.navigationTo(getActivity(), DownloadActivity.class);
+        NavigationManager.navigationTo(getActivity(),
+            NavigationManager.buildUri(NavigationManager.FAVOURITES,
+                new NameValuePair(Const.KEY_FAV_CAT, Const.ZERO)));
         break;
       case R.id.btn_clear:
         if (TextUtils.isEmpty(mSearchView.getText().toString())) {
@@ -154,10 +161,13 @@ public class ArtListFragment extends BaseFragment
     switch (CollectionUtils.isEmpty(paths) ? Const.API_ROOT : paths.get(0)) {
       case Const.TAG:
         bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());
-        bundle.putStringArrayList(Const.KEY_API_PATH, paths);
+//        bundle.putStringArrayList(Const.KEY_API_PATH, paths);
         break;
       case Const.API_ROOT:
         bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
+        break;
+      case Const.FAV_LIST:
+        bundle.putInt(Const.KEY_API_TYPE, ApiType.FAV_LIST.ordinal());
         break;
     }
     return mContentFragment = ListFragment.newInstance(bundle);

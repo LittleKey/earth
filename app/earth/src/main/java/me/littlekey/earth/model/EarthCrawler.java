@@ -31,7 +31,7 @@ public class EarthCrawler {
     Elements children = element.children();
     // NOTE : find category
     Element categoryEle = children.get(0);
-    Model.Category category = Model.Category.from(categoryEle.select("a > img").attr("alt"));
+    Model.Category category = Model.Category.from(categoryEle.select("img.ic").attr("alt"));
     // NOTE : find date
     Element dateEle = children.get(1);
     String date = dateEle.text();

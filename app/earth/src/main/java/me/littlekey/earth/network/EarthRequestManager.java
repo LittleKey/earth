@@ -111,6 +111,8 @@ public class EarthRequestManager extends RequestManager {
         return RequestManager.parseUrl(Const.API_REGISTER, registerPairs);
       case CHECK:
         return Const.API_CHECK;
+      case FAV_LIST:
+        return Const.API_FAV_LIST;
       default:
         throw new IllegalStateException("Unknown api type:" + apiType.name());
     }
@@ -134,6 +136,7 @@ public class EarthRequestManager extends RequestManager {
         EarthApplication.getInstance().getAccountManager().getUserId());
     cookies.put(Const.IPB_PASS_HASH,
         EarthApplication.getInstance().getAccountManager().getPassHash());
+    cookies.put(Const.USER_AGENT, Const.USER_AGENT_VALUE);
     cookies.put(Const.UCONFIG, Const.UCONFIG_VALUE);
     return cookies;
   }

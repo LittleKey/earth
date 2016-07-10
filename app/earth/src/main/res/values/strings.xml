@@ -8,6 +8,9 @@
     <string name="loading_hint">加载中</string>
     <string name="parse_error">parse %s error</string>
 
+    <!-- favourites -->
+    <string name="fav_list">收藏夹</string>
+
     <!-- download -->
     <string name="start_download_notification">正在下载Art</string>
     <string name="download_notification_prefix">正在下载:</string>

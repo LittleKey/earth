@@ -213,6 +213,7 @@ public class ListFragment extends BaseFragment {
       case HOME_LIST:
       case TAG_LIST:
       case SEARCH_LIST:
+      case FAV_LIST:
         /** TODO : code refactoring
          *  {@link android.support.design.widget.SearchAppBarBehavior}
          *  {@link android.support.design.widget.SearchScrollBehavior}

@@ -6,7 +6,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,15 +75,15 @@ public class TagFragment extends BaseFragment {
           NavigationManager.buildUri(Uri.parse(url).getEncodedPath()));
     }
   }
-
-  private String buildUrl(Model model) {
-    return new Uri.Builder()
-        .scheme("http")
-        .appendEncodedPath("/exhentai.org")
-        .appendEncodedPath(NavigationManager.TAG)
-        .appendPath(String.format("%s:%s",
-            mModel.title, TextUtils.join("+", model.title.split(Const.STRING_SPACE))))
-        .build()
-        .toString();
-  }
+//
+//  private String buildUrl(Model model) {
+//    return new Uri.Builder()
+//        .scheme("http")
+//        .appendEncodedPath("/exhentai.org")
+//        .appendEncodedPath(NavigationManager.TAG)
+//        .appendPath(String.format("%s:%s",
+//            mModel.title, TextUtils.join("+", model.title.split(Const.STRING_SPACE))))
+//        .build()
+//        .toString();
+//  }
 }

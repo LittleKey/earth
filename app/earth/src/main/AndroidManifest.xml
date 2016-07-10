@@ -38,6 +38,7 @@
                 <data android:scheme="earth" />
                 <data android:host="exhentai.org" android:pathPrefix="/tag" />
                 <data android:host="exhentai.org" android:path="/" />
+                <data android:host="exhentai.org" android:path="/favorites.php" />
             </intent-filter>
         </activity>
 

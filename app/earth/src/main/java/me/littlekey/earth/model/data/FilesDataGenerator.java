@@ -59,6 +59,7 @@ public class FilesDataGenerator extends EarthDataGenerator<GetDownloadFileRespon
 
   @Override
   public boolean getHasMoreFromResponse(GetDownloadFileResponse response) {
+    // NOTE : delegate {@link EarthApiList} determine has more
     return true;
   }
 

@@ -3,7 +3,6 @@ package me.littlekey.earth.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +42,7 @@ public class DownloadFragment extends BaseFragment {
       };
 
   private ListAdapter mAdapter;
+  private LinearLayoutManager mLayoutManager;
   private DownloadAgent mDownloadListCheckAgent;
   private EarthApiList<GetDownloadFileResponse> mApiList;
   private EarthServer mServer;
@@ -66,8 +66,8 @@ public class DownloadFragment extends BaseFragment {
   public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
     MvpRecyclerView recyclerView = (MvpRecyclerView) view.findViewById(R.id.recycler);
     mAdapter = new ListAdapter();
-    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-    recyclerView.setLayoutManager(layoutManager);
+    mLayoutManager = new LinearLayoutManager(getActivity());
+    recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setAdapter(mAdapter);
     recyclerView.setItemAnimator(null);
     mApiList = new EarthApiList<>(new FilesDataGenerator(mServer.getListeningPort()));
@@ -109,7 +109,6 @@ public class DownloadFragment extends BaseFragment {
               agent.addListener(new DownloadAgent.ListenerAdapter() {
                 @Override
                 public void onProgress(float progress) {
-                  Timber.d("onProgress: " + progress);
                   mAdapter.changeData(index, item.newBuilder()
                       .template(Model.Template.ITEM_DLC_DOWNLOADING)
                       .count(item.count.newBuilder().progress(progress).build())
@@ -118,7 +117,6 @@ public class DownloadFragment extends BaseFragment {
 
                 @Override
                 public void onComplete(boolean succeed) {
-                  Timber.d("onComplete: " + succeed);
                   mAdapter.changeData(index, item.newBuilder()
                       .template(Model.Template.ITEM_DLC)
                       .build());
@@ -136,7 +134,7 @@ public class DownloadFragment extends BaseFragment {
   @Override
   public void onResume() {
     super.onResume();
-    mDownloadListCheckAgent.checkDownloadList();
+    mAdapter.tryPreLoad(mLayoutManager.findLastVisibleItemPosition(), mAdapter.getItemCount());
   }
 
   @Override

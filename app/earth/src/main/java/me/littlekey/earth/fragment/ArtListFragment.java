@@ -88,7 +88,7 @@ public class ArtListFragment extends BaseFragment
     }
     mBtnClear = (IconFontTextView) view.findViewById(R.id.btn_clear);
     mBtnClear.setOnClickListener(this);
-    view.findViewById(R.id.fab).setOnClickListener(this);
+//    view.findViewById(R.id.fab).setOnClickListener(this);
     mSearchView = (SearchCompleteView) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
@@ -174,7 +174,6 @@ public class ArtListFragment extends BaseFragment
     switch (CollectionUtils.isEmpty(paths) ? Const.API_ROOT : paths.get(0)) {
       case Const.TAG:
         bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());
-//        bundle.putStringArrayList(Const.KEY_API_PATH, paths);
         break;
       case Const.API_ROOT:
         bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
@@ -256,8 +255,7 @@ public class ArtListFragment extends BaseFragment
                 break;
               case 1:
                 NavigationManager.navigationTo(fragment.getActivity(),
-                    NavigationManager.buildUri(NavigationManager.FAVOURITES,
-                        new NameValuePair(Const.KEY_FAV_CAT, Const.ZERO)));
+                    NavigationManager.buildUri(NavigationManager.FAVOURITES));
                 break;
               case 2:
                 NavigationManager.navigationTo(fragment.getActivity(), DownloadActivity.class);

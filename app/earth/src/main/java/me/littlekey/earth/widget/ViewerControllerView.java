@@ -25,7 +25,6 @@ import me.littlekey.earth.R;
  */
 public class ViewerControllerView extends FrameLayout
     implements
-      View.OnTouchListener,
       GestureDetector.OnGestureListener,
       SeekBar.OnSeekBarChangeListener,
       ViewPager.OnPageChangeListener,
@@ -67,7 +66,6 @@ public class ViewerControllerView extends FrameLayout
     mControlFrame = (FrameLayout) findViewById(R.id.viewer_controller_frame);
     mTitleBar = (ViewerTitleBar) findViewById(R.id.viewer_title_bar);
     mControlBar = (ViewerControlBar) findViewById(R.id.viewer_control_bar);
-    mControlFrame.setOnTouchListener(this);
     mControlBar.setSeekBarChangeListener(this);
   }
 
@@ -93,11 +91,8 @@ public class ViewerControllerView extends FrameLayout
   }
 
   @Override
-  public boolean onTouch(View v, MotionEvent event) {
-    if (!mGestureDetector.onTouchEvent(event) && mViewer != null) {
-      mViewer.onTouchEvent(event);
-    }
-    return true;
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    return mGestureDetector.onTouchEvent(ev) || super.dispatchTouchEvent(ev);
   }
 
   @Override

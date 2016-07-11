@@ -5,9 +5,10 @@ import android.support.annotation.Nullable;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 
-import me.littlekey.earth.fragment.BaseFragment;
 import me.littlekey.earth.fragment.ArtListFragment;
+import me.littlekey.earth.fragment.BaseFragment;
 import me.littlekey.earth.utils.NavigationManager;
 
 /**
@@ -26,7 +27,8 @@ public class ArtListActivity extends SingleFragmentActivity {
           @SuppressWarnings("RtlHardcoded")
           public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (getFragment() instanceof ArtListFragment
-                && Math.abs(velocityY) < Math.abs(velocityX)) {
+                && Math.abs(velocityY) < Math.abs(velocityX)
+                && Math.abs(velocityX) > ViewConfiguration.get(ArtListActivity.this).getScaledMinimumFlingVelocity()) {
               if (velocityX > 0) {
                 if (((ArtListFragment) getFragment()).checkDrawerLocked(Gravity.LEFT)) {
                   return false;

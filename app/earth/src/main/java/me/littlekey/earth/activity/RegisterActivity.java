@@ -1,5 +1,7 @@
 package me.littlekey.earth.activity;
 
+import android.content.Intent;
+
 import me.littlekey.earth.R;
 import me.littlekey.earth.fragment.BaseFragment;
 import me.littlekey.earth.fragment.RegisterFragment;
@@ -10,7 +12,7 @@ import me.littlekey.earth.fragment.RegisterFragment;
 public class RegisterActivity extends SingleFragmentActivity {
 
   @Override
-  protected BaseFragment createFragment() {
+  protected BaseFragment createFragment(Intent intent) {
     return RegisterFragment.newInstance();
   }
 

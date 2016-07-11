@@ -26,7 +26,9 @@ import com.yuanqi.network.NameValuePair;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
@@ -35,6 +37,7 @@ import me.littlekey.earth.activity.BaseActivity;
 import me.littlekey.earth.activity.DownloadActivity;
 import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
+import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.EarthUtils;
@@ -220,16 +223,69 @@ public class ArtListFragment extends BaseFragment
     }
 
     @Override
-    public CharSequence getItem(int position) {
+    public Model getItem(int position) {
+      Model.Builder builder = new Model.Builder();
+      Map<Integer, Action> actions = new HashMap<>();
       switch (position) {
         case 0:
-          return "主页";
+          builder.title("主页");
+          builder.cover(EarthUtils.formatString(R.string.img_home));
+          actions.put(Const.ACTION_MAIN, new Action.Builder()
+              .type(Action.Type.JUMP)
+              .clazz(ArtListActivity.class)
+              .build());
+          break;
         case 1:
-          return "收藏";
+          builder.title("收藏");
+          builder.cover(EarthUtils.formatString(R.string.img_heart));
+          actions.put(Const.ACTION_MAIN, new Action.Builder()
+              .type(Action.Type.JUMP)
+              .uri(NavigationManager.buildUri(NavigationManager.FAVOURITES))
+              .build());
+          break;
         case 2:
-          return "下载";
+          builder.title("下载");
+          builder.cover(EarthUtils.formatString(R.string.img_down_arrow));
+          actions.put(Const.ACTION_MAIN, new Action.Builder()
+              .type(Action.Type.JUMP)
+              .clazz(DownloadActivity.class)
+              .build());
+          break;
       }
-      return null;
+      builder.actions(actions);
+      return builder.build();
+    }
+
+    private void bindView(View v, int position) {
+      TextView title = (TextView) v.findViewById(R.id.title);
+      IconFontTextView icon = (IconFontTextView) v.findViewById(R.id.icon);
+      final Model model = getItem(position);
+      title.setText(model.title);
+      icon.setText(model.cover);
+      v.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          ArtListFragment fragment = mWeakArtListFragment.get();
+          if (fragment == null) {
+            return;
+          }
+          Action action = model.actions.get(Const.ACTION_MAIN);
+          fragment.closeDrawers();
+          if (action != null) {
+            switch (action.type) {
+              case JUMP:
+                if (null != action.clazz) {
+                  NavigationManager.navigationTo(v.getContext(), action.clazz, action.bundle);
+                } else if (null != action.uri) {
+                  NavigationManager.navigationTo(v.getContext(), action.uri, action.bundle);
+                } else if (null != action.url) {
+                  NavigationManager.navigationTo(v.getContext(), action.url, action.bundle);
+                }
+                break;
+            }
+          }
+        }
+      });
     }
 
     @Override
@@ -243,27 +299,7 @@ public class ArtListFragment extends BaseFragment
       if (convertView == null && fragment != null) {
         convertView = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.item_navigation, parent, false);
-        TextView title = (TextView) convertView.findViewById(R.id.title);
-        title.setText(getItem(position));
-        convertView.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            fragment.closeDrawers();
-            switch (position) {
-              case 0:
-                NavigationManager.navigationTo(fragment.getActivity(), ArtListActivity.class);
-                break;
-              case 1:
-                NavigationManager.navigationTo(fragment.getActivity(),
-                    NavigationManager.buildUri(NavigationManager.FAVOURITES));
-                break;
-              case 2:
-                NavigationManager.navigationTo(fragment.getActivity(), DownloadActivity.class);
-                return;
-            }
-            fragment.getActivity().finish();
-          }
-        });
+        bindView(convertView, position);
       }
       return convertView;
     }

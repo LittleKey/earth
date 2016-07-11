@@ -85,6 +85,8 @@
     <string name="date_show">E MM-dd</string>
 
     <!-- IconFont -->
+    <string name="img_home">&#xe598;</string>
+    <string name="img_down_arrow">&#xe597;</string>
     <string name="img_court">&#xe617;</string>
     <string name="img_people">&#xe615;</string>
     <string name="img_comment">&#xe616;</string>

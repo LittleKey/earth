@@ -1,5 +1,6 @@
 package me.littlekey.earth.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -20,8 +21,8 @@ public class ArtDetailActivity extends SingleFragmentActivity {
   }
 
   @Override
-  protected BaseFragment createFragment() {
-    return mFragment = ArtDetailFragment.newInstance(NavigationManager.parseIntent(getIntent()));
+  protected BaseFragment createFragment(Intent intent) {
+    return mFragment = ArtDetailFragment.newInstance(NavigationManager.parseIntent(intent));
   }
 
   @Override

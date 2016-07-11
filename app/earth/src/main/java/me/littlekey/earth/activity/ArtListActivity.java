@@ -1,5 +1,6 @@
 package me.littlekey.earth.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.GestureDetector;
@@ -56,8 +57,8 @@ public class ArtListActivity extends SingleFragmentActivity {
   }
 
   @Override
-  protected BaseFragment createFragment() {
-    return ArtListFragment.newInstance(NavigationManager.parseIntent(getIntent()));
+  protected BaseFragment createFragment(Intent intent) {
+    return ArtListFragment.newInstance(NavigationManager.parseIntent(intent));
   }
 
   @Override

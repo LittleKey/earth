@@ -30,7 +30,8 @@
                   android:screenOrientation="portrait" />
 
         <activity android:name=".activity.ArtListActivity"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

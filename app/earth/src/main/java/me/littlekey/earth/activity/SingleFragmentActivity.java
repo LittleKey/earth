@@ -1,5 +1,6 @@
 package me.littlekey.earth.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -51,9 +52,18 @@ public abstract class SingleFragmentActivity extends BaseActivity {
     Fragment fragment = fm.findFragmentById(R.id.fragment_container);
     if (fragment == null) {
       fm.beginTransaction()
-          .add(R.id.fragment_container, mFragment = createFragment())
+          .add(R.id.fragment_container, mFragment = createFragment(getIntent()))
           .commit();
     }
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    FragmentManager fm = getSupportFragmentManager();
+    fm.beginTransaction()
+        .replace(R.id.fragment_container, mFragment = createFragment(intent))
+        .commit();
   }
 
   protected boolean hasToolbar() {
@@ -72,7 +82,7 @@ public abstract class SingleFragmentActivity extends BaseActivity {
     return hasToolbar() ? R.layout.activity_single_fragment : R.layout.activity_without_toolbar;
   }
 
-  protected abstract BaseFragment createFragment();
+  protected abstract BaseFragment createFragment(Intent intent);
 
   protected BaseFragment getFragment() {
     return mFragment;

@@ -5,5 +5,5 @@ package me.littlekey.earth.network;
  */
 public enum ApiType {
   HOME_LIST, LOGIN, ART_DETAIL, TAG_LIST, LIKED, SEARCH_LIST, VIEWER, REGISTER, CHECK, FILES,
-  FAV_LIST
+  FAV_LIST, SEARCH_FAV_LIST
 }

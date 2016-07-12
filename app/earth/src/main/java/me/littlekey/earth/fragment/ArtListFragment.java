@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,6 +62,21 @@ public class ArtListFragment extends BaseFragment
 
   public static ArtListFragment newInstance(Bundle bundle) {
     ArtListFragment fragment = new ArtListFragment();
+    ArrayList<String> paths = bundle.getStringArrayList(Const.KEY_API_PATH);
+    switch (CollectionUtils.isEmpty(paths) ? Const.API_ROOT : paths.get(0)) {
+      case Const.TAG:
+        bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());
+        break;
+      case Const.API_ROOT:
+        bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
+        break;
+      case Const.FAV_LIST:
+        bundle.putInt(Const.KEY_API_TYPE, ApiType.FAV_LIST.ordinal());
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new NameValuePair(Const.KEY_FAV_CAT, Const.ALL));
+        bundle.putSerializable(Const.KEY_API_QUERY, pairs);
+        break;
+    }
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -80,7 +96,9 @@ public class ArtListFragment extends BaseFragment
     cover.setImageURI(Uri.parse(EarthUtils.buildImage(R.mipmap.kiseki)));
     cover.getHierarchy().setActualImageFocusPoint(new PointF(0, 0));
     ListView navigationListView = (ListView) view.findViewById(R.id.list_view);
-    navigationListView.setAdapter(new NavigationAdapter(this));
+    NavigationAdapter navigationAdapter = new NavigationAdapter(this);
+    navigationListView.setAdapter(navigationAdapter);
+    navigationListView.setOnItemClickListener(navigationAdapter);
     FragmentManager fm = getChildFragmentManager();
     Fragment contentFragment = fm.findFragmentById(R.id.fragment_container);
     if (contentFragment == null) {
@@ -95,16 +113,20 @@ public class ArtListFragment extends BaseFragment
     mSearchView = (SearchCompleteView) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
-    if (!CollectionUtils.isEmpty(paths)) {
-      if (TextUtils.equals(paths.get(0), Const.FAV_LIST)) {
+    switch (ApiType.values()[getArguments().getInt(Const.KEY_API_TYPE)]) {
+      case TAG_LIST:
+        if (!CollectionUtils.isEmpty(paths)) {
+          mSearchView.setText(paths.get(paths.size() - 1));
+          mBtnClear.setText(R.string.img_cross);
+        }
+        break;
+      case HOME_LIST:
+        mBtnClear.setText(R.string.img_search);
+        break;
+      case FAV_LIST:
         mSearchView.setHint(R.string.fav_list);
         mBtnClear.setText(R.string.img_search);
-      } else {
-        mSearchView.setText(paths.get(paths.size() - 1));
-        mBtnClear.setText(R.string.img_cross);
-      }
-    } else {
-      mBtnClear.setText(R.string.img_search);
+        break;
     }
     mSearchView.addTextChangedListener(this);
   }
@@ -160,55 +182,44 @@ public class ArtListFragment extends BaseFragment
   private void search() {
     List<NameValuePair> pairs = new ArrayList<>();
     String searchContent = mSearchView.getText().toString();
-    pairs.add(new NameValuePair(Const.KEY_F_SEARCH, searchContent));
-    for (Model.Category category: EarthApplication.getInstance().getSelectedCategory()) {
-      pairs.add(new NameValuePair(category.getSearchName(), Const.ONE));
+    ApiType searchApi;
+    switch (ApiType.values()[getArguments().getInt(Const.KEY_API_TYPE)]) {
+      case FAV_LIST:
+        pairs.add(new NameValuePair(Const.KEY_FAV_CAT, Const.ALL));
+        pairs.add(new NameValuePair(Const.KEY_F_APPLY, Const.SEARCH_AND_FAVORITES));
+        searchApi = ApiType.SEARCH_FAV_LIST;
+        break;
+      case HOME_LIST:
+        for (Model.Category category: EarthApplication.getInstance().getSelectedCategory()) {
+          pairs.add(new NameValuePair(category.getSearchName(), Const.ONE));
+        }
+      case TAG_LIST:
+      default:
+        pairs.add(new NameValuePair(Const.KEY_F_APPLY, Const.APPLY_AND_FILTER));
+        searchApi = ApiType.SEARCH_LIST;
+        break;
     }
-    pairs.add(new NameValuePair(Const.KEY_F_APPLY, Const.APPLY_AND_FILTER));
-    mContentFragment.resetApi(ApiType.SEARCH_LIST, null, pairs.toArray(new NameValuePair[pairs.size()]));
+    pairs.add(new NameValuePair(Const.KEY_F_SEARCH, searchContent));
+    mContentFragment.resetApi(searchApi, null, pairs.toArray(new NameValuePair[pairs.size()]));
     EarthApplication.getInstance().addSearchHistory(searchContent);
     ((BaseActivity) getActivity()).closeKeyboard();
     mSearchView.dismissDropDown();
   }
 
   protected Fragment createContentFragment() {
-    Bundle bundle = getArguments();
-    ArrayList<String> paths = bundle.getStringArrayList(Const.KEY_API_PATH);
-    switch (CollectionUtils.isEmpty(paths) ? Const.API_ROOT : paths.get(0)) {
-      case Const.TAG:
-        bundle.putInt(Const.KEY_API_TYPE, ApiType.TAG_LIST.ordinal());
-        break;
-      case Const.API_ROOT:
-        bundle.putInt(Const.KEY_API_TYPE, ApiType.HOME_LIST.ordinal());
-        break;
-      case Const.FAV_LIST:
-        bundle.putInt(Const.KEY_API_TYPE, ApiType.FAV_LIST.ordinal());
-        break;
-    }
-    return mContentFragment = ListFragment.newInstance(bundle);
+    return mContentFragment = ListFragment.newInstance(getArguments());
   }
 
   public boolean isDrawerOpen(int gravity) {
     return mDrawerLayout.isDrawerOpen(gravity);
   }
 
-  public void openDrawer(int gravity) {
-    mDrawerLayout.openDrawer(gravity);
-  }
-
-  public void closeDrawer(int gravity) {
-    mDrawerLayout.closeDrawer(gravity);
-  }
-
   public void closeDrawers() {
     mDrawerLayout.closeDrawers();
   }
 
-  public boolean checkDrawerLocked(int gravity) {
-    return mDrawerLayout.getDrawerLockMode(gravity) != DrawerLayout.LOCK_MODE_UNLOCKED;
-  }
-
-  private static class NavigationAdapter extends BaseAdapter {
+  private static class NavigationAdapter extends BaseAdapter
+      implements AdapterView.OnItemClickListener {
 
     private WeakReference<ArtListFragment> mWeakArtListFragment;
 
@@ -256,36 +267,35 @@ public class ArtListFragment extends BaseFragment
       return builder.build();
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      ArtListFragment fragment = mWeakArtListFragment.get();
+      if (fragment == null) {
+        return;
+      }
+      Action action = getItem(position).actions.get(Const.ACTION_MAIN);
+      fragment.closeDrawers();
+      if (action != null) {
+        switch (action.type) {
+          case JUMP:
+            if (null != action.clazz) {
+              NavigationManager.navigationTo(view.getContext(), action.clazz, action.bundle);
+            } else if (null != action.uri) {
+              NavigationManager.navigationTo(view.getContext(), action.uri, action.bundle);
+            } else if (null != action.url) {
+              NavigationManager.navigationTo(view.getContext(), action.url, action.bundle);
+            }
+            break;
+        }
+      }
+    }
+
     private void bindView(View v, int position) {
       TextView title = (TextView) v.findViewById(R.id.title);
       IconFontTextView icon = (IconFontTextView) v.findViewById(R.id.icon);
-      final Model model = getItem(position);
+      Model model = getItem(position);
       title.setText(model.title);
       icon.setText(model.cover);
-      v.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          ArtListFragment fragment = mWeakArtListFragment.get();
-          if (fragment == null) {
-            return;
-          }
-          Action action = model.actions.get(Const.ACTION_MAIN);
-          fragment.closeDrawers();
-          if (action != null) {
-            switch (action.type) {
-              case JUMP:
-                if (null != action.clazz) {
-                  NavigationManager.navigationTo(v.getContext(), action.clazz, action.bundle);
-                } else if (null != action.uri) {
-                  NavigationManager.navigationTo(v.getContext(), action.uri, action.bundle);
-                } else if (null != action.url) {
-                  NavigationManager.navigationTo(v.getContext(), action.url, action.bundle);
-                }
-                break;
-            }
-          }
-        }
-      });
     }
 
     @Override
@@ -294,13 +304,12 @@ public class ArtListFragment extends BaseFragment
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-      final ArtListFragment fragment = mWeakArtListFragment.get();
-      if (convertView == null && fragment != null) {
+    public View getView(int position, View convertView, ViewGroup parent) {
+      if (convertView == null) {
         convertView = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.item_navigation, parent, false);
-        bindView(convertView, position);
       }
+      bindView(convertView, position);
       return convertView;
     }
   }

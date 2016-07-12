@@ -24,8 +24,7 @@ import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.data.FilesDataGenerator;
 import me.littlekey.earth.model.proto.GetDownloadFileResponse;
 import me.littlekey.earth.utils.DownloadAgent;
-import me.littlekey.earth.utils.EarthServer;
-import timber.log.Timber;
+import me.littlekey.earth.network.EarthServer;
 
 /**
  * Created by littlekey on 16/7/5.

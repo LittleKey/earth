@@ -18,7 +18,7 @@ import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
-import me.littlekey.earth.model.EarthCrawler;
+import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Art;
@@ -47,6 +47,7 @@ public class ArtListsDataGenerator extends EarthDataGenerator<EarthResponse> {
     switch (apiType) {
       case HOME_LIST:
       case SEARCH_LIST:
+      case SEARCH_FAV_LIST:
       case FAV_LIST:
         request.setQuery(pairs);
         break;

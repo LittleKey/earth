@@ -1,4 +1,4 @@
-package me.littlekey.earth.model;
+package me.littlekey.earth.network;
 
 import android.net.Uri;
 import android.text.TextUtils;
@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.Comment;
 import me.littlekey.earth.model.proto.Count;

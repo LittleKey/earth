@@ -1,4 +1,4 @@
-package me.littlekey.earth.utils;
+package me.littlekey.earth.network;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -60,7 +60,7 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
-import me.littlekey.earth.utils.NanoHTTPD.Response.*;
+import me.littlekey.earth.network.NanoHTTPD.Response.*;
 import okio.ByteString;
 
 /**

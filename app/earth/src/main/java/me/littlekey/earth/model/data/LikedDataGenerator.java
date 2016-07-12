@@ -18,7 +18,7 @@ import java.util.Map;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
-import me.littlekey.earth.model.EarthCrawler;
+import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Action;

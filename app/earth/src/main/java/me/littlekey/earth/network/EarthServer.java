@@ -1,4 +1,4 @@
-package me.littlekey.earth.utils;
+package me.littlekey.earth.network;
 
 import android.net.Uri;
 

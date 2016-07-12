@@ -106,6 +106,8 @@ public class EarthRequestManager extends RequestManager {
       case SEARCH_LIST:
       case VIEWER:
         return Const.API_ROOT;
+      case SEARCH_FAV_LIST:
+        return Const.API_FAV_LIST;
       case LIKED:
         return Const.API_LIKED;
       case LOGIN:

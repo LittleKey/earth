@@ -36,7 +36,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.littlekey.earth.R;
-import me.littlekey.earth.model.EarthCrawler;
+import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.model.proto.SaveData;

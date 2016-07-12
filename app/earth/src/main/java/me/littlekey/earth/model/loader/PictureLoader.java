@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import me.littlekey.earth.EarthApplication;
-import me.littlekey.earth.model.EarthCrawler;
+import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.network.EarthRequest;

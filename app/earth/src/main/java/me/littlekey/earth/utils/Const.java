@@ -172,6 +172,8 @@ public class Const {
   public static final String APPLY_CHANGES = "apply_changes";
   public static final String ADD_TO_FAVOURITES = "add_to_favourites";
   public static final String APPLY_AND_FILTER = "Apply+Filter";
+  public static final String SEARCH_AND_FAVORITES = "Search+Favorites";
+  public static final String ALL = "all";
   public static final String XML_OUT = "xmlout";
   public static final String ROOT = "/";
   public static final String TAG = "tag";

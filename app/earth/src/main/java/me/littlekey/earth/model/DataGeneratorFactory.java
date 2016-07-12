@@ -22,6 +22,7 @@ public class DataGeneratorFactory {
       case TAG_LIST:
       case HOME_LIST:
       case SEARCH_LIST:
+      case SEARCH_FAV_LIST:
       case FAV_LIST:
         return new ArtListsDataGenerator(apiType, paths, pairs);
       case ART_DETAIL:

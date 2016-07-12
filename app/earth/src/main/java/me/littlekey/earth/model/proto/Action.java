@@ -142,7 +142,9 @@ public final class Action {
     SELECT_FAV(15),
     SELECT_CATEGORY(16),
     JUMP_IMAGE(17),
-    DOWNLOAD(18);
+    DOWNLOAD(18),
+    SELECT_ADV_OPT(19),
+    POPUP_RATING(20);
 
     private final int value;
 

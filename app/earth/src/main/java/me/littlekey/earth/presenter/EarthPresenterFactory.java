@@ -118,4 +118,19 @@ public class EarthPresenterFactory {
         .add(R.id.progress, new ProgressPresenter())
         .add(new ActionPresenter());
   }
+
+  public static ViewGroupPresenter createAdvSearchItemPresenter(ViewGroup parent, int layout,
+      MvpRecyclerView.Adapter adapter) {
+    return new ViewGroupPresenter(parent, layout, adapter)
+        .add(R.id.description, new TextPresenter())
+        .add(R.id.checkbox, new FlagPresenter())
+        .add(new ActionPresenter());
+  }
+
+  public static ViewGroupPresenter createPopupRatingPresenter(ViewGroup parent, int layout,
+      MvpRecyclerView.Adapter adapter) {
+    return new ViewGroupPresenter(parent, layout, adapter)
+        .add(R.id.rating, new TextPresenter())
+        .add(new ActionPresenter());
+  }
 }

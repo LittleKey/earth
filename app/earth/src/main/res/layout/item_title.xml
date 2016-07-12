@@ -6,6 +6,5 @@
 
     <TextView
         android:id="@id/title"
-        style="@style/TextStyle.Normal.Black"
-        android:layout_gravity="center_horizontal"/>
+        style="@style/TextStyle.Normal.Black"/>
 </FrameLayout>

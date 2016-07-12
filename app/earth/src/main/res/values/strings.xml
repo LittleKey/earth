@@ -28,10 +28,13 @@
 
     <!-- rating -->
     <string name="rating_count" formatted="false">%.2f (%d人)</string>
+    <string name="rating_num" formatted="false">%.0f星</string>
 
     <!-- category -->
     <string name="select_category">分类选择</string>
     <string name="category_search_key">f_%s</string>
+    <string name="advanced_option">高级选项</string>
+    <string name="advanced_option_search_key" formatted="false">f_s%s</string>
 
     <!-- favourite -->
     <string name="unlike_error">取消收藏失败</string>

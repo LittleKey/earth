@@ -4,6 +4,7 @@ package me.littlekey.earth.presenter;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,9 +38,18 @@ public class FlagPresenter extends EarthPresenter {
       case R.id.black_background:
         judgeBlackBackgroundSelected(model);
         break;
+      case R.id.checkbox:
+        judgeCheckBox(model);
+        break;
       default:
         judgeSelected(model);
         break;
+    }
+  }
+
+  private void judgeCheckBox(Model model) {
+    if (view() instanceof CheckBox) {
+      ((CheckBox) view()).setChecked(Wire.get(model.flag.is_selected, false));
     }
   }
 

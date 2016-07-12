@@ -22,11 +22,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
 import com.yuanqi.network.NameValuePair;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,6 @@ import me.littlekey.earth.R;
 import me.littlekey.earth.activity.ArtListActivity;
 import me.littlekey.earth.activity.BaseActivity;
 import me.littlekey.earth.activity.DownloadActivity;
-import me.littlekey.earth.dialog.CategoryDialog;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.network.ApiType;
@@ -109,7 +110,7 @@ public class ArtListFragment extends BaseFragment
     }
     mBtnClear = (IconFontTextView) view.findViewById(R.id.btn_clear);
     mBtnClear.setOnClickListener(this);
-//    view.findViewById(R.id.fab).setOnClickListener(this);
+    view.findViewById(R.id.fab).setOnClickListener(this);
     mSearchView = (SearchCompleteView) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
@@ -160,10 +161,21 @@ public class ArtListFragment extends BaseFragment
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.fab:
+        FragmentManager fm = getChildFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        if (fragment == null || !(fragment instanceof AdvancedSearchFragment)) {
+          fragment = AdvancedSearchFragment.newInstance();
+          fm.beginTransaction()
+              .add(R.id.fragment_container, fragment)
+              .addToBackStack("")
+              .commit();
+        } else {
+          search();
+        }
         break;
       case R.id.btn_clear:
-        if (TextUtils.isEmpty(mSearchView.getText().toString())) {
-          CategoryDialog.newInstance().show(getActivity());
+        if (mSearchView.getText().length() > 0) {
+          search();
         } else {
           mSearchView.setText(Const.EMPTY_STRING);
         }
@@ -175,6 +187,7 @@ public class ArtListFragment extends BaseFragment
   public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
       search();
+      return true;
     }
     return false;
   }
@@ -190,6 +203,7 @@ public class ArtListFragment extends BaseFragment
         searchApi = ApiType.SEARCH_FAV_LIST;
         break;
       case HOME_LIST:
+        // TODO : delete
         for (Model.Category category: EarthApplication.getInstance().getSelectedCategory()) {
           pairs.add(new NameValuePair(category.getSearchName(), Const.ONE));
         }
@@ -198,6 +212,47 @@ public class ArtListFragment extends BaseFragment
         pairs.add(new NameValuePair(Const.KEY_F_APPLY, Const.APPLY_AND_FILTER));
         searchApi = ApiType.SEARCH_LIST;
         break;
+    }
+    Fragment fragment = getChildFragmentManager().findFragmentById(R.id.fragment_container);
+    if (fragment != null && fragment instanceof AdvancedSearchFragment) {
+      List<Model> searchOpts = ((AdvancedSearchFragment) fragment).getSearchQuery();
+      getChildFragmentManager().popBackStackImmediate();
+      pairs.add(new NameValuePair(Const.KEY_ADV_SEARCH, Const.ONE));
+      Collection<Model> ratings = CollectionUtils.filter(searchOpts,
+          new CollectionUtils.FilterCallback<Model>() {
+            @Override
+            public boolean onFilter(Model item) {
+              return item.template == Model.Template.RATING_SELECT;
+            }
+          });
+      if (!CollectionUtils.isEmpty(ratings) && ratings instanceof List) {
+        pairs.add(new NameValuePair(
+            EarthUtils.formatString(R.string.advanced_option_search_key, Const.RDD),
+            String.valueOf(((List<Model>) ratings).get(0).count.rating)));
+      }
+      Collection<Model> categories = CollectionUtils.filter(searchOpts,
+          new CollectionUtils.FilterCallback<Model>() {
+            @Override
+            public boolean onFilter(Model item) {
+              return item.template == Model.Template.CATEGORY
+                  && Wire.get(item.flag.is_selected, false);
+            }
+          });
+      Collection<Model> advances = CollectionUtils.filter(searchOpts,
+          new CollectionUtils.FilterCallback<Model>() {
+            @Override
+            public boolean onFilter(Model item) {
+              return item.template == Model.Template.ADVANCED_SEARCH
+                  && Wire.get(item.flag.is_selected, false);
+            }
+          });
+      for (Model model: categories) {
+        CollectionUtils.add(pairs, new NameValuePair(model.category.getSearchName(), Const.ONE));
+      }
+      for (Model model: advances) {
+        CollectionUtils.add(pairs, new NameValuePair(
+            EarthUtils.formatString(R.string.advanced_option_search_key, model.title), Const.ON));
+      }
     }
     pairs.add(new NameValuePair(Const.KEY_F_SEARCH, searchContent));
     mContentFragment.resetApi(searchApi, null, pairs.toArray(new NameValuePair[pairs.size()]));

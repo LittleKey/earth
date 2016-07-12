@@ -46,6 +46,8 @@ public class TextPresenter extends EarthPresenter {
       /** Common **/
       case R.id.content:
         return Html.fromHtml(model.description);
+      case R.id.description:
+        return model.description;
       case R.id.title:
         return model.title;
       case R.id.nickname:
@@ -75,6 +77,8 @@ public class TextPresenter extends EarthPresenter {
       case R.id.rating_count:
         return EarthUtils.formatString(R.string.rating_count,
             model.count.rating, model.count.rating_count);
+      case R.id.rating:
+        return EarthUtils.formatString(R.string.rating_num, model.count.rating);
     }
     return null;
   }

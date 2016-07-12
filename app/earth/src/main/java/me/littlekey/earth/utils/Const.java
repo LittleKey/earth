@@ -98,6 +98,7 @@ public class Const {
   public static final String KEY_NAME = "name";
   public static final String KEY__ = "_";
   public static final String KEY_HAS_MORE = "has_more";
+  public static final String KEY_ADV_SEARCH = "advsearch";
   /*********************************** EXTRA **********************************/
   public static final String EXTRA_TASK_ID = KEY_EXTRA + "task_id";
   public static final String EXTRA_IDENTITY = KEY_EXTRA + "identity";
@@ -152,6 +153,17 @@ public class Const {
   public static final String APP_SECRET_WX = "7fbeb429ea9920a0300f7a34e791bbed";
   public static final String TARGET_URL = "https://yuanqi.tv";
   /************************************ ConstValues ***********************************/
+  public static final String R = "r";
+  public static final String RDD = "rdd";
+  public static final String NAME = "name";
+  public static final String TAGS = "tags";
+  public static final String DEST = "dest";
+  public static final String TORR = "torr";
+  public static final String TO = "to";
+  public static final String DT_ONE = "dt1";
+  public static final String DT_TWO = "dt2";
+  public static final String H = "h";
+  public static final String ON = "on";
   public static final String ZERO = "0";
   public static final String ONE = "1";
   public static final String EIGHT = "8";

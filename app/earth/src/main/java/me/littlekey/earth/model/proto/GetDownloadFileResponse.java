@@ -10,7 +10,6 @@ import com.squareup.wire.ProtoWriter;
 import com.squareup.wire.WireField;
 import com.squareup.wire.internal.Internal;
 import java.io.IOException;
-import java.lang.Boolean;
 import java.lang.Long;
 import java.lang.Object;
 import java.lang.Override;
@@ -26,8 +25,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
 
   public static final Long DEFAULT_LAST_TIMESTAMP = 0L;
 
-  public static final Boolean DEFAULT_HAS_MORE = false;
-
   @WireField(
       tag = 1,
       adapter = "com.squareup.wire.ProtoAdapter#INT64"
@@ -41,21 +38,14 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
   )
   public final List<Art> arts;
 
-  @WireField(
-      tag = 3,
-      adapter = "com.squareup.wire.ProtoAdapter#BOOL"
-  )
-  public final Boolean has_more;
-
-  public GetDownloadFileResponse(Long last_timestamp, List<Art> arts, Boolean has_more) {
-    this(last_timestamp, arts, has_more, ByteString.EMPTY);
+  public GetDownloadFileResponse(Long last_timestamp, List<Art> arts) {
+    this(last_timestamp, arts, ByteString.EMPTY);
   }
 
-  public GetDownloadFileResponse(Long last_timestamp, List<Art> arts, Boolean has_more, ByteString unknownFields) {
+  public GetDownloadFileResponse(Long last_timestamp, List<Art> arts, ByteString unknownFields) {
     super(ADAPTER, unknownFields);
     this.last_timestamp = last_timestamp;
     this.arts = Internal.immutableCopyOf("arts", arts);
-    this.has_more = has_more;
   }
 
   @Override
@@ -63,7 +53,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
     Builder builder = new Builder();
     builder.last_timestamp = last_timestamp;
     builder.arts = Internal.copyOf("arts", arts);
-    builder.has_more = has_more;
     builder.addUnknownFields(unknownFields());
     return builder;
   }
@@ -75,8 +64,7 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
     GetDownloadFileResponse o = (GetDownloadFileResponse) other;
     return unknownFields().equals(o.unknownFields())
         && Internal.equals(last_timestamp, o.last_timestamp)
-        && arts.equals(o.arts)
-        && Internal.equals(has_more, o.has_more);
+        && arts.equals(o.arts);
   }
 
   @Override
@@ -86,7 +74,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
       result = unknownFields().hashCode();
       result = result * 37 + (last_timestamp != null ? last_timestamp.hashCode() : 0);
       result = result * 37 + arts.hashCode();
-      result = result * 37 + (has_more != null ? has_more.hashCode() : 0);
       super.hashCode = result;
     }
     return result;
@@ -97,7 +84,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
     StringBuilder builder = new StringBuilder();
     if (last_timestamp != null) builder.append(", last_timestamp=").append(last_timestamp);
     if (!arts.isEmpty()) builder.append(", arts=").append(arts);
-    if (has_more != null) builder.append(", has_more=").append(has_more);
     return builder.replace(0, 2, "GetDownloadFileResponse{").append('}').toString();
   }
 
@@ -105,8 +91,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
     public Long last_timestamp;
 
     public List<Art> arts;
-
-    public Boolean has_more;
 
     public Builder() {
       arts = Internal.newMutableList();
@@ -123,14 +107,9 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
       return this;
     }
 
-    public Builder has_more(Boolean has_more) {
-      this.has_more = has_more;
-      return this;
-    }
-
     @Override
     public GetDownloadFileResponse build() {
-      return new GetDownloadFileResponse(last_timestamp, arts, has_more, super.buildUnknownFields());
+      return new GetDownloadFileResponse(last_timestamp, arts, super.buildUnknownFields());
     }
   }
 
@@ -143,7 +122,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
     public int encodedSize(GetDownloadFileResponse value) {
       return (value.last_timestamp != null ? ProtoAdapter.INT64.encodedSizeWithTag(1, value.last_timestamp) : 0)
           + Art.ADAPTER.asRepeated().encodedSizeWithTag(2, value.arts)
-          + (value.has_more != null ? ProtoAdapter.BOOL.encodedSizeWithTag(3, value.has_more) : 0)
           + value.unknownFields().size();
     }
 
@@ -151,7 +129,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
     public void encode(ProtoWriter writer, GetDownloadFileResponse value) throws IOException {
       if (value.last_timestamp != null) ProtoAdapter.INT64.encodeWithTag(writer, 1, value.last_timestamp);
       Art.ADAPTER.asRepeated().encodeWithTag(writer, 2, value.arts);
-      if (value.has_more != null) ProtoAdapter.BOOL.encodeWithTag(writer, 3, value.has_more);
       writer.writeBytes(value.unknownFields());
     }
 
@@ -163,7 +140,6 @@ public final class GetDownloadFileResponse extends Message<GetDownloadFileRespon
         switch (tag) {
           case 1: builder.last_timestamp(ProtoAdapter.INT64.decode(reader)); break;
           case 2: builder.arts.add(Art.ADAPTER.decode(reader)); break;
-          case 3: builder.has_more(ProtoAdapter.BOOL.decode(reader)); break;
           default: {
             FieldEncoding fieldEncoding = reader.peekFieldEncoding();
             Object value = fieldEncoding.rawProtoAdapter().decode(reader);

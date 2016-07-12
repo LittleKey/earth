@@ -54,9 +54,13 @@ from data
 
 - **update** `1`
 
-#### search
+#### search or search favorites
 
 **GET** '/'
+
+or
+
+**GET** '/favorites.php'
 
 query params
 
@@ -82,7 +86,33 @@ query params
 
 - **f_search** `{search content}`
 
-- **f_apply** `Apply+Filter`
+- **f_apply** `[Apply+Filter|Apply+Search+Favorites]`
+
+---
+
+*advanced search*
+
+- **advsearch** `[0|1]`
+
+- **f_sname** `on` search gallery name
+
+- **f_stags** `on`  search gallery tags
+
+- **f_sr** `on` turn on minimun rating
+
+- **f_srdd** `[2|3|4|5]` minimun rating
+
+- **f_sdesc** `on` search gallery description
+
+- **f_storr** `on` search torrent filenames
+
+- **f_sto** `on` only shouw galleries with torrents
+
+- **f_sdt1** `on` search Low-Power tags
+
+- **f_sdt2** `on` search downvoted tags
+
+- **f_sh** `on` show expunged galleries
 
 #### register
 

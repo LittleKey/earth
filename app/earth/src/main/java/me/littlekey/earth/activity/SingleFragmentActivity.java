@@ -66,6 +66,13 @@ public abstract class SingleFragmentActivity extends BaseActivity {
         .commit();
   }
 
+  @Override
+  public void onBackPressed() {
+    if (!getFragment().getChildFragmentManager().popBackStackImmediate()) {
+      super.onBackPressed();
+    }
+  }
+
   protected boolean hasToolbar() {
     return true;
   }

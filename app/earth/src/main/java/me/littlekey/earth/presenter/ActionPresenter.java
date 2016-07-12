@@ -33,6 +33,7 @@ import me.littlekey.earth.dialog.LikedDialog;
 import me.littlekey.earth.dialog.ProgressDialog;
 import me.littlekey.earth.event.OnLikedEvent;
 import me.littlekey.earth.event.OnSelectEvent;
+import me.littlekey.earth.fragment.AdvancedSearchFragment;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Action;
@@ -45,6 +46,7 @@ import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.DownloadAgent;
 import me.littlekey.earth.utils.NavigationManager;
 import me.littlekey.earth.utils.ToastUtils;
+import me.littlekey.earth.widget.PopupMenuList;
 import timber.log.Timber;
 
 
@@ -119,9 +121,9 @@ public class ActionPresenter extends EarthPresenter {
               } catch (NoSuchMethodException e) {
                 Timber.e(e, "NoSuchMethodException in ActionPresenter");
               } catch (InstantiationException e) {
-                Timber.e(e, "InstantiationException ActionPresenter");
+                Timber.e(e, "InstantiationException in ActionPresenter");
               } catch (InvocationTargetException e) {
-                Timber.e(e, "InvocationTargetException ActionPresenter");
+                Timber.e(e, "InvocationTargetException in ActionPresenter");
               }
             }
             break;
@@ -143,9 +145,45 @@ public class ActionPresenter extends EarthPresenter {
           case DOWNLOAD:
             download(model);
             break;
+          case SELECT_ADV_OPT:
+            selectAdvOpt(model);
+            break;
+          case POPUP_RATING:
+            popupRating(model);
+            break;
         }
       }
     });
+  }
+
+  @SuppressWarnings("unchecked")
+  private void popupRating(Model model) {
+    final MvpRecyclerView.Adapter<Model> adapter = group().pageContext.adapter;
+    final int position = adapter.indexOf(model);
+    PopupMenuList popupMenuList = new PopupMenuList(view().getContext());
+    popupMenuList.setItems(AdvancedSearchFragment.sRatingsReadOnlyList);
+    popupMenuList.setOnDismissListener(new PopupMenuList.OnDismissListener() {
+      @Override
+      public void onDismiss(int chosenPosition) {
+        if (chosenPosition > -1) {
+          Model item = adapter.getItem(position);
+          adapter.changeData(position, item.newBuilder()
+              .count(item.count.newBuilder().rating((float) (chosenPosition + 2)).build())
+              .build());
+        }
+      }
+    });
+    popupMenuList.showAsDropDown(view());
+  }
+
+  @SuppressWarnings("unchecked")
+  private void selectAdvOpt(Model model) {
+    MvpRecyclerView.Adapter<Model> adapter = group().pageContext.adapter;
+    int position = adapter.indexOf(model);
+    // NOTE : not check null value
+    adapter.changeData(position, model.newBuilder()
+        .flag(model.flag.newBuilder().is_selected(!model.flag.is_selected).build())
+        .build());
   }
 
   @SuppressWarnings("unchecked")

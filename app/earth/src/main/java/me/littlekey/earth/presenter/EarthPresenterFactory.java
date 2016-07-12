@@ -133,4 +133,10 @@ public class EarthPresenterFactory {
         .add(R.id.rating, new TextPresenter())
         .add(new ActionPresenter());
   }
+
+  public static ViewGroupPresenter createQuickSearchItemPresenter(ViewGroup parent, int layout) {
+    return new ViewGroupPresenter(parent, layout)
+        .add(R.id.title, new TextPresenter())
+        .add(new ActionPresenter());
+  }
 }

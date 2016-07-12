@@ -82,7 +82,7 @@ public class ViewerFragment extends BaseFragment
       viewPager.setCurrentItem(position);
     }
     // TODO : add dynamic adjust pre-load page number
-    viewPager.setOffscreenPageLimit(5);
+    viewPager.setOffscreenPageLimit(3);
     mController.show();
   }
 

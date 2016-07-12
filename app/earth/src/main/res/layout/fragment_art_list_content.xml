@@ -67,7 +67,7 @@
         app:layout_anchor="@id/fragment_container"
         app:layout_anchorGravity="bottom|end|right"
         android:layout_margin="16dp"
-        android:src="@drawable/arrow_up_gray"
+        android:src="@drawable/search"
         app:backgroundTint="@color/colorPrimary"
         app:backgroundTintMode="src_atop"
         app:fabSize="mini"/>

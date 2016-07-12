@@ -63,6 +63,7 @@ message Model {
         ITEM_DLC_DOWNLOADING = 14;
         ADVANCED_SEARCH = 15;
         RATING_SELECT = 16;
+        QUICK_SEARCH = 17;
     }
 
     enum Category {

@@ -20,6 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_marginRight="15dp"
         android:layout_gravity="right|center_vertical"
-        android:text="@string/img_down_arrow"
+        android:text="@string/img_triangle"
         android:textSize="@dimen/textSizeMiddle"/>
 </FrameLayout>

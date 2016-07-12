@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="250dp"
+              android:layout_height="wrap_content"
+              android:padding="5dp">
+
+    <TextView
+        style="@style/TextStyle.Normal.Black"
+        android:text="@string/input_quick_search_name"/>
+    
+    <EditText
+        android:id="@+id/edit_name"
+        style="@style/EditTextStyle"
+        android:maxLength="20"
+        android:inputType="text"
+        android:imeOptions="actionDone"/>
+
+</LinearLayout>

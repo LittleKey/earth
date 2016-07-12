@@ -1,12 +1,17 @@
 package me.littlekey.earth.fragment;
 
+import android.database.Cursor;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,6 +29,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.wire.Wire;
 import com.yuanqi.base.utils.CollectionUtils;
+import com.yuanqi.mvp.widget.MvpRecyclerView;
 import com.yuanqi.network.NameValuePair;
 
 import java.lang.ref.WeakReference;
@@ -33,17 +39,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.activity.ArtListActivity;
 import me.littlekey.earth.activity.BaseActivity;
 import me.littlekey.earth.activity.DownloadActivity;
+import me.littlekey.earth.adapter.OfflineListAdapter;
+import me.littlekey.earth.data.DataContract;
+import me.littlekey.earth.dialog.QuickSearchDialog;
+import me.littlekey.earth.event.OnQuickSearchEvent;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Action;
 import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.EarthUtils;
 import me.littlekey.earth.utils.NavigationManager;
+import me.littlekey.earth.utils.ToastUtils;
 import me.littlekey.earth.widget.IconFontTextView;
 import me.littlekey.earth.widget.SearchCompleteView;
 
@@ -54,12 +66,16 @@ public class ArtListFragment extends BaseFragment
     implements
       View.OnClickListener,
       TextView.OnEditorActionListener,
-      TextWatcher {
+      TextWatcher,
+      LoaderManager.LoaderCallbacks<Cursor> {
 
   private DrawerLayout mDrawerLayout;
   private ListFragment mContentFragment;
   private SearchCompleteView mSearchView;
   private IconFontTextView mBtnClear;
+  private OfflineListAdapter mQuickSearchAdapter;
+
+  private String mCurrentSearchUrl;
 
   public static ArtListFragment newInstance(Bundle bundle) {
     ArtListFragment fragment = new ArtListFragment();
@@ -92,7 +108,8 @@ public class ArtListFragment extends BaseFragment
   @SuppressWarnings("RtlHardcoded")
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
+//    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
+    // NOTE : left drawer
     SimpleDraweeView cover = (SimpleDraweeView) view.findViewById(R.id.cover);
     cover.setImageURI(Uri.parse(EarthUtils.buildImage(R.mipmap.kiseki)));
     cover.getHierarchy().setActualImageFocusPoint(new PointF(0, 0));
@@ -100,6 +117,14 @@ public class ArtListFragment extends BaseFragment
     NavigationAdapter navigationAdapter = new NavigationAdapter(this);
     navigationListView.setAdapter(navigationAdapter);
     navigationListView.setOnItemClickListener(navigationAdapter);
+    // NOTE : right drawer
+    MvpRecyclerView quickSearchRecyclerView = (MvpRecyclerView) view.findViewById(R.id.quick_search_recycler);
+    quickSearchRecyclerView.setItemAnimator(null);
+    quickSearchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    mQuickSearchAdapter = new OfflineListAdapter();
+    quickSearchRecyclerView.setAdapter(mQuickSearchAdapter);
+    view.findViewById(R.id.add_search).setOnClickListener(this);
+    // NOTE : content
     FragmentManager fm = getChildFragmentManager();
     Fragment contentFragment = fm.findFragmentById(R.id.fragment_container);
     if (contentFragment == null) {
@@ -130,12 +155,74 @@ public class ArtListFragment extends BaseFragment
         break;
     }
     mSearchView.addTextChangedListener(this);
+    getLoaderManager().initLoader(0, null, this);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    EventBus.getDefault().register(this);
+  }
+
+  @Override
+  public void onPause() {
+    EventBus.getDefault().unregister(this);
+    super.onPause();
   }
 
   @Override
   public void onDestroyView() {
     EarthApplication.getInstance().getRequestManager().cancel(this);
     super.onDestroyView();
+  }
+
+  @Override
+  public void onLoaderReset(Loader<Cursor> loader) {
+
+  }
+
+  @Override
+  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    if (data != null && data.moveToFirst()) {
+      List<Model> models = new ArrayList<>();
+      while (data.getPosition() != -1 && data.getPosition() < data.getCount()) {
+        String name = data.getString(data.getColumnIndex(DataContract.QuickSearch.COLUMN_NAME));
+        String url = data.getString(data.getColumnIndex(DataContract.QuickSearch.COLUMN_URL));
+        Map<Integer, Action> actions = new HashMap<>();
+        actions.put(Const.ACTION_MAIN, new Action.Builder()
+            .type(Action.Type.EVENT)
+            .clazz(OnQuickSearchEvent.class)
+            .build());
+        CollectionUtils.add(models, new Model.Builder()
+            .template(Model.Template.QUICK_SEARCH)
+            .title(name)
+            .url(url)
+            .actions(actions)
+            .build());
+        data.moveToNext();
+      }
+      mQuickSearchAdapter.setData(models);
+    }
+  }
+
+  @Override
+  public CursorLoader onCreateLoader(int id, Bundle args) {
+    CursorLoader loader = new CursorLoader(getContext());
+    loader.setUri(DataContract.QuickSearch.CONTENT_URI);
+    loader.setSortOrder(DataContract.QuickSearch.COLUMN_NUMBER);
+    return loader;
+  }
+
+  public void onEventMainThread(OnQuickSearchEvent event) {
+    if (event.getModel() != null) {
+      Uri uri = Uri.parse(event.getModel().url);
+      List<NameValuePair> pairs = new ArrayList<>();
+      for (String key: uri.getQueryParameterNames()) {
+        pairs.add(new NameValuePair(key, uri.getQueryParameter(key)));
+      }
+      NavigationManager.navigationTo(getActivity(),
+          NavigationManager.buildUri(uri.getPath(), pairs.toArray(new NameValuePair[pairs.size()])));
+    }
   }
 
   @Override
@@ -158,6 +245,7 @@ public class ArtListFragment extends BaseFragment
   }
 
   @Override
+  @SuppressWarnings("RtlHardcoded")
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.fab:
@@ -174,11 +262,19 @@ public class ArtListFragment extends BaseFragment
         }
         break;
       case R.id.btn_clear:
-        if (mSearchView.getText().length() > 0) {
+        if (mSearchView.getText().length() == 0) {
           search();
         } else {
           mSearchView.setText(Const.EMPTY_STRING);
         }
+        break;
+      case R.id.add_search:
+        if (!TextUtils.isEmpty(mCurrentSearchUrl)) {
+          new QuickSearchDialog(getActivity(), mCurrentSearchUrl).show();
+        } else {
+          ToastUtils.toast(R.string.please_search_first);
+        }
+        mDrawerLayout.closeDrawer(Gravity.RIGHT);
         break;
     }
   }
@@ -203,10 +299,6 @@ public class ArtListFragment extends BaseFragment
         searchApi = ApiType.SEARCH_FAV_LIST;
         break;
       case HOME_LIST:
-        // TODO : delete
-        for (Model.Category category: EarthApplication.getInstance().getSelectedCategory()) {
-          pairs.add(new NameValuePair(category.getSearchName(), Const.ONE));
-        }
       case TAG_LIST:
       default:
         pairs.add(new NameValuePair(Const.KEY_F_APPLY, Const.APPLY_AND_FILTER));
@@ -256,6 +348,7 @@ public class ArtListFragment extends BaseFragment
     }
     pairs.add(new NameValuePair(Const.KEY_F_SEARCH, searchContent));
     mContentFragment.resetApi(searchApi, null, pairs.toArray(new NameValuePair[pairs.size()]));
+    mCurrentSearchUrl = mContentFragment.getUrl();
     EarthApplication.getInstance().addSearchHistory(searchContent);
     ((BaseActivity) getActivity()).closeKeyboard();
     mSearchView.dismissDropDown();

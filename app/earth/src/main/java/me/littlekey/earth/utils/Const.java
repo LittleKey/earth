@@ -18,6 +18,7 @@ public class Const {
   public static final String LAST_CATEGORY = "last_category";
   public static final String LAST_SEARCH = "last_search";
   public static final String LAST_HISTORY = "last_history";
+  public static final String QUICK_SEARCH = "quick_search";
   public static final String FIRST_SYNC = "first_sync";
   public static final String EMPTY_STRING = "";
   public static final String IPB_MEMBER_ID = "ipb_member_id";

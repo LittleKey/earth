@@ -8,6 +8,11 @@
     <string name="loading_hint">加载中</string>
     <string name="parse_error">parse %s error</string>
 
+    <!-- search -->
+    <string name="quick_search">快速搜索</string>
+    <string name="input_quick_search_name">输入快速搜索名:</string>
+    <string name="please_search_first">请先执行搜索</string>
+
     <!-- favourites -->
     <string name="fav_list">收藏夹</string>
 
@@ -113,4 +118,6 @@
     <string name="img_setting">&#xe610;</string>
     <string name="img_clock">&#xe611;</string>
     <string name="img_cross">&#xe612;</string>
+    <string name="img_add">&#xe594;</string>
+    <string name="img_triangle">&#xe595;</string>
 </resources>

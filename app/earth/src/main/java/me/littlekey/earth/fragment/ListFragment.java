@@ -4,6 +4,7 @@ package me.littlekey.earth.fragment;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -141,6 +142,10 @@ public class ListFragment extends BaseFragment {
 
   public void refresh(NameValuePair... pairs) {
     mList.refresh(pairs);
+  }
+
+  public @Nullable String getUrl() {
+    return mList == null ? null : mList.getCurrentUrl();
   }
 
   public void resetApi(@NonNull ApiType apiType, List<String> paths, NameValuePair... pairs) {

@@ -77,6 +77,10 @@
                  android:process=":me.littlekey.earth.service.DownloadService"
                  android:exported="false"/>
 
+        <provider android:name=".data.EarthProvider"
+                  android:authorities="me.littlekey.earth"
+                  android:exported="false" />
+
     </application>
 
 </manifest>

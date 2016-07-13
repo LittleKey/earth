@@ -142,7 +142,7 @@ public class ArtListFragment extends BaseFragment
     switch (ApiType.values()[getArguments().getInt(Const.KEY_API_TYPE)]) {
       case TAG_LIST:
         if (!CollectionUtils.isEmpty(paths)) {
-          mSearchView.setText(paths.get(paths.size() - 1));
+          mSearchView.setText(paths.get(paths.size() - 1).replace("+", Const.STRING_SPACE));
           mBtnClear.setText(R.string.img_cross);
         }
         break;

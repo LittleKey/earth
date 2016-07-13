@@ -1,5 +1,6 @@
 package me.littlekey.earth.fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -15,6 +16,9 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.io.File;
+
+import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.ModelFactory;
@@ -32,10 +36,11 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
   private SimpleDraweeView mPictureView;
   private String mPictureSrc;
 
-  public static PictureFragment newInstance(String gid, int position) {
+  public static PictureFragment newInstance(String gid, String gToken, int position) {
     PictureFragment fragment = new PictureFragment();
     Bundle bundle = new Bundle();
     bundle.putString(Const.KEY_GID, gid);
+    bundle.putString(Const.KEY_TOKEN, gToken);
     bundle.putInt(Const.KEY_POSITION, position);
     fragment.setArguments(bundle);
     return fragment;
@@ -53,10 +58,20 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
     mPictureView.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
         .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
         .setProgressBarImage(new ProgressBarDrawable()).build());
-    // TODO : determine picture whether exist in download location
-    if (savedInstanceState != null
-        && (mPictureSrc = savedInstanceState.getString(Const.EXTRA_URL)) != null) {
-      setPictureSrc(mPictureSrc);
+    if (savedInstanceState != null) {
+      mPictureSrc = savedInstanceState.getString(Const.EXTRA_URL);
+    } else {
+      File galleryDir = new File(EarthApplication.getInstance().getFileManager().getDownloadDir(),
+          EarthUtils.formatString(R.string.art_file_name,
+              getArguments().getString(Const.KEY_GID),
+              getArguments().getString(Const.KEY_TOKEN)));
+      File picFile = new File(galleryDir, EarthUtils.formatString("%d.jpg", getArguments().getInt(Const.KEY_POSITION)));
+      if (picFile.exists() && picFile.isFile()) {
+        mPictureSrc = Uri.fromFile(picFile).toString();
+      }
+    }
+    if (mPictureSrc != null) {
+        setPictureSrc(mPictureSrc);
     } else {
       view.post(new Runnable() {
         @Override

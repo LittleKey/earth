@@ -164,6 +164,10 @@ public class FileManager {
     return queryFirstFileAfter(timestamp) != null;
   }
 
+  public File getDownloadDir() {
+    return mRoot;
+  }
+
   private List<File> getSortedFiles() {
     List<File> files = Arrays.asList(mRoot.listFiles());
     Collections.sort(files, FILE_COMPARATOR);

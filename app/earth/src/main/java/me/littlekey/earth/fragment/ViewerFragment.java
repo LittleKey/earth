@@ -157,6 +157,6 @@ public class ViewerFragment extends BaseFragment
   }
 
   protected Fragment createFragment(int position) {
-    return PictureFragment.newInstance(mGid, position);
+    return PictureFragment.newInstance(mGid, mGalleryToken, position);
   }
 }

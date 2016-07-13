@@ -6,6 +6,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.wire.Wire;
+import com.yuanqi.update.UpdateAgent;
+import com.yuanqi.update.UpdateListener;
+import com.yuanqi.update.model.UpdateResponse;
+
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;
 import me.littlekey.earth.utils.Const;
@@ -15,12 +20,23 @@ import me.littlekey.earth.utils.PreferenceUtils;
 /**
  * Created by littlekey on 16/6/13.
  */
-public class WelcomeActivity extends BaseActivity implements View.OnClickListener {
+public class WelcomeActivity extends BaseActivity
+    implements View.OnClickListener, UpdateListener {
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_welcome);
+    UpdateAgent updateAgent = new UpdateAgent(this, EarthApplication.getInstance());
+    updateAgent.setUpdateListener(this);
+    updateAgent.update();
+  }
+
+  @Override
+  public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
+    if (updateInfo == null || Wire.get(updateInfo.force_update, false)) {
+      return;
+    }
     String userId = PreferenceUtils.getString(Const.LAST_ACTION, Const.LAST_USER_ID, null);
     String passHash = PreferenceUtils.getString(Const.LAST_ACTION, Const.LAST_PASS_HASH, null);
     if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(passHash)) {

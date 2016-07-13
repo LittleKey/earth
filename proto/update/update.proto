@@ -13,4 +13,5 @@ message UpdateResponse {
   string update_log = 3;
   string path = 4;
   string sign = 5;
+  bool force_update = 6;
 }

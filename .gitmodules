@@ -13,3 +13,6 @@
 [submodule "model"]
 	path = model
 	url = git@github.com:littlekey/android-model.git
+[submodule "framework/update"]
+	path = framework/update
+	url = git@github.com:littlekey/android-framework-update.git

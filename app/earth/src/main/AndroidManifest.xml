@@ -81,6 +81,13 @@
                   android:authorities="me.littlekey.earth"
                   android:exported="false" />
 
+        <activity android:name="com.yuanqi.update.UpdateDialogActivity"
+                  android:screenOrientation="portrait" />
+
+        <service android:name="com.yuanqi.update.DownloadingService"
+                 android:process=":me.littlekey.earth.service.DownloadingService"
+                 android:exported="false"/>
+
     </application>
 
 </manifest>

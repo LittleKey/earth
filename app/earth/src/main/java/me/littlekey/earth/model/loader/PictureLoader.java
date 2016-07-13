@@ -1,10 +1,13 @@
 package me.littlekey.earth.model.loader;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.RequestFuture;
+import com.yuanqi.base.utils.CollectionUtils;
 
 import org.jsoup.select.Elements;
 
@@ -13,9 +16,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import me.littlekey.earth.EarthApplication;
-import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.network.ApiType;
+import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.network.EarthRequest;
 import me.littlekey.earth.network.EarthResponse;
 import me.littlekey.earth.utils.Const;
@@ -132,7 +135,14 @@ public class PictureLoader extends AsyncTaskLoader<Picture> {
     if (response != null) {
       try {
         Elements pictureElements = response.document.select("#i1");
-        // TODO : insert picture token
+        String prevToken = getTokenFromUrl(response.document.select("#prev").attr("href"));
+        if (!TextUtils.isEmpty(prevToken)) {
+          tokenSupplier.insertPosition(mGid, mPosition - 1, prevToken);
+        }
+        String nextToken = getTokenFromUrl(response.document.select("#next").attr("href"));
+        if (!TextUtils.isEmpty(nextToken)) {
+          tokenSupplier.insertPosition(mGid, mPosition + 1, nextToken);
+        }
         picture = EarthCrawler.createPictureFromElements(pictureElements);
       } catch (Exception e) {
         e.printStackTrace();
@@ -145,5 +155,13 @@ public class PictureLoader extends AsyncTaskLoader<Picture> {
   public void cancelLoadInBackground() {
     super.cancelLoadInBackground();
     EarthApplication.getInstance().getRequestManager().cancel(this);
+  }
+
+  private String getTokenFromUrl(String url) {
+    List<String> paths = Uri.parse(url).getPathSegments();
+    if (!CollectionUtils.isEmpty(paths)) {
+      return paths.get(1);
+    }
+    return null;
   }
 }

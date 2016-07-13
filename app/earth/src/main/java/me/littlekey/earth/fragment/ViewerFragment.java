@@ -82,7 +82,7 @@ public class ViewerFragment extends BaseFragment
       viewPager.setCurrentItem(position);
     }
     // TODO : add dynamic adjust pre-load page number
-    viewPager.setOffscreenPageLimit(3);
+    viewPager.setOffscreenPageLimit(5);
     mController.show();
   }
 
@@ -121,7 +121,7 @@ public class ViewerFragment extends BaseFragment
   @SuppressWarnings("SynchronizeOnNonFinalField")
   public @Nullable String get(String gid, int position) {
     if (mTokenList != null && mGid != null && TextUtils.equals(mGid, gid)
-        && mTokenList.maxSize()  > position) {
+        && mTokenList.maxSize()  > position && position >= 0) {
       // TODO : read operate maybe needn't synchronized
       synchronized (mTokenList) {
         return mTokenList.get(position);
@@ -134,11 +134,15 @@ public class ViewerFragment extends BaseFragment
   @SuppressWarnings("SynchronizeOnNonFinalField")
   public void insertPage(String gid, int page, List<String> tokens) {
     if (mTokenList != null && mGid != null && TextUtils.equals(mGid, gid)
-        && !CollectionUtils.isEmpty(tokens)) {
+        && !CollectionUtils.isEmpty(tokens) && page >= 0
+        && page * Const.IMAGE_ITEM_COUNT_PER_PAGE + tokens.size() <= mTokenList.size()) {
       synchronized (mTokenList) {
         // TODO : optimize
         for (int i = 0; i < tokens.size(); ++i) {
-          mTokenList.set(page * Const.IMAGE_ITEM_COUNT_PER_PAGE + i, tokens.get(i));
+          String token = tokens.get(i);
+          if (!TextUtils.isEmpty(token)) {
+            mTokenList.set(page * Const.IMAGE_ITEM_COUNT_PER_PAGE + i, token);
+          }
         }
       }
     }
@@ -147,10 +151,14 @@ public class ViewerFragment extends BaseFragment
   @Override
   @SuppressWarnings("SynchronizeOnNonFinalField")
   public void insertPosition(String gid, int position, String... tokens) {
-    if (mTokenList != null && mGid != null && TextUtils.equals(mGid, gid) && tokens != null) {
+    if (mTokenList != null && mGid != null && TextUtils.equals(mGid, gid) && tokens != null
+        && mTokenList.maxSize() > position && position >= 0) {
       synchronized (mTokenList) {
         for (int i = 0; i < tokens.length; ++i) {
-          mTokenList.set(position + i, tokens[i]);
+          String token = tokens[i];
+          if (!TextUtils.isEmpty(token)) {
+            mTokenList.set(position + i, token);
+          }
         }
       }
     }

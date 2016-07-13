@@ -3,10 +3,15 @@ package me.littlekey.earth.utils;
 import android.os.FileObserver;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.RequestFuture;
 import com.yuanqi.base.utils.CollectionUtils;
+
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +19,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
+import de.greenrobot.event.EventBus;
+import me.littlekey.earth.EarthApplication;
+import me.littlekey.earth.R;
+import me.littlekey.earth.event.OnLoadedPageEvent;
+import me.littlekey.earth.model.Model;
+import me.littlekey.earth.model.ModelFactory;
 import me.littlekey.earth.model.proto.Art;
 import me.littlekey.earth.model.proto.SaveData;
+import me.littlekey.earth.network.ApiType;
+import me.littlekey.earth.network.EarthCrawler;
+import me.littlekey.earth.network.EarthRequest;
+import me.littlekey.earth.network.EarthResponse;
+import timber.log.Timber;
 
 /**
  * Created by littlekey on 16/7/6.
@@ -91,14 +108,43 @@ public class FileManager {
         close();
         open(root);
       }
+      EventBus.getDefault().register(this);
     }
   }
 
   public void close() {
     if (mRoot != null) {
+      EventBus.getDefault().unregister(this);
       mFileObserver.stopWatching();
       mRoot = null;
       mArtFileList = null;
+    }
+  }
+
+  public void onEventAsync(OnLoadedPageEvent event) {
+    Model model;
+    if ((model = event.getModel()) != null) {
+      File galleryDir = new File(mRoot,
+          EarthUtils.formatString(R.string.art_file_name, model.identity, model.token));
+      if (galleryDir.exists() && galleryDir.isDirectory()) {
+        File saveData = new File(galleryDir, Const.SAVE_DATA);
+        FileOutputStream fileOutputStream = null;
+        try {
+          fileOutputStream = new FileOutputStream(saveData);
+          byte[] content = model.art.encode();
+          SaveData.ADAPTER.encode(fileOutputStream, EncryptUtils.getInstance().toSaveData(content));
+        } catch (IOException e) {
+          e.printStackTrace();
+        } finally {
+          try {
+            if (fileOutputStream != null) {
+              fileOutputStream.close();
+            }
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
     }
   }
 
@@ -138,7 +184,26 @@ public class FileManager {
                 e.printStackTrace();
                 String gid = gidAndToken[0];
                 String token = gidAndToken[1];
-                // TODO : access art from network
+                RequestFuture<EarthResponse> future = RequestFuture.newFuture();
+                EarthRequest request = EarthApplication.getInstance().getRequestManager()
+                    .newEarthRequest(ApiType.ART_DETAIL, Request.Method.GET, future, future);
+                request.appendPath("g");
+                request.appendPath(gid);
+                request.appendPath(token);
+                request.submit();
+                try {
+                  EarthResponse response = future.get(30, TimeUnit.SECONDS);
+                  Elements artElements = response.document.select("body > div.gm");
+                  Art art = EarthCrawler.createArtDetailFromElements(artElements, gid, token);
+                  CollectionUtils.add(models, art);
+                  EventBus.getDefault().post(new OnLoadedPageEvent(
+                      ModelFactory.createModelFromArt(art, Model.Template.DATA)));
+                  if (file.lastModified() > last_timestamp[0]) {
+                    last_timestamp[0] = file.lastModified();
+                  }
+                } catch (Exception ignore) {
+                  Timber.e(ignore, EarthUtils.formatString(R.string.parse_error, Const.ART_DETAIL));
+                }
               } finally {
                 try {
                   if (fileInputStream != null) {

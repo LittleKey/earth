@@ -36,10 +36,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.littlekey.earth.R;
-import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.model.Model;
 import me.littlekey.earth.model.proto.Picture;
 import me.littlekey.earth.model.proto.SaveData;
+import me.littlekey.earth.network.EarthCrawler;
 import me.littlekey.earth.service.DownloadService;
 
 /**
@@ -285,8 +285,8 @@ public class DownloadThread extends Thread {
             | Context.MODE_WORLD_WRITEABLE)) {
           fileOutputStream.close();
           fileOutputStream = mContext.openFileOutput(filename, Context.MODE_WORLD_READABLE
-            | Context.MODE_WORLD_WRITEABLE
-          | Context.MODE_APPEND);
+              | Context.MODE_WORLD_WRITEABLE
+              | Context.MODE_APPEND);
           mFileList.set(position, file = mContext.getFileStreamPath(filename));
         }
       }
@@ -308,7 +308,6 @@ public class DownloadThread extends Thread {
       inputStream = conn.getInputStream();
       @SuppressWarnings("unused")
       long accLen = file.length();
-      @SuppressWarnings("unused")
       long totalLen = conn.getContentLength();
 
       byte[] buffer = new byte[4096];
@@ -340,6 +339,9 @@ public class DownloadThread extends Thread {
       if (SUCCEED) {
         File newFile = new File(file.getParent(), file.getName().replace(".tmp", ""));
         file.renameTo(newFile);
+        if (newFile.length() != totalLen) {
+          throw new IOException(EarthUtils.formatString("[File] %s not integrity", file.toString()));
+        }
       }
       return SUCCEED;
     } catch (IOException e) {

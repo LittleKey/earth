@@ -7,6 +7,7 @@
     <string name="unknown">unknown</string>
     <string name="loading_hint">加载中</string>
     <string name="parse_error">parse %s error</string>
+    <string name="sure">确定</string>
 
     <!-- search -->
     <string name="quick_search">快速搜索</string>

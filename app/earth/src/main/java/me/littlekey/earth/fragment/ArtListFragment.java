@@ -55,7 +55,9 @@ import me.littlekey.earth.network.ApiType;
 import me.littlekey.earth.utils.Const;
 import me.littlekey.earth.utils.EarthUtils;
 import me.littlekey.earth.utils.NavigationManager;
+import me.littlekey.earth.utils.ResourceUtils;
 import me.littlekey.earth.utils.ToastUtils;
+import me.littlekey.earth.widget.DividerItemDecoration;
 import me.littlekey.earth.widget.IconFontTextView;
 import me.littlekey.earth.widget.SearchCompleteView;
 
@@ -74,8 +76,6 @@ public class ArtListFragment extends BaseFragment
   private SearchCompleteView mSearchView;
   private IconFontTextView mBtnClear;
   private OfflineListAdapter mQuickSearchAdapter;
-
-  private String mCurrentSearchUrl;
 
   public static ArtListFragment newInstance(Bundle bundle) {
     ArtListFragment fragment = new ArtListFragment();
@@ -120,6 +120,8 @@ public class ArtListFragment extends BaseFragment
     // NOTE : right drawer
     MvpRecyclerView quickSearchRecyclerView = (MvpRecyclerView) view.findViewById(R.id.quick_search_recycler);
     quickSearchRecyclerView.setItemAnimator(null);
+    quickSearchRecyclerView.addItemDecoration(new DividerItemDecoration(
+        ResourceUtils.getDrawable(R.drawable.recycler_view_divider_line), 0));
     quickSearchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mQuickSearchAdapter = new OfflineListAdapter();
     quickSearchRecyclerView.setAdapter(mQuickSearchAdapter);
@@ -269,8 +271,8 @@ public class ArtListFragment extends BaseFragment
         }
         break;
       case R.id.add_search:
-        if (!TextUtils.isEmpty(mCurrentSearchUrl)) {
-          new QuickSearchDialog(getActivity(), mCurrentSearchUrl).show();
+        if (!TextUtils.isEmpty(mContentFragment.getUrl())) {
+          new QuickSearchDialog(getActivity(), mContentFragment.getUrl()).show();
         } else {
           ToastUtils.toast(R.string.please_search_first);
         }
@@ -348,7 +350,6 @@ public class ArtListFragment extends BaseFragment
     }
     pairs.add(new NameValuePair(Const.KEY_F_SEARCH, searchContent));
     mContentFragment.resetApi(searchApi, null, pairs.toArray(new NameValuePair[pairs.size()]));
-    mCurrentSearchUrl = mContentFragment.getUrl();
     EarthApplication.getInstance().addSearchHistory(searchContent);
     ((BaseActivity) getActivity()).closeKeyboard();
     mSearchView.dismissDropDown();

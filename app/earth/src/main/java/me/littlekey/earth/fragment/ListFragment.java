@@ -159,13 +159,7 @@ public class ListFragment extends BaseFragment {
     final RecyclerView.LayoutManager layoutManager;
     switch (apiType) {
       case ART_DETAIL:
-        layoutManager = new GridLayoutManager(getActivity(), ART_DETAIL_GRID_SPAN) {
-          @Override
-          protected int getExtraLayoutSpace(RecyclerView.State state) {
-            // for preload more image
-            return Math.max(super.getExtraLayoutSpace(state), 3 * getHeight());
-          }
-        };
+        layoutManager = new GridLayoutManager(getActivity(), ART_DETAIL_GRID_SPAN);
         ((GridLayoutManager) layoutManager).setSpanSizeLookup(
             new GridLayoutManager.SpanSizeLookup() {
               @Override

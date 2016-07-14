@@ -215,6 +215,7 @@ public class ArtListFragment extends BaseFragment
     return loader;
   }
 
+  @SuppressWarnings("unused")
   public void onEventMainThread(OnQuickSearchEvent event) {
     if (event.getModel() != null) {
       Uri uri = Uri.parse(event.getModel().url);

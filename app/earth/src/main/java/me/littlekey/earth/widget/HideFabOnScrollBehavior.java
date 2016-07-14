@@ -22,7 +22,6 @@ import android.view.View;
   @Override
   public void onNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
     super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-
     if (child.isShown() && dyConsumed > 0) {
       child.hide();
     } else if (!child.isShown() && dyConsumed < 0) {

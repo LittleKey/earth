@@ -67,6 +67,9 @@ public class EncryptUtils {
   }
 
   public byte[] fromSaveData(SaveData saveData) {
+    if (saveData.key == null || saveData.salt == null || saveData.content == null || saveData.cycle == null) {
+      return new byte[0];
+    }
     return decrypt(saveData.key, saveData.salt, saveData.content.toByteArray(), saveData.cycle);
   }
 

@@ -19,6 +19,7 @@ import me.littlekey.earth.utils.Const;
  * {@link android.support.design.widget.SearchScrollBehavior}
  * {@link Const#ART_LIST_TOP_PADDING}
  */
+@SuppressWarnings("unused")
 public class SearchAppBarBehavior extends AppBarLayout.Behavior {
 
   private static final int INVALID_SCROLL_RANGE = -1;

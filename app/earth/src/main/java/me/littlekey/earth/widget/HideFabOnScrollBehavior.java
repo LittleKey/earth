@@ -9,7 +9,9 @@ import android.view.View;
 
 /**
  * Created by littlekey on 16/6/21.
- */public class HideFabOnScrollBehavior extends FloatingActionButton.Behavior {
+ */
+@SuppressWarnings("unused")
+public class HideFabOnScrollBehavior extends FloatingActionButton.Behavior {
 
   public HideFabOnScrollBehavior(Context context) {
     this(context, null);

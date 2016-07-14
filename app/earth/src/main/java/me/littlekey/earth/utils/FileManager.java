@@ -61,12 +61,14 @@ public class FileManager {
     mListeners = new ArrayList<>();
   }
 
+  @SuppressWarnings("unused")
   public void addFileChangeListener(Listener listener) {
     if (listener != null) {
       mListeners.add(listener);
     }
   }
 
+  @SuppressWarnings("unused")
   public void removeFileChangeListener(Listener listener) {
     if (listener != null) {
       mListeners.remove(listener);
@@ -121,6 +123,7 @@ public class FileManager {
     }
   }
 
+  @SuppressWarnings("unused")
   public void onEventAsync(OnLoadedPageEvent event) {
     Model model;
     if ((model = event.getModel()) != null) {
@@ -164,55 +167,54 @@ public class FileManager {
     File tempFile = queryFirstFileAfter(timestamp);
     int index;
     if (tempFile != null && (index = mArtFileList.indexOf(tempFile)) >= 0) {
-      for (File file : mArtFileList.subList(index, Math.min(index + limit, mArtFileList.size()))) {
-        if (dirValid(file)) {
-          String filename = file.getName();
-          if (!TextUtils.isEmpty(filename)) {
-            String[] gidAndToken = filename.split("-");
-            if (gidAndToken.length == 2) {
-              FileInputStream fileInputStream = null;
-              try {
-                File saveDataFile = new File(file, Const.SAVE_DATA);
-                fileInputStream = new FileInputStream(saveDataFile);
-                SaveData saveData = SaveData.ADAPTER.decode(fileInputStream);
-                CollectionUtils.add(models,
-                    Art.ADAPTER.decode(EncryptUtils.getInstance().fromSaveData(saveData)));
-                if (file.lastModified() > last_timestamp[0]) {
-                  last_timestamp[0] = file.lastModified();
-                }
-              } catch (IOException e) {
-                e.printStackTrace();
-                String gid = gidAndToken[0];
-                String token = gidAndToken[1];
-                RequestFuture<EarthResponse> future = RequestFuture.newFuture();
-                EarthRequest request = EarthApplication.getInstance().getRequestManager()
-                    .newEarthRequest(ApiType.ART_DETAIL, Request.Method.GET, future, future);
-                request.appendPath("g");
-                request.appendPath(gid);
-                request.appendPath(token);
-                request.submit();
-                try {
-                  EarthResponse response = future.get(30, TimeUnit.SECONDS);
-                  Elements artElements = response.document.select("body > div.gm");
-                  Art art = EarthCrawler.createArtDetailFromElements(artElements, gid, token);
-                  CollectionUtils.add(models, art);
-                  EventBus.getDefault().post(new OnLoadedPageEvent(
-                      ModelFactory.createModelFromArt(art, Model.Template.DATA)));
-                  if (file.lastModified() > last_timestamp[0]) {
-                    last_timestamp[0] = file.lastModified();
-                  }
-                } catch (Exception ignore) {
-                  Timber.e(ignore, EarthUtils.formatString(R.string.parse_error, Const.ART_DETAIL));
-                }
-              } finally {
-                try {
-                  if (fileInputStream != null) {
-                    fileInputStream.close();
-                  }
-                } catch (IOException e) {
-                  e.printStackTrace();
-                }
+      for (File galleryDir : mArtFileList.subList(index, Math.min(index + limit, mArtFileList.size()))) {
+        if (!dirValid(galleryDir)) {
+          continue;
+        }
+        String filename = galleryDir.getName();
+        String[] gidAndToken;
+        if (!TextUtils.isEmpty(filename) && (gidAndToken = filename.split("-")).length == 2) {
+          FileInputStream fileInputStream = null;
+          try {
+            File saveDataFile = new File(galleryDir, Const.SAVE_DATA);
+            fileInputStream = new FileInputStream(saveDataFile);
+            SaveData saveData = SaveData.ADAPTER.decode(fileInputStream);
+            CollectionUtils.add(models,
+                Art.ADAPTER.decode(EncryptUtils.getInstance().fromSaveData(saveData)));
+            if (galleryDir.lastModified() > last_timestamp[0]) {
+              last_timestamp[0] = galleryDir.lastModified();
+            }
+          } catch (IOException e) {
+            e.printStackTrace();
+            String gid = gidAndToken[0];
+            String token = gidAndToken[1];
+            RequestFuture<EarthResponse> future = RequestFuture.newFuture();
+            EarthRequest request = EarthApplication.getInstance().getRequestManager()
+                .newEarthRequest(ApiType.ART_DETAIL, Request.Method.GET, future, future);
+            request.appendPath("g");
+            request.appendPath(gid);
+            request.appendPath(token);
+            request.submit();
+            try {
+              EarthResponse response = future.get(30, TimeUnit.SECONDS);
+              Elements artElements = response.document.select("body > div.gm");
+              Art art = EarthCrawler.createArtDetailFromElements(artElements, gid, token);
+              CollectionUtils.add(models, art);
+              EventBus.getDefault().post(new OnLoadedPageEvent(
+                  ModelFactory.createModelFromArt(art, Model.Template.DATA)));
+              if (galleryDir.lastModified() > last_timestamp[0]) {
+                last_timestamp[0] = galleryDir.lastModified();
               }
+            } catch (Exception ignore) {
+              Timber.e(ignore, EarthUtils.formatString(R.string.parse_error, Const.ART_DETAIL));
+            }
+          } finally {
+            try {
+              if (fileInputStream != null) {
+                fileInputStream.close();
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
             }
           }
         }
@@ -225,6 +227,7 @@ public class FileManager {
     return mArtFileList == null ? 0 : mArtFileList.size();
   }
 
+  @SuppressWarnings("unused")
   public boolean hasMore(long timestamp) {
     return queryFirstFileAfter(timestamp) != null;
   }

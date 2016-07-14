@@ -27,11 +27,17 @@ import me.littlekey.earth.EarthApplication;
  * Created by littlekey on 16/6/10.
  */
 public class EarthUtils {
+  @SuppressWarnings("unused")
   public static final int SEXAGESIMAL = 60;
+  @SuppressWarnings("unused")
   public static final int DATE_TODAY = 0;
+  @SuppressWarnings("unused")
   public static final int DATE_YESTERDAY = 1;
+  @SuppressWarnings("unused")
   public static final int DATE_WITHIN_A_WEEK = 2;
+  @SuppressWarnings("unused")
   public static final int DATE_BEYONG_A_WEEK = 3;
+  @SuppressWarnings("unused")
   public static final int DATE_SPECIFIC_DATE = 4;
 
   private EarthUtils() {
@@ -55,6 +61,7 @@ public class EarthUtils {
    * {@link ActivityInfo#SCREEN_ORIENTATION_PORTRAIT}
    * {@link ActivityInfo#SCREEN_ORIENTATION_REVERSE_PORTRAIT}
    */
+  @SuppressWarnings("unused")
   public static int getScreenOrientation(Activity activity) {
     int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
     DisplayMetrics dm = new DisplayMetrics();
@@ -107,10 +114,12 @@ public class EarthUtils {
     return orientation;
   }
 
+  @SuppressWarnings("unused")
   public static boolean verifyNickname(String nickName) {
     return checkLength(nickName.length(), Const.MIN_NICKNAME_LENGTH, Const.MAX_NICKNAME_LENGTH);
   }
 
+  @SuppressWarnings("unused")
   public static boolean verifyPassword(String passWord) {
     return checkLength(passWord.length(), Const.MIN_PASSWORD_LENGTH, Const.MAX_PASSWORD_LENGTH);
   }
@@ -119,6 +128,7 @@ public class EarthUtils {
     return length >= min && length <= max;
   }
 
+  @SuppressWarnings("unused")
   public static String buildImage(String url) {
     return buildImage(url, true);
   }
@@ -130,6 +140,7 @@ public class EarthUtils {
     return url.replace("{size}", large ? "large" : "small").replace("{ext}", "webp");
   }
 
+  @SuppressWarnings("unused")
   public static byte[] toByteArray(InputStream in) throws IOException {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     byte[] buffer = new byte[1024 * 4];
@@ -154,6 +165,7 @@ public class EarthUtils {
     return drawable;
   }
 
+  @SuppressWarnings("unused")
   public static void setEditTextContent(EditText editText, String content) {
     editText.setText(content);
     if (!TextUtils.isEmpty(content)) {

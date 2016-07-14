@@ -345,7 +345,7 @@ public class ActionPresenter extends EarthPresenter {
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "unused"})
   private void expand(Model model, boolean shouldExpand) {
     MvpRecyclerView.Adapter adapter = group().pageContext.adapter;
     // int position = group().holder.getAdapterPosition();

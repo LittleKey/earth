@@ -29,7 +29,7 @@ import me.littlekey.earth.network.EarthServer;
 /**
  * Created by littlekey on 16/7/5.
  */
-public class DownloadFragment extends BaseFragment {
+public class DownloadFragment extends BaseFragment implements DownloadAgent.Listener {
 
   private final static Comparator<Model> ADDITION_MODEL_COMPARATOR =
       new Comparator<Model>() {
@@ -90,43 +90,7 @@ public class DownloadFragment extends BaseFragment {
     mAdapter.setList(mApiList);
     mApiList.refresh();
     mDownloadListCheckAgent = EarthApplication.getInstance().newDownload(null);
-    mDownloadListCheckAgent.addListener(new DownloadAgent.ListenerAdapter() {
-
-      @Override
-      public void onConnect() {
-        mDownloadListCheckAgent.checkDownloadList();
-      }
-
-      @Override
-      public void onList(@Nullable final List<Model> list) {
-        if (list != null) {
-          for (Model model: list) {
-            final int index = Collections.binarySearch(mAdapter.getData(), model, ADDITION_MODEL_COMPARATOR);
-            if (index > -1) {
-              final Model item = mAdapter.getItem(index);
-              DownloadAgent agent = EarthApplication.getInstance().newDownload(model);
-              agent.addListener(new DownloadAgent.ListenerAdapter() {
-                @Override
-                public void onProgress(float progress) {
-                  mAdapter.changeData(index, item.newBuilder()
-                      .template(Model.Template.ITEM_DLC_DOWNLOADING)
-                      .count(item.count.newBuilder().progress(progress).build())
-                      .build());
-                }
-
-                @Override
-                public void onComplete(boolean succeed) {
-                  mAdapter.changeData(index, item.newBuilder()
-                      .template(Model.Template.ITEM_DLC)
-                      .build());
-                }
-              });
-              agent.connect();
-            }
-          }
-        }
-      }
-    });
+    mDownloadListCheckAgent.addListener(this);
     mDownloadListCheckAgent.connect();
   }
 
@@ -140,9 +104,66 @@ public class DownloadFragment extends BaseFragment {
   public void onDestroyView() {
     EarthApplication.getInstance().getRequestManager().cancel(this);
     mApiList.unregisterDataLoadObservers();
+    mDownloadListCheckAgent.removeListener(this);
     if (mServer != null) {
       mServer.stop();
     }
     super.onDestroyView();
+  }
+
+  @Override
+  public void onConnect() {
+    mDownloadListCheckAgent.checkDownloadList();
+  }
+
+  @Override
+  public void onDisconnect() {
+
+  }
+
+  @Override
+  public void onComplete(boolean succeed) {
+
+  }
+
+  @Override
+  public void onProgress(float progress) {
+
+  }
+
+  @Override
+  public void onBadNetwork() {
+
+  }
+
+  @Override
+  public void onList(@Nullable List<Model> list) {
+    if (list == null) {
+      return;
+    }
+    for (Model model: list) {
+      final int index = Collections.binarySearch(mAdapter.getData(), model, ADDITION_MODEL_COMPARATOR);
+      if (index > -1) {
+        final Model item = mAdapter.getItem(index);
+        DownloadAgent agent = EarthApplication.getInstance().newDownload(model);
+        agent.addListener(new DownloadAgent.ListenerAdapter() {
+          @Override
+          public void onProgress(float progress) {
+            mAdapter.changeData(index, item.newBuilder()
+                .template(Model.Template.ITEM_DLC_DOWNLOADING)
+                .count(item.count.newBuilder().progress(progress).build())
+                .build());
+          }
+
+          @Override
+          public void onComplete(boolean succeed) {
+            mAdapter.changeData(index, item.newBuilder()
+                .template(Model.Template.ITEM_DLC)
+                .build());
+          }
+        });
+        agent.connect();
+      }
+    }
   }
 }

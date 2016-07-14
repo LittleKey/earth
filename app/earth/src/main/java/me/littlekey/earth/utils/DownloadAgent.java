@@ -40,6 +40,7 @@ public class DownloadAgent {
     mListeners = new ArrayList<>();
   }
 
+  @SuppressWarnings("unused")
   public boolean isDownloading() {
     return mIsDownloading;
   }

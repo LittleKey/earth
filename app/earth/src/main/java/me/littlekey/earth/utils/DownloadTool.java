@@ -52,6 +52,7 @@ public class DownloadTool {
     return model.addition.identity.hashCode() + model.addition.token.hashCode();
   }
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   public static File getDownloadDir(Context context, boolean[] isSdCard) {
     File file;
     String root;

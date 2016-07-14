@@ -33,6 +33,7 @@ public class CustomTabLayout extends TabLayout {
     });
   }
 
+  @SuppressWarnings("deprecation")
   private void setupViewPager(ViewPager viewPager) {
     setOnTabSelectedListener(null);
     super.setupWithViewPager(viewPager);

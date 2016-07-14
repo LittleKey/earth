@@ -97,6 +97,7 @@ public class FlagPresenter extends EarthPresenter {
     view().setVisibility(Wire.get(model.flag.is_selected, false) ? View.GONE : View.VISIBLE);
   }
 
+  @SuppressWarnings("unused")
   private void judgeHasMore(Model model) {
     if (view() instanceof TextView) {
       if (CollectionUtils.isEmpty(model.subModels)) {

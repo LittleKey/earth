@@ -9,6 +9,7 @@ import android.view.View;
 /**
  * Created by littlekey on 16/6/19.
  */
+@SuppressWarnings("unused")
 public class FixedFlingBehavior extends AppBarLayout.Behavior {
 
   private boolean isPositive;

@@ -67,6 +67,7 @@ public class DownloadThread extends Thread {
   private ExecutorService mExecutor;
   private AtomicInteger mProgress;
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   public DownloadThread(DownloadService service, Model model, String cookie, int nid, Listener listener) {
     super();
     mWeakService = new WeakReference<>(service);
@@ -264,7 +265,7 @@ public class DownloadThread extends Thread {
     return url;
   }
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({"deprecation", "ResultOfMethodCallIgnored"})
   @SuppressLint({"WorldReadableFiles", "WorldWriteableFiles"})
   private boolean savePicture(int position, int repeatCount) {
     File file = mFileList.get(position);

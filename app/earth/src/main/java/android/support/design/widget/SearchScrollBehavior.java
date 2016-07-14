@@ -20,6 +20,7 @@ import me.littlekey.earth.utils.Const;
  * {@link android.support.design.widget.SearchAppBarBehavior}
  * {@link Const#ART_LIST_TOP_PADDING}
  */
+@SuppressWarnings("unused")
 public class SearchScrollBehavior extends AppBarLayout.ScrollingViewBehavior {
 
   private final Rect mTempRect1 = new Rect();

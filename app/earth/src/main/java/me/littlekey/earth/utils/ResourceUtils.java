@@ -14,6 +14,7 @@ import me.littlekey.earth.EarthApplication;
  */
 public class ResourceUtils {
 
+  @SuppressWarnings("deprecation")
   public static @ColorInt int getColor(@ColorRes int colorRes) {
     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
       return EarthApplication.getInstance().getColor(colorRes);
@@ -22,6 +23,7 @@ public class ResourceUtils {
     }
   }
 
+  @SuppressWarnings("deprecation")
   public static Drawable getDrawable(@DrawableRes int drawRes) {
     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
       return EarthApplication.getInstance().getDrawable(drawRes);
@@ -30,6 +32,7 @@ public class ResourceUtils {
     }
   }
 
+  @SuppressWarnings("deprecation")
   public static void setBackground(View view, Drawable drawable) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       view.setBackground(drawable);

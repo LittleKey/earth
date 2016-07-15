@@ -44,8 +44,8 @@ public class EarthPresenterFactory {
         .add(R.id.likes, new FlagPresenter())
         .add(R.id.likes, new ActionPresenter())
         .add(R.id.date, new TextPresenter())
-        .add(R.id.fab, new ActionPresenter())
-        .add(R.id.fab, new FlagPresenter())
+        .add(R.id.show_hide_fab, new ActionPresenter())
+        .add(R.id.show_hide_fab, new FlagPresenter())
         .add(R.id.rating, new BasePresenter())
         .add(R.id.rating_count, new TextPresenter());
   }

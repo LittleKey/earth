@@ -29,7 +29,7 @@ public class FlagPresenter extends EarthPresenter {
       case R.id.mask:
         judgeMask(model);
         break;
-      case R.id.fab:
+      case R.id.show_hide_fab:
         judgeShowHide(model);
         break;
       case R.id.likes:

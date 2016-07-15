@@ -389,7 +389,7 @@ public class ActionPresenter extends EarthPresenter {
       case 0:
 //      case R.id.mask:
         return model.actions.get(Const.ACTION_MAIN);
-      case R.id.fab:
+      case R.id.show_hide_fab:
         return model.actions.get(Const.ACTION_SHOW_HIDE);
       case R.id.likes:
         return model.actions.get(Const.ACTION_LIKED);

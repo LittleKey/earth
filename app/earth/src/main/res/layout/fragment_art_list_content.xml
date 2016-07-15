@@ -61,7 +61,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/advanced_search"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         app:layout_anchor="@id/fragment_container"

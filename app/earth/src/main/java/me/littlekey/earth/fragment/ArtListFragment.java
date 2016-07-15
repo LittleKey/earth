@@ -137,7 +137,7 @@ public class ArtListFragment extends BaseFragment
     }
     mBtnClear = (IconFontTextView) view.findViewById(R.id.btn_clear);
     mBtnClear.setOnClickListener(this);
-    view.findViewById(R.id.fab).setOnClickListener(this);
+    view.findViewById(R.id.advanced_search).setOnClickListener(this);
     mSearchView = (SearchCompleteView) view.findViewById(R.id.search);
     mSearchView.setOnEditorActionListener(this);
     ArrayList<String> paths = getArguments().getStringArrayList(Const.KEY_API_PATH);
@@ -251,7 +251,7 @@ public class ArtListFragment extends BaseFragment
   @SuppressWarnings("RtlHardcoded")
   public void onClick(View v) {
     switch (v.getId()) {
-      case R.id.fab:
+      case R.id.advanced_search:
         FragmentManager fm = getChildFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment == null || !(fragment instanceof AdvancedSearchFragment)) {

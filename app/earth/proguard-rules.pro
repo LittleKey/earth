@@ -61,6 +61,7 @@
 -keep public class android.support.design.** { *; }
 -keep public class android.support.v7.** { *; }
 -keep class javax.annotation.** { *; }
+-keep class me.littlekey.earth.event.* { *; }
 
 -keep class com.yuanqi.basket.model.proto.** { *; }
 -keep class com.yuanqi.basket.model.business.** { *; }
@@ -111,7 +112,7 @@
 -keep class com.sina.** { *; }
 # keep eventbus
 -keepclassmembers class ** {
-    public void onEvent*(**);
+    public void onEvent*(***);
 }
 # keep ijkplayer
 -keep class tv.danmaku.ijk.** { *; }

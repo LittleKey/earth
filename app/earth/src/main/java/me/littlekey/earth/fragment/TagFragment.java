@@ -66,6 +66,7 @@ public class TagFragment extends BaseFragment {
     return R.layout.fragment_tag;
   }
 
+  @SuppressWarnings("unused")
   public void onEventMainThread(OnClickTagItemEvent event) {
     int index;
     if ((index = mModel.subModels.indexOf(event.getTag())) != -1) {

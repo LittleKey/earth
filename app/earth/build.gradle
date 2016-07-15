@@ -18,8 +18,8 @@ android {
         applicationId "me.littlekey.earth"
         minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.0.4"
+        versionCode 3
+        versionName "1.0.5"
 //        ndk {
 //            abiFilters "armeabi-v7a", "x86"
 //        }

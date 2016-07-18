@@ -111,17 +111,7 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
     };
     mViewPager.setAdapter(mPagerAdapter);
     mViewPager.addOnPageChangeListener(this);
-    mPagerAdapter.registerDataSetObserver(new DataSetObserver() {
-      @Override
-      public void onChanged() {
-        selectTag(mViewPager.getCurrentItem());
-      }
-
-      @Override
-      public void onInvalidated() {
-        selectTag(mViewPager.getCurrentItem());
-      }
-    });
+    mPagerAdapter.registerDataSetObserver(mTagsObserver);
     mContentViewPager = (ViewPager) view.findViewById(R.id.content_viewpager);
     mContentPagerAdapter = new FragmentStatePagerAdapter(fm) {
       @Override
@@ -146,6 +136,7 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
 
   @Override
   public void onDestroyView() {
+    mPagerAdapter.unregisterDataSetObserver(mTagsObserver);
     mPresenter.unbind();
     EventBus.getDefault().unregister(this);
     super.onDestroyView();
@@ -164,6 +155,18 @@ public class ArtDetailFragment extends BaseFragment implements ViewPager.OnPageC
     }
     return false;
   }
+
+  private final DataSetObserver mTagsObserver = new DataSetObserver() {
+    @Override
+    public void onChanged() {
+      selectTag(mViewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onInvalidated() {
+      selectTag(mViewPager.getCurrentItem());
+    }
+  };
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

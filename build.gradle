@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.0-rc2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -109,10 +109,24 @@ String getBuildToolsVersion(String defaultBuildTools) {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-ext.compileSdkVersion = 23
-ext.buildToolsVersion = "23.0.3"
-ext.targetSdkVersion = 23
-//ext.storeFile = new File(rootDir, (String) properties.get("store.dir"))
-//ext.storePassword = properties.get("store.password")
-//ext.aliasName = properties.get("alias.name")
-//ext.aliasPassword = properties.get("alias.password")
+ext {
+    compileSdkVersion = 24
+    buildToolsVersion = "24.0.2"
+    targetSdkVersion = 24
+    supportLibraryVersion = "24.2.0"
+
+    jsoupVersion = "1.9.2"
+    junitVersion = "4.12"
+    timberVersion = "3.1.0"
+    eventbusVersion = "2.4.0"
+    gsonVersion = "2.4"
+    frescoVersion = "0.13.0"
+    okhttpVersion = "3.3.1"
+    imagepipelineOkhttp3Version = "0.11.0"
+    wireRuntimeVersion = "2.2.0"
+
+    //ext.storeFile = new File(rootDir, (String) properties.get("store.dir"))
+    //ext.storePassword = properties.get("store.password")
+    //ext.aliasName = properties.get("alias.name")
+    //ext.aliasPassword = properties.get("alias.password")
+}

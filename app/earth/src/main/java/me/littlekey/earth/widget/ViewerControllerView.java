@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -19,6 +20,7 @@ import android.widget.SeekBar;
 import java.lang.ref.WeakReference;
 
 import me.littlekey.earth.R;
+import me.littlekey.earth.fragment.ViewerFragment;
 
 /**
  * Created by littlekey on 16/7/1.
@@ -150,10 +152,33 @@ public class ViewerControllerView extends FrameLayout
     }
   }
 
+  private boolean mIsPreVisible = false;
+
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     if (positionOffset == 0) {
       mCurrentPage = position;
+    } else {
+      boolean isPreVisible = position + positionOffset < mCurrentPage;
+      if (isPreVisible != mIsPreVisible) {
+        Fragment prePage = null;
+        Fragment nextPage = null;
+        Object left = mViewer.getAdapter().instantiateItem(mViewer, mCurrentPage - 1);
+        if (left instanceof Fragment) {
+          prePage = (Fragment) left;
+        }
+        Object right = mViewer.getAdapter().instantiateItem(mViewer, mCurrentPage + 1);
+        if (right instanceof Fragment) {
+          nextPage = (Fragment) right;
+        }
+        if (prePage != null) {
+          prePage.setMenuVisibility(isPreVisible);
+        }
+        if (nextPage != null) {
+          nextPage.setMenuVisibility(!isPreVisible);
+        }
+        mIsPreVisible = isPreVisible;
+      }
     }
   }
 

@@ -40,7 +40,7 @@ public class EarthCrawler {
     Element artEle = children.get(2);
     String cover =  artEle.select("div.it2 > img").attr("src");
     if (TextUtils.isEmpty(cover)) {
-      Pattern coverPattern = Pattern.compile("init~(.*?)~(.*?)/(.*?)~");
+      Pattern coverPattern = Pattern.compile("inits~(.*?)~(.*?)/(.*?)~");
       Matcher coverMatcher = coverPattern.matcher(artEle.select("div.it2").text());
       if (coverMatcher.find()) {
         cover = String.format("http://%s/%s/%s",

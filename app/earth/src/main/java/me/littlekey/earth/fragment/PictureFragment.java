@@ -1,5 +1,6 @@
 package me.littlekey.earth.fragment;
 
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,10 +12,14 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.io.File;
 
@@ -35,6 +40,7 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
 
   private SimpleDraweeView mPictureView;
   private String mPictureSrc;
+  private boolean mVisible;
 
   public static PictureFragment newInstance(String gid, String gToken, int position) {
     PictureFragment fragment = new PictureFragment();
@@ -83,6 +89,26 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
   }
 
   @Override
+  public void setMenuVisibility(boolean menuVisible) {
+    super.setMenuVisibility(menuVisible);
+    mVisible = menuVisible;
+    if (mPictureView == null) {
+      return;
+    }
+    DraweeController controller = mPictureView.getController();
+    if (controller != null) {
+      Animatable animatable = controller.getAnimatable();
+      if (animatable != null) {
+        if (menuVisible) {
+          animatable.start();
+        } else {
+          animatable.stop();
+        }
+      }
+    }
+  }
+
+  @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     if (mPictureSrc != null) {
@@ -91,10 +117,20 @@ public class PictureFragment extends BaseFragment implements LoaderManager.Loade
   }
 
   private void setPictureSrc(String src) {
+    ControllerListener<ImageInfo> controllerListener = new BaseControllerListener<ImageInfo>() {
+
+      @Override
+      public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+        if (animatable != null && mVisible) {
+          animatable.start();
+        }
+      }
+    };
     PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
         .setUri(src)
         .setTapToRetryEnabled(true)
-        .setOldController(mPictureView.getController());
+        .setOldController(mPictureView.getController())
+        .setControllerListener(controllerListener);
     mPictureView.setController(controllerBuilder.build());
     mPictureSrc = src;
     Timber.d(EarthUtils.formatString("Position: %d, url: %s", getArguments().getInt(Const.KEY_POSITION), src));

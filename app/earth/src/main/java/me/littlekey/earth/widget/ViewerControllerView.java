@@ -47,6 +47,9 @@ public class ViewerControllerView extends FrameLayout
   private boolean mShowing = false;
   private int mCurrentPage = -1;
 
+  private boolean mIsPreVisible = false;
+  private boolean mIsNextVisible = false;
+
   public ViewerControllerView(Context context) {
     this(context, null);
   }
@@ -152,32 +155,39 @@ public class ViewerControllerView extends FrameLayout
     }
   }
 
-  private boolean mIsPreVisible = false;
-
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     if (positionOffset == 0) {
       mCurrentPage = position;
+      mIsPreVisible = false;
+      mIsNextVisible = false;
     } else {
-      boolean isPreVisible = position + positionOffset < mCurrentPage;
-      if (isPreVisible != mIsPreVisible) {
+      boolean isPreVisible = position + positionOffset < mCurrentPage
+          || mCurrentPage == mViewer.getAdapter().getCount() - 1;
+      boolean isNextVisible = position + positionOffset > mCurrentPage;
+      if (isPreVisible != mIsPreVisible || isNextVisible != mIsNextVisible) {
         Fragment prePage = null;
         Fragment nextPage = null;
-        Object left = mViewer.getAdapter().instantiateItem(mViewer, mCurrentPage - 1);
-        if (left instanceof Fragment) {
-          prePage = (Fragment) left;
+        if (mCurrentPage > 0) {
+          Object left = mViewer.getAdapter().instantiateItem(mViewer, mCurrentPage - 1);
+          if (left instanceof Fragment) {
+            prePage = (Fragment) left;
+          }
         }
-        Object right = mViewer.getAdapter().instantiateItem(mViewer, mCurrentPage + 1);
-        if (right instanceof Fragment) {
-          nextPage = (Fragment) right;
+        if (mCurrentPage < mViewer.getAdapter().getCount() - 1) {
+          Object right = mViewer.getAdapter().instantiateItem(mViewer, mCurrentPage + 1);
+          if (right instanceof Fragment) {
+            nextPage = (Fragment) right;
+          }
         }
         if (prePage != null) {
           prePage.setMenuVisibility(isPreVisible);
         }
         if (nextPage != null) {
-          nextPage.setMenuVisibility(!isPreVisible);
+          nextPage.setMenuVisibility(isNextVisible);
         }
         mIsPreVisible = isPreVisible;
+        mIsNextVisible = isNextVisible;
       }
     }
   }

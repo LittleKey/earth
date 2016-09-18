@@ -3,8 +3,8 @@ package me.littlekey.earth.adapter;
 import android.view.ViewGroup;
 
 import com.squareup.wire.Wire;
-import com.yuanqi.mvp.presenter.ViewGroupPresenter;
-import com.yuanqi.mvp.widget.MvpRecyclerView;
+import me.littlekey.mvp.presenter.ViewGroupPresenter;
+import me.littlekey.mvp.widget.MvpRecyclerView;
 
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;

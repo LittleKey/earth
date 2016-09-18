@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
 import com.squareup.wire.Wire;
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.base.utils.FormatUtils;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.base.utils.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;

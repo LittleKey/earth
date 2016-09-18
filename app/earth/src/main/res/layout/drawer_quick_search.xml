@@ -30,7 +30,7 @@
             android:text="@string/img_add"/>
     </android.support.v7.widget.Toolbar>
 
-    <com.yuanqi.mvp.widget.MvpRecyclerView
+    <me.littlekey.mvp.widget.MvpRecyclerView
         android:id="@+id/quick_search_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

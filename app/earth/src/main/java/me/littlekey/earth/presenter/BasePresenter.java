@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
-import com.yuanqi.base.utils.CollectionUtils;
+import me.littlekey.base.utils.CollectionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

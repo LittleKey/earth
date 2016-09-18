@@ -9,8 +9,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.base.utils.DeviceConfig;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.base.utils.DeviceConfig;
 
 import org.apache.commons.collections4.list.FixedSizeList;
 import org.jsoup.Jsoup;

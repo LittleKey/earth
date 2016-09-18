@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.SparseArray;
 
-import com.yuanqi.base.utils.DeviceConfig;
+import me.littlekey.base.utils.DeviceConfig;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

@@ -3,7 +3,7 @@ package me.littlekey.earth.network;
 import android.net.Uri;
 
 import com.squareup.wire.Wire;
-import com.yuanqi.base.utils.CollectionUtils;
+import me.littlekey.base.utils.CollectionUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

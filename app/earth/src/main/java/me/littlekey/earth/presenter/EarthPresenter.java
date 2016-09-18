@@ -1,6 +1,6 @@
 package me.littlekey.earth.presenter;
 
-import com.yuanqi.mvp.presenter.Presenter;
+import me.littlekey.mvp.presenter.Presenter;
 
 import me.littlekey.earth.model.Model;
 

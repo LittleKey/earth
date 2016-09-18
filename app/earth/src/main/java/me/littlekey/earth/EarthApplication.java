@@ -8,11 +8,11 @@ import com.facebook.common.internal.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.base.utils.LinkedHashTreeSet;
-import com.yuanqi.base.utils.LogUtils;
-import com.yuanqi.mvp.BaseApplication;
-import com.yuanqi.network.ApiContext;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.base.utils.LinkedHashTreeSet;
+import me.littlekey.base.utils.LogUtils;
+import me.littlekey.mvp.BaseApplication;
+import me.littlekey.network.ApiContext;
 
 import java.util.Collections;
 import java.util.HashSet;

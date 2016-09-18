@@ -2,9 +2,9 @@ package me.littlekey.earth.model;
 
 import android.support.annotation.Nullable;
 
-import com.yuanqi.mvp.PageList;
-import com.yuanqi.network.ApiRequest;
-import com.yuanqi.network.NameValuePair;
+import me.littlekey.mvp.PageList;
+import me.littlekey.network.ApiRequest;
+import me.littlekey.network.NameValuePair;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.model.data.EarthDataGenerator;

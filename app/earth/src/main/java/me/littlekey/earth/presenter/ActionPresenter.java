@@ -14,8 +14,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.squareup.wire.Wire;
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.mvp.widget.MvpRecyclerView;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.mvp.widget.MvpRecyclerView;
 
 import org.apache.commons.collections4.list.FixedSizeList;
 

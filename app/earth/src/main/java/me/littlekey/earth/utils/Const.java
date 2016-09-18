@@ -1,6 +1,6 @@
 package me.littlekey.earth.utils;
 
-import com.yuanqi.base.utils.FormatUtils;
+import me.littlekey.base.utils.FormatUtils;
 
 /**
  * Created by nengxiangzhou on 15/12/24.

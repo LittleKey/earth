@@ -1,6 +1,6 @@
 package me.littlekey.earth.model;
 
-import com.yuanqi.network.NameValuePair;
+import me.littlekey.network.NameValuePair;
 
 import java.util.List;
 

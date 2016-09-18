@@ -122,7 +122,7 @@
             android:layout_gravity="center_horizontal"
             app:layout_scrollFlags="scroll"/>
 
-        <com.yuanqi.mvp.widget.MvpRecyclerView
+        <me.littlekey.mvp.widget.MvpRecyclerView
             android:id="@+id/tag_recycler"
             android:layout_width="match_parent"
             android:layout_height="50dp"

@@ -19,7 +19,7 @@
         app:cardElevation="2dp"
         app:cardCornerRadius="2dp">
 
-            <com.yuanqi.mvp.widget.MvpRecyclerView
+            <me.littlekey.mvp.widget.MvpRecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

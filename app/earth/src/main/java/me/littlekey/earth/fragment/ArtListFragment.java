@@ -28,9 +28,9 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.wire.Wire;
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.mvp.widget.MvpRecyclerView;
-import com.yuanqi.network.NameValuePair;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.mvp.widget.MvpRecyclerView;
+import me.littlekey.network.NameValuePair;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

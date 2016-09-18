@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yuanqi.mvp.widget.MvpRecyclerView;
+import me.littlekey.mvp.widget.MvpRecyclerView;
 
 import de.greenrobot.event.EventBus;
 import me.littlekey.earth.R;

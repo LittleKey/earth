@@ -3,7 +3,7 @@ package me.littlekey.earth.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.yuanqi.mvp.widget.MvpSwipeRefreshLayout;
+import me.littlekey.mvp.widget.MvpSwipeRefreshLayout;
 
 import me.littlekey.earth.model.Model;
 

@@ -12,10 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yuanqi.base.utils.FormatUtils;
-import com.yuanqi.mvp.adapter.HeaderFooterAdapter;
-import com.yuanqi.mvp.widget.MvpRecyclerView;
-import com.yuanqi.network.NameValuePair;
+import me.littlekey.base.utils.FormatUtils;
+import me.littlekey.mvp.adapter.HeaderFooterAdapter;
+import me.littlekey.mvp.widget.MvpRecyclerView;
+import me.littlekey.network.NameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;

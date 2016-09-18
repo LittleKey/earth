@@ -2,8 +2,8 @@ package me.littlekey.earth.presenter;
 
 import android.view.ViewGroup;
 
-import com.yuanqi.mvp.presenter.ViewGroupPresenter;
-import com.yuanqi.mvp.widget.MvpRecyclerView;
+import me.littlekey.mvp.presenter.ViewGroupPresenter;
+import me.littlekey.mvp.widget.MvpRecyclerView;
 
 import me.littlekey.earth.R;
 

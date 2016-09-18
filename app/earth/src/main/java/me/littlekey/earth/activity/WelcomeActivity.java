@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.squareup.wire.Wire;
-import com.yuanqi.update.UpdateAgent;
-import com.yuanqi.update.UpdateListener;
-import com.yuanqi.update.model.UpdateResponse;
+import me.littlekey.update.UpdateAgent;
+import me.littlekey.update.UpdateListener;
+import me.littlekey.update.model.UpdateResponse;
 
 import me.littlekey.earth.EarthApplication;
 import me.littlekey.earth.R;

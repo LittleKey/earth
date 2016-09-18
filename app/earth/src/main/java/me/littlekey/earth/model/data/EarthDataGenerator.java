@@ -3,9 +3,9 @@ package me.littlekey.earth.model.data;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Response;
-import com.yuanqi.mvp.DataGenerator;
-import com.yuanqi.network.ApiRequest;
-import com.yuanqi.network.NameValuePair;
+import me.littlekey.mvp.DataGenerator;
+import me.littlekey.network.ApiRequest;
+import me.littlekey.network.NameValuePair;
 
 import java.util.HashMap;
 import java.util.List;

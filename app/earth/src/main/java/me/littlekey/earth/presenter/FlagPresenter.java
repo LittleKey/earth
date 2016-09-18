@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.wire.Wire;
-import com.yuanqi.base.utils.CollectionUtils;
+import me.littlekey.base.utils.CollectionUtils;
 
 import me.littlekey.earth.R;
 import me.littlekey.earth.model.Model;

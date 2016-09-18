@@ -3,9 +3,9 @@ package me.littlekey.earth.fragment;
 import android.os.Bundle;
 import android.view.View;
 
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.mvp.DataLoadObserver;
-import com.yuanqi.network.NameValuePair;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.mvp.DataLoadObserver;
+import me.littlekey.network.NameValuePair;
 
 import java.util.ArrayList;
 

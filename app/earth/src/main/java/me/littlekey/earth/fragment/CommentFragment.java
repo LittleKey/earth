@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.base.utils.LinkedHashTreeSet;
-import com.yuanqi.mvp.widget.MvpRecyclerView;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.base.utils.LinkedHashTreeSet;
+import me.littlekey.mvp.widget.MvpRecyclerView;
 
 import java.util.List;
 

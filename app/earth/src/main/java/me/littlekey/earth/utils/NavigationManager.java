@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.yuanqi.base.utils.CollectionUtils;
-import com.yuanqi.network.NameValuePair;
+import me.littlekey.base.utils.CollectionUtils;
+import me.littlekey.network.NameValuePair;
 
 import java.util.ArrayList;
 import java.util.HashMap;

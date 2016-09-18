@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yuanqi.mvp.DataLoadObserver;
-import com.yuanqi.mvp.widget.MvpRecyclerView;
+import me.littlekey.mvp.DataLoadObserver;
+import me.littlekey.mvp.widget.MvpRecyclerView;
 
 import java.io.IOException;
 import java.util.Collections;

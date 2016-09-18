@@ -117,6 +117,7 @@ ext {
 
     jsoupVersion = "1.9.2"
     junitVersion = "4.12"
+    robolectricVersion = "3.1.2"
     timberVersion = "3.1.0"
     eventbusVersion = "2.4.0"
     gsonVersion = "2.4"

@@ -122,6 +122,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile "junit:junit:$rootProject.junitVersion"
+    testCompile "org.robolectric:robolectric:$rootProject.robolectricVersion"
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile project(':framework:mvp')
